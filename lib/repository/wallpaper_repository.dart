@@ -1,4 +1,3 @@
-import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:wallpaper/data/ImageList.dart';
 import 'package:http/http.dart' as http;
@@ -41,7 +40,7 @@ class WallpaperRepository {
     }
   }
 
-  Future<ImageListPage> fetchImageListPage2(int page) async {
+  Future<ImageListPage> fetchWallpaperList(int page) async {
     String baseUrl = 'https://www.kr.playblackdesert.com/ko-KR/Data/Wallpaper/';
     String getUrl = '?boardType=0&searchType=&searchText=&Page=$page';
     final response = await http.get(
@@ -90,5 +89,4 @@ class WallpaperRepository {
       throw Exception('Failed to load HTML');
     }
   }
-
 }

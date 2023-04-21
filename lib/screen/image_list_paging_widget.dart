@@ -11,11 +11,7 @@ class ImageListPagingWidget extends StatelessWidget {
     final pageUrls = notifier.imageList.pageUrls;
     final currentPage = notifier.currentPage;
 
-    List<int> pageNumbers = [];
-
-    for (int i = 1; i <= pageUrls.length; i++) {
-      pageNumbers.add(i);
-    }
+    final pageNumbers = List.generate(pageUrls.length, (index) => index + 1);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -29,7 +25,7 @@ class ImageListPagingWidget extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                for (int i in pageNumbers)
+                for (final i in pageNumbers)
                   GestureDetector(
                     onTap: () => notifier.fetchImageListPage(context.read(), i),
                     child: Padding(

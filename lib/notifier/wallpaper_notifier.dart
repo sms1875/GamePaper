@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:wallpaper/data/ImageList.dart';
 import 'package:wallpaper/repository/wallpaper_repository.dart';
 
 class WallpaperNotifier extends ChangeNotifier {
   WallpaperNotifier();
-
 
   ImageListPage paging = ImageListPage(page: 1, pageUrls: [], wallpapers: []);
   ImageListPage get imageList => paging;
@@ -35,15 +33,15 @@ class WallpaperNotifier extends ChangeNotifier {
   Future<void> fetchImageListPage(WallpaperRepository repository, int page) async {
     _currentPage=page;
 
+    // 현재 페이지의 pageUrls 값만 가져와서 업데이트합니다
     try {
       final result = await repository.fetchImageListPage(page);
-      // 현재 페이지의 pageUrls 값만 가져와서 업데이트합니다
       paging = ImageListPage(page: result.page, pageUrls: imageList.pageUrls, wallpapers: result.wallpapers);
       _isLoading = false;
       _error = null;
     } catch (e) {
-      print(e);
-      final result = await repository.fetchImageListPage2(page);
+      // null 오류가 날 경우 split을 이용하여 wallpaper를 parsing합니다
+      final result = await repository.fetchWallpaperList(page);
       paging = ImageListPage(page: result.page, pageUrls: imageList.pageUrls, wallpapers: result.wallpapers);
       _isLoading = false;
       _error = e;
