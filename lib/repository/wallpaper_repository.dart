@@ -78,6 +78,7 @@ class WallpaperRepository {
           'src': itemTrimmed.substring(srcStart, srcEnd),
         });
       }
+      print(wallpaperList)  ;
       final pageUrls =[""];
 
       return ImageListPage(

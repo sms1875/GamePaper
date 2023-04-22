@@ -39,6 +39,11 @@ dependencies:
   provider: ^6.0.1
   cached_network_image: ^3.0.0
 
+  #배경화면 설정 관련 패키지
+  flutter_cache_manager: ^3.0.0
+  desktop_wallpaper_set: ^0.0.3
+  async_wallpaper: ^2.0.0
+
 
 dev_dependencies:
   flutter_test:
