@@ -28,7 +28,6 @@ class ImageListWidget extends StatelessWidget {
                   child: Column(
                     children: [
                       Image.network(wallpaper['src']!),
-                      Text(wallpaper['attr-idx']!),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [

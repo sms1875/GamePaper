@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.wallpaper">
+    package="com.sms1875.wallpaper">
     <application
-        android:label="wallpaper"
+        android:label="검은사막 월페이퍼"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
-            android:name=".MainActivity"
+            android:name="com.sms1875.wallpaper.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
