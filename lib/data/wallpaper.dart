@@ -1,19 +1,19 @@
-class ImageListPage {
+class Wallpaper {
   final int page;
   final List<String> pageUrls;
   final List<Map<String, String>> wallpapers;
 
-  ImageListPage({
+  Wallpaper({
     required this.page,
     required this.pageUrls,
     required this.wallpapers,
   });
 
-  factory ImageListPage.fromJson(Map<String, dynamic> json) {
+  factory Wallpaper.fromJson(Map<String, dynamic> json) {
     final page = json['page'] as int;
     final pageUrls = json['pageUrls'] as List<String>;
     final wallpapers = json['wallpapers'] as List<Map<String, String>>;
-    return ImageListPage(
+    return Wallpaper(
       page: page,
       pageUrls: pageUrls,
       wallpapers: wallpapers,

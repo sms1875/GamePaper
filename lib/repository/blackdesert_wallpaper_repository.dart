@@ -1,17 +1,13 @@
 import 'package:html/parser.dart';
-import 'package:wallpaper/data/ImageList.dart';
+import 'package:wallpaper/data/wallpaper.dart';
 import 'package:http/http.dart' as http;
 
-class WallpaperRepository {
+class BlackDesertWallpaperRepository {
 
-  Future<ImageListPage> fetchImageListPage(int page) async {
+  Future<Wallpaper> fetchBlackDesertWallpaper(int page) async {
     String baseUrl = 'https://www.kr.playblackdesert.com/ko-KR/Data/Wallpaper/';
     String getUrl = '?boardType=0&searchType=&searchText=&Page=$page';
-    final response = await http.get(
-      Uri.parse(
-        '$baseUrl$getUrl',
-      ),
-    );
+    final response = await http.get(Uri.parse('$baseUrl$getUrl'));
     if (response.statusCode == 200) {
       final document = parse(response.body);
       final paging = document.getElementById('paging');
@@ -30,7 +26,7 @@ class WallpaperRepository {
         return {'attr-idx': attrIdx, 'attr-img': attrImg, 'attr-img_m': attrImgM, 'src': src};
       }).toList();
 
-      return ImageListPage(
+      return Wallpaper(
         page: page,
         pageUrls: pageUrls,
         wallpapers: wallpapers,
@@ -40,14 +36,10 @@ class WallpaperRepository {
     }
   }
 
-  Future<ImageListPage> fetchWallpaperList(int page) async {
+  Future<Wallpaper> fetchBlackDesertWallpaperOnError(int page) async {
     String baseUrl = 'https://www.kr.playblackdesert.com/ko-KR/Data/Wallpaper/';
     String getUrl = '?boardType=0&searchType=&searchText=&Page=$page';
-    final response = await http.get(
-      Uri.parse(
-        '$baseUrl$getUrl',
-      ),
-    );
+    final response = await http.get(Uri.parse('$baseUrl$getUrl'));
     if (response.statusCode == 200) {
       final wallpaperListStartIndex =
           response.body.indexOf('<ul class="wallpaper_list" id="wallpaper_list">') +
@@ -81,7 +73,7 @@ class WallpaperRepository {
       print(wallpaperList)  ;
       final pageUrls =[""];
 
-      return ImageListPage(
+      return Wallpaper(
         page: page,
         pageUrls: pageUrls,
         wallpapers: wallpaperList,
