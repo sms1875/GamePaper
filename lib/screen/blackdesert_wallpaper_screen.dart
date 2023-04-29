@@ -44,7 +44,20 @@ class BlackDesertWallpaperScreen extends StatelessWidget {
           child: Column(
             children: [
               Expanded(
-                child: Image.network(url!),
+                child: InkWell(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => Dialog(
+                        child: InkWell(
+                          onTap: () => Navigator.pop(context),
+                          child: Image.network(url!),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Image.network(url!),
+                ),
               ),
               isPlatformMobile
                   ? url == wallpaper['src']
@@ -119,8 +132,8 @@ class BlackDesertWallpaperScreen extends StatelessWidget {
             final result = await AsyncWallpaper.setWallpaper(
               url: wallpaper,
               wallpaperLocation: AsyncWallpaper.HOME_SCREEN,
-                toastDetails: ToastDetails( message: '배경 화면이 성공적으로 설정되었습니다!'),
-                errorToastDetails: ToastDetails( message: '배경 화면 설정에 실패했습니다.'),
+              toastDetails: ToastDetails( message: '배경 화면이 성공적으로 설정되었습니다!'),
+              errorToastDetails: ToastDetails( message: '배경 화면 설정에 실패했습니다.'),
             );
           },
           child: Text('배경 화면'),
