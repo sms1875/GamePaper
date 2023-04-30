@@ -1,16 +1,14 @@
-import 'dart:io';
-
 import 'package:async_wallpaper/async_wallpaper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wallpaper/notifier/wallpaper_notifier.dart';
+import 'package:wallpaper/notifier/df_wallpaper_notifier.dart';
 
-class BlackDesertWallpaperScreen extends StatefulWidget {
+class DungeonAndFighterWallpaperScreen extends StatefulWidget {
   @override
-  State<BlackDesertWallpaperScreen> createState() => _BlackDesertWallpaperScreenState();
+  State<DungeonAndFighterWallpaperScreen> createState() => _DungeonAndFighterWallpaperScreenState();
 }
 
-class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen> {
+class _DungeonAndFighterWallpaperScreenState extends State<DungeonAndFighterWallpaperScreen> {
   final _scrollController = ScrollController();
 
   @override
@@ -20,10 +18,9 @@ class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen>
   }
   @override
   Widget build(BuildContext context) {
-    final notifier = context.watch<WallpaperNotifier>();
+    final notifier = context.watch<DungeonAndFighterWallpaperNotifier>();
     final pageUrls = notifier.imageList.pageUrls;
     final currentPage = notifier.currentPage;
-    final isPlatformMobile = Platform.isAndroid || Platform.isIOS;
     final wallpapers = notifier.imageList.wallpapers;
 
     return Scaffold(
@@ -38,11 +35,7 @@ class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen>
               itemCount: wallpapers.length,
               itemBuilder: (context, index) {
                 final wallpaper = wallpapers[index];
-                var url = isPlatformMobile ? wallpaper['attr-img_m'] : wallpaper['attr-img'];
-                //모바일이 지원 안되는 월페이퍼 구분
-                if (!url!.startsWith('http')) {
-                  url = wallpaper['src'];
-                }
+                var url = wallpaper['src']!;
                 return Card(
                   child: Column(
                     children: [
@@ -54,23 +47,18 @@ class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen>
                               builder: (_) => Dialog(
                                 child: InkWell(
                                   onTap: () => Navigator.pop(context),
-                                  child: Image.network(url!),
+                                  child: Image.network(url),
                                 ),
                               ),
                             );
                           },
-                          child: Image.network(url!),
+                          child: Image.network(url),
                         ),
                       ),
-                      isPlatformMobile
-                          ? url == wallpaper['src']
-                          ? Text("모바일은 지원하지 않습니다.")
-                          : _buildPlatformMobileWidget(context, url)
-                          : _buildPlatformDesktopWidget(context, url),
+                      _buildPlatformMobileWidget(context, url),
                     ],
                   ),
-                );
-              },
+                );},
               controller: _scrollController, // ScrollController 할당
             ),
           ),
@@ -80,14 +68,14 @@ class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen>
     );
   }
 
-  Widget _buildPageNumbers(BuildContext context, List<String> pageUrls, int currentPage) {
+  Widget _buildPageNumbers(BuildContext context, List<List<String>> pageUrls, int currentPage) {
     final pageNumbers = List.generate(pageUrls.length, (index) => index + 1);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
           onPressed: currentPage == 1 ? null : () {
-            context.read<WallpaperNotifier>().prevPage(context.read());
+            context.read<DungeonAndFighterWallpaperNotifier>().prevPage(context.read());
             _scrollController.jumpTo(0); // 스크롤 맨 위로 이동
           },
           icon: const Icon(Icons.arrow_back_ios),
@@ -98,9 +86,9 @@ class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen>
             children: [
               ...pageNumbers.map((i) => GestureDetector(
                 onTap: () {
-                  context.read<WallpaperNotifier>().fetchImageListPage(context.read(), i);
+                  context.read<DungeonAndFighterWallpaperNotifier>().fetchImageListPage(context.read(), i);
                   _scrollController.jumpTo(0);
-                  },
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
@@ -118,7 +106,7 @@ class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen>
         ),
         IconButton(
           onPressed: currentPage == pageUrls.length ? null : () {
-            context.read<WallpaperNotifier>().nextPage(context.read());
+            context.read<DungeonAndFighterWallpaperNotifier>().nextPage(context.read());
             _scrollController.jumpTo(0); // 스크롤 맨 위로 이동
           },
           icon: const Icon(Icons.arrow_forward_ios),

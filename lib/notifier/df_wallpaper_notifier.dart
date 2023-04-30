@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaper/data/wallpaper.dart';
+import 'package:wallpaper/data/df_wallpaper.dart';
 import 'package:wallpaper/repository/df_wallpaper_repository.dart';
 
 class DungeonAndFighterWallpaperNotifier extends ChangeNotifier {
   DungeonAndFighterWallpaperNotifier();
 
-  Wallpaper paging = Wallpaper(page: 1, pageUrls: [], wallpapers: []);
-  Wallpaper get imageList => paging;
+  DungeonAndFighterWallpaper paging = DungeonAndFighterWallpaper(page: 1, pageUrls: [], wallpapers: []);
+  DungeonAndFighterWallpaper get imageList => paging;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -17,35 +17,37 @@ class DungeonAndFighterWallpaperNotifier extends ChangeNotifier {
   int _currentPage = 1;
   int get currentPage => _currentPage;
 
+  //초기 설정
   Future<void> update(DungeonAndFighterWallpaperRepository repository) async {
     try {
-      paging = (await repository.fetchDungeonAndFighterWallpaper(1));
+      paging = (await repository.fetchDungeonAndFighterWallpaper());
       _isLoading = false;
       _error = null;
     } catch (e) {
-      paging = Wallpaper(page: 1, pageUrls: [], wallpapers: []);
+      paging = DungeonAndFighterWallpaper(page: 1, pageUrls: [], wallpapers: []);
       _isLoading = false;
       _error = e;
     }
     notifyListeners();
   }
 
+  //페이지 업데이트
   Future<void> fetchImageListPage(DungeonAndFighterWallpaperRepository repository, int page) async {
     _currentPage=page;
 
-    // 현재 페이지의 pageUrls 값만 가져와서 업데이트합니다
     try {
-      final result = await repository.fetchDungeonAndFighterWallpaper(page);
-      paging = Wallpaper(page: result.page, pageUrls: imageList.pageUrls, wallpapers: result.wallpapers);
+      final result = await repository.fetchPage(page, imageList.pageUrls);
+      paging = DungeonAndFighterWallpaper(page: page, pageUrls: imageList.pageUrls, wallpapers: result);
       _isLoading = false;
       _error = null;
     } catch (e) {
-      paging = Wallpaper(page: 1, pageUrls: [], wallpapers: []);
+      paging = DungeonAndFighterWallpaper(page: page, pageUrls: [], wallpapers: []);
       _isLoading = false;
       _error = e;
     }
     notifyListeners();
   }
+
 
   void nextPage(DungeonAndFighterWallpaperRepository repository) {
     if (currentPage < imageList.pageUrls.length) {

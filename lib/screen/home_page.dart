@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:wallpaper/notifier/df_wallpaper_notifier.dart';
 import 'package:wallpaper/screen/blackdesert_wallpaper_screen.dart';
+import 'package:wallpaper/screen/df_wallpaper_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,7 +13,7 @@ class HomePage extends StatelessWidget {
           crossAxisCount: 2,
           children: [
             buildButton(context, 'BlackDesert', BlackDesertWallpaperScreen()),
-            buildButton(context, 'Dungeon&Fighter', DungeonAndFighterWallpaper()),
+            buildButton(context, 'Dungeon&Fighter', DungeonAndFighterWallpaperScreen()),
             //buildButton(context, 'LeagueOfLegends', LeagueOfLegendsWallpaperScreen()),
             //buildButton(context, 'MapleStory', MapleStoryWallpaperScreen()),
             //buildButton(context, 'LostArk', LostArkWallpaper()),
@@ -53,24 +52,6 @@ class HomePage extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class DungeonAndFighterWallpaper extends StatelessWidget {
-  const DungeonAndFighterWallpaper({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final notifier = context.watch<DungeonAndFighterWallpaperNotifier>();
-    return Scaffold(
-      body: Column(
-        children: [
-          Text("DungeonAndFighter", style: TextStyle(fontSize: 30)),
-        ],
       ),
     );
   }
