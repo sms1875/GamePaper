@@ -3,19 +3,19 @@ import 'package:wallpaper/data/wallpaper.dart';
 import 'package:http/http.dart' as http;
 
 class BlackDesertWallpaperRepository {
+  String baseUrl = 'https://www.kr.playblackdesert.com/ko-KR/Data/Wallpaper/';
 
   Future<Wallpaper> fetchBlackDesertWallpaper(int page) async {
-    String baseUrl = 'https://www.kr.playblackdesert.com/ko-KR/Data/Wallpaper/';
     String getUrl = '?boardType=0&searchType=&searchText=&Page=$page';
     final response = await http.get(Uri.parse('$baseUrl$getUrl'));
     if (response.statusCode == 200) {
       final document = parse(response.body);
       final paging = document.getElementById('paging');
-      final pageUrls = paging
-      !.querySelectorAll('a')
+      final pageUrls = paging!
+          .querySelectorAll('a')
           .map((a) => a.attributes['href']!)
           .toSet()
-          .toList() ;
+          .toList();
       var wallpaperList = document.querySelector('#wallpaper_list');
       final wallpapers = wallpaperList!.querySelectorAll('li').map((li) {
         final a = li.querySelector('a')!;
@@ -23,7 +23,12 @@ class BlackDesertWallpaperRepository {
         final attrImg = a.attributes['attr-img']!;
         final attrImgM = a.attributes['attr-img_m']!;
         final src = a.querySelector('img')!.attributes['src']!;
-        return {'attr-idx': attrIdx, 'attr-img': attrImg, 'attr-img_m': attrImgM, 'src': src};
+        return {
+          'attr-idx': attrIdx,
+          'attr-img': attrImg,
+          'attr-img_m': attrImgM,
+          'src': src
+        };
       }).toList();
 
       return Wallpaper(
@@ -37,17 +42,16 @@ class BlackDesertWallpaperRepository {
   }
 
   Future<Wallpaper> fetchBlackDesertWallpaperOnError(int page) async {
-    String baseUrl = 'https://www.kr.playblackdesert.com/ko-KR/Data/Wallpaper/';
     String getUrl = '?boardType=0&searchType=&searchText=&Page=$page';
     final response = await http.get(Uri.parse('$baseUrl$getUrl'));
     if (response.statusCode == 200) {
-      final wallpaperListStartIndex =
-          response.body.indexOf('<ul class="wallpaper_list" id="wallpaper_list">') +
-              ('<ul class="wallpaper_list" id="wallpaper_list">').length;
+      final wallpaperListStartIndex = response.body
+              .indexOf('<ul class="wallpaper_list" id="wallpaper_list">') +
+          ('<ul class="wallpaper_list" id="wallpaper_list">').length;
       final wallpaperListEndIndex =
-      response.body.indexOf('</ul>', wallpaperListStartIndex);
-      final wallpaperList1 =
-      response.body.substring(wallpaperListStartIndex, wallpaperListEndIndex);
+          response.body.indexOf('</ul>', wallpaperListStartIndex);
+      final wallpaperList1 = response.body
+          .substring(wallpaperListStartIndex, wallpaperListEndIndex);
 
       final wallpaperList = <Map<String, String>>[];
       final wallpaperListItems = wallpaperList1.split('</li>');
@@ -70,8 +74,8 @@ class BlackDesertWallpaperRepository {
           'src': itemTrimmed.substring(srcStart, srcEnd),
         });
       }
-      print(wallpaperList)  ;
-      final pageUrls =[""];
+      print(wallpaperList);
+      final pageUrls = [""];
 
       return Wallpaper(
         page: page,

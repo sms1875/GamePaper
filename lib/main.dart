@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallpaper/notifier/df_wallpaper_notifier.dart';
 import 'package:wallpaper/repository/blackdesert_wallpaper_repository.dart';
-import 'package:wallpaper/notifier/wallpaper_notifier.dart';
+import 'package:wallpaper/notifier/blackdesert_wallpaper_notifier.dart';
 import 'package:wallpaper/repository/df_wallpaper_repository.dart';
 import 'package:wallpaper/screen/home_page.dart';
 
@@ -20,8 +20,8 @@ class MyApp extends StatelessWidget {
         Provider<BlackDesertWallpaperRepository>(
           create: (_) => BlackDesertWallpaperRepository(),
         ),
-        ChangeNotifierProxyProvider<BlackDesertWallpaperRepository, WallpaperNotifier>(
-          create: (_) => WallpaperNotifier(),
+        ChangeNotifierProxyProvider<BlackDesertWallpaperRepository, BlackDesertWallpaperNotifier>(
+          create: (_) => BlackDesertWallpaperNotifier(),
           update: (_, repository, notifier) => notifier!..update(repository),
         ),
         Provider<DungeonAndFighterWallpaperRepository>(
