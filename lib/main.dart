@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:wallpaper/notifier/df_wallpaper_notifier.dart';
 import 'package:wallpaper/repository/blackdesert_wallpaper_repository.dart';
 import 'package:wallpaper/notifier/wallpaper_notifier.dart';
+import 'package:wallpaper/repository/df_wallpaper_repository.dart';
 import 'package:wallpaper/screen/home_page.dart';
 
 void main() {
@@ -10,7 +11,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +22,13 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProxyProvider<BlackDesertWallpaperRepository, WallpaperNotifier>(
           create: (_) => WallpaperNotifier(),
+          update: (_, repository, notifier) => notifier!..update(repository),
+        ),
+        Provider<DungeonAndFighterWallpaperRepository>(
+          create: (_) => DungeonAndFighterWallpaperRepository(),
+        ),
+        ChangeNotifierProxyProvider<DungeonAndFighterWallpaperRepository, DungeonAndFighterWallpaperNotifier>(
+          create: (_) => DungeonAndFighterWallpaperNotifier(),
           update: (_, repository, notifier) => notifier!..update(repository),
         ),
       ],
