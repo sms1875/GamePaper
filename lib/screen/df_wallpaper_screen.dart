@@ -1,4 +1,5 @@
 import 'package:async_wallpaper/async_wallpaper.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallpaper/notifier/df_wallpaper_notifier.dart';
@@ -9,8 +10,7 @@ class DungeonAndFighterWallpaperScreen extends StatefulWidget {
       _DungeonAndFighterWallpaperScreenState();
 }
 
-class _DungeonAndFighterWallpaperScreenState
-    extends State<DungeonAndFighterWallpaperScreen> {
+class _DungeonAndFighterWallpaperScreenState extends State<DungeonAndFighterWallpaperScreen> {
   final _scrollController = ScrollController();
 
   @override
@@ -22,16 +22,16 @@ class _DungeonAndFighterWallpaperScreenState
   @override
   Widget build(BuildContext context) {
     final notifier = context.watch<DungeonAndFighterWallpaperNotifier>();
-    final pageUrlsList = notifier.wallpaperPage.pageUrlsList;
     final currentPage = notifier.currentPageIndex;
     final wallpapers = notifier.wallpaperPage.wallpapers;
+    final pageNumbers = List.generate(notifier.wallpaperPage.pageUrlsList.length, (index) => index + 1);
 
     return Scaffold(
       body: Column(
         children: [
           Expanded(
             child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 9 / 16,
               ),
@@ -49,13 +49,25 @@ class _DungeonAndFighterWallpaperScreenState
                               context: context,
                               builder: (_) => Dialog(
                                 child: InkWell(
-                                  onTap: () => Navigator.pop(context),
-                                  child: Image.network(url),
+                                    onTap: () => Navigator.pop(context),
+                                    child: CachedNetworkImage(
+                                      imageUrl: url,
+                                      placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                    )
                                 ),
                               ),
                             );
                           },
-                          child: Image.network(url),
+                          child: CachedNetworkImage(
+                            imageUrl: url,
+                            placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                          ),
                         ),
                       ),
                       _buildPlatformMobileWidget(context, url),
@@ -66,66 +78,53 @@ class _DungeonAndFighterWallpaperScreenState
               controller: _scrollController, // ScrollController 할당
             ),
           ),
-          _buildPageNumbers(context, pageUrlsList, currentPage),
+          _buildPageNumbers(context, pageNumbers ,currentPage),
         ],
       ),
     );
   }
 
-  Widget _buildPageNumbers(
-      BuildContext context, List<List<String>> pageUrls, int currentPage) {
-    final pageNumbers = List.generate(pageUrls.length, (index) => index + 1);
+  Widget _buildPageNumbers(BuildContext context, List<int> pageNumbers, int currentPage) {
+    final notifier =  context.read<DungeonAndFighterWallpaperNotifier>();
+    final pageUrlsList = notifier.wallpaperPage.pageUrlsList;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          onPressed: currentPage == 1
-              ? null
-              : () {
-                  context
-                      .read<DungeonAndFighterWallpaperNotifier>()
-                      .prevPage(context.read());
-                  _scrollController.jumpTo(0); // 스크롤 맨 위로 이동
-                },
+          onPressed: currentPage == 1 ? null : () {
+            notifier.prevPage(context.read());
+            _scrollController.jumpTo(0);
+          },
           icon: const Icon(Icons.arrow_back_ios),
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              ...pageNumbers.map((i) => GestureDetector(
-                    onTap: () {
-                      context
-                          .read<DungeonAndFighterWallpaperNotifier>()
-                          .fetchImageListPage(context.read(), i);
-                      _scrollController.jumpTo(0);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        '$i',
-                        style: TextStyle(
-                          color: currentPage == i ? Colors.blue : Colors.black,
-                          fontWeight: currentPage == i
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  )),
-            ],
-          ),
+        Row(
+          children: [
+            ...pageNumbers.map((i) => GestureDetector(
+              onTap: () {notifier.fetchImageListPage(context.read(), i);
+              _scrollController.jumpTo(0);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '$i',
+                  style: TextStyle(
+                    color: currentPage == i ? Colors.blue : Colors.black,
+                    fontWeight: currentPage == i
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            )),
+          ],
         ),
         IconButton(
-          onPressed: currentPage == pageUrls.length
-              ? null
-              : () {
-                  context
-                      .read<DungeonAndFighterWallpaperNotifier>()
-                      .nextPage(context.read());
-                  _scrollController.jumpTo(0); // 스크롤 맨 위로 이동
-                },
+          onPressed: currentPage == pageUrlsList.length ? null : () {
+            notifier.nextPage(context.read());
+            _scrollController.jumpTo(0);
+          },
           icon: const Icon(Icons.arrow_forward_ios),
         ),
       ],
@@ -145,7 +144,7 @@ class _DungeonAndFighterWallpaperScreenState
               errorToastDetails: ToastDetails(message: '잠금 화면 설정에 실패했습니다.'),
             );
           },
-          child: Text('잠금 화면'),
+          child: const Text('잠금 화면'),
         ),
         ElevatedButton(
           onPressed: () async {
@@ -156,14 +155,14 @@ class _DungeonAndFighterWallpaperScreenState
               errorToastDetails: ToastDetails(message: '배경 화면 설정에 실패했습니다.'),
             );
           },
-          child: Text('배경 화면'),
+          child: const Text('배경 화면'),
         ),
       ],
     );
   }
 
   Widget _buildPlatformDesktopWidget(BuildContext context, String wallpaper) {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [Text("데스크탑은 준비중입니다")],
     );

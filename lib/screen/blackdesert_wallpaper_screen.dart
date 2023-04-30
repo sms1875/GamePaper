@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:async_wallpaper/async_wallpaper.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallpaper/notifier/blackdesert_wallpaper_notifier.dart';
@@ -59,12 +60,24 @@ class _BlackDesertWallpaperScreenState
                               builder: (_) => Dialog(
                                 child: InkWell(
                                   onTap: () => Navigator.pop(context),
-                                  child: Image.network(url!),
+                                  child: CachedNetworkImage(
+                                    imageUrl: url!,
+                                    placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                                  ),
                                 ),
                               ),
                             );
                           },
-                          child: Image.network(url!),
+                          child: CachedNetworkImage(
+                            imageUrl: url!,
+                            placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                          ),
                         ),
                       ),
                       isPlatformMobile
