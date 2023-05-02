@@ -143,10 +143,11 @@ mixin WallpaperScreen<T extends StatefulWidget> on State<T> {
         }
         Navigator.pop(context);
         showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              content: Text(result),
+              title: Text(result),
               actions: [
                 TextButton(
                   child: Text('OK'),

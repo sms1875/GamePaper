@@ -16,6 +16,8 @@ class _DungeonAndFighterWallpaperScreenState
   Widget build(BuildContext context) {
     return Consumer<DungeonAndFighterWallpaperProvider>(
       builder: (context, dungeonAndFighterProvider, child) {
+        final isLoading = dungeonAndFighterProvider.isLoading;
+        final error = dungeonAndFighterProvider.error;
         final currentPage = dungeonAndFighterProvider.currentPageIndex;
         final wallpapers = dungeonAndFighterProvider.wallpaperPage.wallpapers;
         final pageNumbers = List.generate(

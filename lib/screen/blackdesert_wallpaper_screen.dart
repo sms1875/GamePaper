@@ -16,6 +16,8 @@ class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen>
   Widget build(BuildContext context) {
     return Consumer<BlackDesertWallpaperProvider>(
       builder: (context, blackDesertProvider, child) {
+        final isLoading = blackDesertProvider.isLoading;
+        final error = blackDesertProvider.error;
         final currentPage = blackDesertProvider.currentPageIndex;
         final wallpapers = blackDesertProvider.wallpaperPage.wallpapers;
         final pageNumbers = List.generate(
