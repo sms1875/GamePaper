@@ -1,44 +1,27 @@
 import 'package:async_wallpaper/async_wallpaper.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:wallpaper/provider/df_wallpaper_provider.dart';
+import 'package:wallpaper/provider/wallpaper_provider.dart';
 
 mixin WallpaperScreen<T extends StatefulWidget> on State<T> {
-  final _scrollController = ScrollController();
+  final scrollController = ScrollController();
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
-  //build에서 호출하는 월페이퍼 위젯
-  Widget buildWallpaperWidget(int currentPage,
-      List<Map<String, String>> wallpapers, List<int> pageNumbers) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 9 / 16,
-                ),
-                itemCount: wallpapers.length,
-                itemBuilder: (context, index) {
-                  final wallpaper = wallpapers[index];
-                  var url = wallpaper['src']!;
-                  return buildCardWidget(url);
-                },
-                controller: _scrollController),
-          ),
-          _buildPageNumbers(pageNumbers, currentPage, context)
-        ],
-      ),
+  Widget wallPaperImage(String url) {
+    return Image.network(
+      url,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return const Center(child: CircularProgressIndicator());
+      },
+      errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
     );
   }
 
-  //각 월페이퍼 카드 위젯
   Widget buildCardWidget(String url, {bool isMobileUnSupported = false}) {
     return Card(
       child: Column(
@@ -65,32 +48,17 @@ mixin WallpaperScreen<T extends StatefulWidget> on State<T> {
     );
   }
 
-  Widget wallPaperImage(String url) {
-    return Image.network(
-      url,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return const Center(child: CircularProgressIndicator());
-      },
-      errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
-    );
-  }
-
-  //월페이퍼 페이지
-  Widget _buildPageNumbers(
-      List<int> pageNumbers, int currentPage, BuildContext context) {
-    final notifier = Provider.of<DungeonAndFighterWallpaperProvider>(context);
-    final pageUrlsList = notifier.wallpaperPage.pageUrlsList;
+  Widget buildPageNumbers(
+      List<int> pageNumbers, int currentPage, WallpaperProvider provider) {
+    final wallpaperProvider = provider;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          onPressed: currentPage == 1
-              ? null
-              : () async {
-            notifier.prevPage();
-            _scrollController.jumpTo(0);
+          onPressed: currentPage == 1 ? null : () async {
+            wallpaperProvider.prevPage();
+            scrollController.jumpTo(0);
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
@@ -98,8 +66,8 @@ mixin WallpaperScreen<T extends StatefulWidget> on State<T> {
           children: [
             ...pageNumbers.map((i) => GestureDetector(
               onTap: () async {
-                await notifier.fetchImageListPage(i);
-                _scrollController.jumpTo(0);
+                await wallpaperProvider.fetchPage(i);
+                scrollController.jumpTo(0);
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -118,11 +86,9 @@ mixin WallpaperScreen<T extends StatefulWidget> on State<T> {
           ],
         ),
         IconButton(
-          onPressed: currentPage == pageUrlsList.length
-              ? null
-              : () async {
-            notifier.nextPage();
-            _scrollController.jumpTo(0);
+          onPressed: currentPage == pageNumbers.length ? null : () async {
+            wallpaperProvider.nextPage();
+            scrollController.jumpTo(0);
           },
           icon: const Icon(Icons.arrow_forward_ios),
         ),

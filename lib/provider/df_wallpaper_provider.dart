@@ -1,69 +1,45 @@
-import 'package:flutter/material.dart';
 import 'package:wallpaper/data/wallpaper.dart';
+import 'package:wallpaper/provider/wallpaper_provider.dart';
 import 'package:wallpaper/repository/df_wallpaper_repository.dart';
 
-class DungeonAndFighterWallpaperProvider extends ChangeNotifier {
+class DungeonAndFighterWallpaperProvider extends WallpaperProvider {
   final DungeonAndFighterWallpaperRepository _dungeonAndFighterWallpaperRepository = DungeonAndFighterWallpaperRepository();
 
-  DungeonAndFighterWallpaper _wallpaperPage = DungeonAndFighterWallpaper(page: 1, pageUrlsList: [], wallpapers: []);
-  DungeonAndFighterWallpaper get wallpaperPage => _wallpaperPage;
+  @override
+  DungeonAndFighterWallpaper wallpaperPage = DungeonAndFighterWallpaper(page: 1, pageUrlsList: [], wallpapers: []);
 
-  bool _isWallpaperPageLoading = true;
-  bool get isWallpaperPageLoading => _isWallpaperPageLoading;
-
-  Object? _wallpaperPageError;
-  Object? get wallpaperPageError => _wallpaperPageError;
-
-  int currentPageIndex = 1;
-
-  //초기 설정
+  @override
   Future<void> update() async {
     try {
-      _wallpaperPage = ( await _dungeonAndFighterWallpaperRepository.fetchDungeonAndFighterWallpaper());
-      _isWallpaperPageLoading = false;
-      _wallpaperPageError = null;
+      wallpaperPage = ( await _dungeonAndFighterWallpaperRepository.fetchDungeonAndFighterWallpaper());
+      setLoading(false);
     } catch (e) {
-      _wallpaperPage =
+      wallpaperPage =
           DungeonAndFighterWallpaper(page: 1, pageUrlsList: [], wallpapers: []);
-      _isWallpaperPageLoading = false;
-      _wallpaperPageError = e;
+      setLoading(false);
+      setError(e);
     }
     notifyListeners();
   }
 
-  //페이지 업데이트
-  Future<void> fetchImageListPage(int page) async {
+  @override
+  Future<void> fetchPage(int page) async {
     currentPageIndex = page;
 
     try {
       final result = await _dungeonAndFighterWallpaperRepository.fetchPage(
           page, wallpaperPage.pageUrlsList);
-      _wallpaperPage = DungeonAndFighterWallpaper(
+      wallpaperPage = DungeonAndFighterWallpaper(
           page: page,
           pageUrlsList: wallpaperPage.pageUrlsList,
           wallpapers: result);
-      _isWallpaperPageLoading = false;
-      _wallpaperPageError = null;
+      setLoading(false);
     } catch (e) {
-      _wallpaperPage = DungeonAndFighterWallpaper(
+      wallpaperPage = DungeonAndFighterWallpaper(
           page: page, pageUrlsList: [], wallpapers: []);
-      _isWallpaperPageLoading = false;
-      _wallpaperPageError = e;
+      setLoading(false);
+      setError(e);
     }
     notifyListeners();
-  }
-
-  void nextPage() {
-    final nextPage = wallpaperPage.page + 1;
-    if (nextPage <= wallpaperPage.pageUrls.length) {
-      fetchImageListPage(nextPage);
-    }
-  }
-
-  void prevPage() {
-    final prevPage = wallpaperPage.page - 1;
-    if (prevPage > 0) {
-      fetchImageListPage(prevPage);
-    }
   }
 }

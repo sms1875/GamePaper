@@ -11,6 +11,7 @@ class DungeonAndFighterWallpaperScreen extends StatefulWidget {
 
 class _DungeonAndFighterWallpaperScreenState
     extends State<DungeonAndFighterWallpaperScreen> with WallpaperScreen {
+
   @override
   Widget build(BuildContext context) {
     return Consumer<DungeonAndFighterWallpaperProvider>(
@@ -20,7 +21,27 @@ class _DungeonAndFighterWallpaperScreenState
         final pageNumbers = List.generate(
             dungeonAndFighterProvider.wallpaperPage.pageUrlsList.length,
             (index) => index + 1);
-        return buildWallpaperWidget(currentPage, wallpapers, pageNumbers);
+        return Scaffold(
+          body: Column(
+            children: [
+              Expanded(
+                child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 9 / 16,
+                    ),
+                    itemCount: wallpapers.length,
+                    itemBuilder: (context, index) {
+                      final wallpaper = wallpapers[index];
+                      var url = wallpaper['src']!;
+                      return buildCardWidget(url);
+                    },
+                    controller: scrollController),
+              ),
+              buildPageNumbers(pageNumbers, currentPage, dungeonAndFighterProvider)
+            ],
+          ),
+        );
       },
     );
   }
