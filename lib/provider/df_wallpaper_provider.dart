@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpaper/data/wallpaper.dart';
 import 'package:wallpaper/repository/df_wallpaper_repository.dart';
 
-class DungeonAndFighterWallpaperNotifier extends ChangeNotifier {
+class DungeonAndFighterWallpaperProvider extends ChangeNotifier {
   final DungeonAndFighterWallpaperRepository _dungeonAndFighterWallpaperRepository = DungeonAndFighterWallpaperRepository();
 
   DungeonAndFighterWallpaper _wallpaperPage = DungeonAndFighterWallpaper(page: 1, pageUrlsList: [], wallpapers: []);

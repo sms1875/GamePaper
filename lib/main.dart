@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wallpaper/notifier/df_wallpaper_notifier.dart';
-import 'package:wallpaper/repository/blackdesert_wallpaper_repository.dart';
-import 'package:wallpaper/notifier/blackdesert_wallpaper_notifier.dart';
-import 'package:wallpaper/repository/df_wallpaper_repository.dart';
+import 'package:wallpaper/provider/df_wallpaper_provider.dart';
+import 'package:wallpaper/provider/blackdesert_wallpaper_provider.dart';
 import 'package:wallpaper/screen/home_page.dart';
 
 void main() {
@@ -18,10 +16,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => BlackDesertWallpaperNotifier()..update()),
+            create: (_) => BlackDesertWallpaperProvider()..update()),
         ChangeNotifierProvider(
-          create: (_) => DungeonAndFighterWallpaperNotifier()..update(),
-        ),
+          create: (_) => DungeonAndFighterWallpaperProvider()..update()),
       ],
       child: const MaterialApp(
         title: 'Wallpaper Changer',

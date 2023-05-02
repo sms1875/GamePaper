@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpaper/data/wallpaper.dart';
 import 'package:wallpaper/repository/blackdesert_wallpaper_repository.dart';
 
-class BlackDesertWallpaperNotifier extends ChangeNotifier {
+class BlackDesertWallpaperProvider extends ChangeNotifier {
   final BlackDesertWallpaperRepository _blackDesertWallpaperRepository =
   BlackDesertWallpaperRepository();
 
