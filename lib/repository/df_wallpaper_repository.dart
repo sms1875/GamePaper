@@ -19,8 +19,7 @@ class DungeonAndFighterWallpaperRepository {
       int pageSize = 20;
       List<List<String>> pageUrlsList = List.generate(
           (paging.length / pageSize).ceil(),
-              (i) => paging.skip(i * pageSize).take(pageSize).toList()
-      );
+          (i) => paging.skip(i * pageSize).take(pageSize).toList());
 
       final wallpapers = await fetchPage(1, pageUrlsList); //초기화면
       return DungeonAndFighterWallpaper(
@@ -33,17 +32,15 @@ class DungeonAndFighterWallpaperRepository {
     }
   }
 
-  Future<List<Map<String, String>>> fetchPage(
-      int page, List<List<String>> pageUrls) async {
+  Future<List<Map<String, String>>> fetchPage(int page, List<List<String>> pageUrls) async {
     List<String> urls = pageUrls[page - 1];
     List<Map<String, String>> wallpapers = [];
 
     List<Future<void>> futures = urls.map((url) async {
       final response = await http.get(Uri.parse('$baseUrl$url'));
       final document = parse(response.body);
-      wallpapers.addAll(document
-          .getElementsByClassName("wp_more_img")
-          .map((div) {
+      wallpapers
+          .addAll(document.getElementsByClassName("wp_more_img").map((div) {
         final src = div.querySelector('img')?.attributes['src'] ?? '';
         return {'src': "https:$src"};
       }).toList());

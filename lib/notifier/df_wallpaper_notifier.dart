@@ -3,7 +3,7 @@ import 'package:wallpaper/data/wallpaper.dart';
 import 'package:wallpaper/repository/df_wallpaper_repository.dart';
 
 class DungeonAndFighterWallpaperNotifier extends ChangeNotifier {
-  DungeonAndFighterWallpaperNotifier();
+  final DungeonAndFighterWallpaperRepository _dungeonAndFighterWallpaperRepository = DungeonAndFighterWallpaperRepository();
 
   DungeonAndFighterWallpaper _wallpaperPage = DungeonAndFighterWallpaper(page: 1, pageUrlsList: [], wallpapers: []);
   DungeonAndFighterWallpaper get wallpaperPage => _wallpaperPage;
@@ -17,9 +17,9 @@ class DungeonAndFighterWallpaperNotifier extends ChangeNotifier {
   int currentPageIndex = 1;
 
   //초기 설정
-  Future<void> update(DungeonAndFighterWallpaperRepository repository) async {
+  Future<void> update() async {
     try {
-      _wallpaperPage = (await repository.fetchDungeonAndFighterWallpaper());
+      _wallpaperPage = ( await _dungeonAndFighterWallpaperRepository.fetchDungeonAndFighterWallpaper());
       _isWallpaperPageLoading = false;
       _wallpaperPageError = null;
     } catch (e) {
@@ -32,13 +32,12 @@ class DungeonAndFighterWallpaperNotifier extends ChangeNotifier {
   }
 
   //페이지 업데이트
-  Future<void> fetchImageListPage(
-      DungeonAndFighterWallpaperRepository repository, int page) async {
+  Future<void> fetchImageListPage(int page) async {
     currentPageIndex = page;
 
     try {
-      final result =
-          await repository.fetchPage(page, wallpaperPage.pageUrlsList);
+      final result = await _dungeonAndFighterWallpaperRepository.fetchPage(
+          page, wallpaperPage.pageUrlsList);
       _wallpaperPage = DungeonAndFighterWallpaper(
           page: page,
           pageUrlsList: wallpaperPage.pageUrlsList,
@@ -54,17 +53,17 @@ class DungeonAndFighterWallpaperNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void nextPage(DungeonAndFighterWallpaperRepository repository) {
+  void nextPage() {
     final nextPage = wallpaperPage.page + 1;
     if (nextPage <= wallpaperPage.pageUrls.length) {
-      fetchImageListPage(repository, nextPage);
+      fetchImageListPage(nextPage);
     }
   }
 
-  void prevPage(DungeonAndFighterWallpaperRepository repository) {
+  void prevPage() {
     final prevPage = wallpaperPage.page - 1;
     if (prevPage > 0) {
-      fetchImageListPage(repository, prevPage);
+      fetchImageListPage(prevPage);
     }
   }
 }

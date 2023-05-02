@@ -82,8 +82,8 @@ class _BlackDesertWallpaperScreenState
                       ),
                       isPlatformMobile
                           ? url == wallpaper['src']
-                              ? Text("모바일은 지원하지 않습니다.")
-                              : _buildPlatformMobileWidget(context, url)
+                          ? Text("모바일은 지원하지 않습니다.")
+                          : _buildPlatformMobileWidget(context, url)
                           : _buildPlatformDesktopWidget(context, url),
                     ],
                   ),
@@ -108,9 +108,11 @@ class _BlackDesertWallpaperScreenState
           onPressed: currentPage == 1
               ? null
               : () {
-                  context.read<BlackDesertWallpaperNotifier>().prevPage(context.read());
-                  _scrollController.jumpTo(0); // 스크롤 맨 위로 이동
-                },
+            context
+                .read<BlackDesertWallpaperNotifier>()
+                .prevPage();
+            _scrollController.jumpTo(0); // 스크롤 맨 위로 이동
+          },
           icon: const Icon(Icons.arrow_back_ios),
         ),
         SingleChildScrollView(
@@ -118,26 +120,26 @@ class _BlackDesertWallpaperScreenState
           child: Row(
             children: [
               ...pageNumbers.map((i) => GestureDetector(
-                    onTap: () {
-                      context
-                          .read<BlackDesertWallpaperNotifier>()
-                          .fetchImageListPage(context.read(), i);
-                      _scrollController.jumpTo(0);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        '$i',
-                        style: TextStyle(
-                          color: currentPage == i ? Colors.blue : Colors.black,
-                          fontWeight: currentPage == i
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                          fontSize: 20,
-                        ),
-                      ),
+                onTap: () {
+                  context
+                      .read<BlackDesertWallpaperNotifier>()
+                      .fetchImageListPage(i);
+                  _scrollController.jumpTo(0);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '$i',
+                    style: TextStyle(
+                      color: currentPage == i ? Colors.blue : Colors.black,
+                      fontWeight: currentPage == i
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                      fontSize: 20,
                     ),
-                  )),
+                  ),
+                ),
+              )),
             ],
           ),
         ),
@@ -145,9 +147,11 @@ class _BlackDesertWallpaperScreenState
           onPressed: currentPage == pageUrls.length
               ? null
               : () {
-                  context.read<BlackDesertWallpaperNotifier>().nextPage(context.read());
-                  _scrollController.jumpTo(0); // 스크롤 맨 위로 이동
-                },
+            context
+                .read<BlackDesertWallpaperNotifier>()
+                .nextPage();
+            _scrollController.jumpTo(0); // 스크롤 맨 위로 이동
+          },
           icon: const Icon(Icons.arrow_forward_ios),
         ),
       ],

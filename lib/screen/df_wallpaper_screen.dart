@@ -10,7 +10,8 @@ class DungeonAndFighterWallpaperScreen extends StatefulWidget {
       _DungeonAndFighterWallpaperScreenState();
 }
 
-class _DungeonAndFighterWallpaperScreenState extends State<DungeonAndFighterWallpaperScreen> {
+class _DungeonAndFighterWallpaperScreenState
+    extends State<DungeonAndFighterWallpaperScreen> {
   final _scrollController = ScrollController();
 
   @override
@@ -24,7 +25,8 @@ class _DungeonAndFighterWallpaperScreenState extends State<DungeonAndFighterWall
     final notifier = context.watch<DungeonAndFighterWallpaperNotifier>();
     final currentPage = notifier.currentPageIndex;
     final wallpapers = notifier.wallpaperPage.wallpapers;
-    final pageNumbers = List.generate(notifier.wallpaperPage.pageUrlsList.length, (index) => index + 1);
+    final pageNumbers = List.generate(
+        notifier.wallpaperPage.pageUrlsList.length, (index) => index + 1);
 
     return Scaffold(
       body: Column(
@@ -53,20 +55,19 @@ class _DungeonAndFighterWallpaperScreenState extends State<DungeonAndFighterWall
                                     child: CachedNetworkImage(
                                       imageUrl: url,
                                       placeholder: (context, url) =>
-                                      const CircularProgressIndicator(),
+                                          const CircularProgressIndicator(),
                                       errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
-                                    )
-                                ),
+                                          const Icon(Icons.error),
+                                    )),
                               ),
                             );
                           },
                           child: CachedNetworkImage(
                             imageUrl: url,
                             placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
+                                const CircularProgressIndicator(),
                             errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                                const Icon(Icons.error),
                           ),
                         ),
                       ),
@@ -78,53 +79,59 @@ class _DungeonAndFighterWallpaperScreenState extends State<DungeonAndFighterWall
               controller: _scrollController, // ScrollController 할당
             ),
           ),
-          _buildPageNumbers(context, pageNumbers ,currentPage),
+          _buildPageNumbers(context, pageNumbers, currentPage),
         ],
       ),
     );
   }
 
-  Widget _buildPageNumbers(BuildContext context, List<int> pageNumbers, int currentPage) {
-    final notifier =  context.read<DungeonAndFighterWallpaperNotifier>();
+  Widget _buildPageNumbers(
+      BuildContext context, List<int> pageNumbers, int currentPage) {
+    final notifier = context.read<DungeonAndFighterWallpaperNotifier>();
     final pageUrlsList = notifier.wallpaperPage.pageUrlsList;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          onPressed: currentPage == 1 ? null : () {
-            notifier.prevPage(context.read());
-            _scrollController.jumpTo(0);
-          },
+          onPressed: currentPage == 1
+              ? null
+              : () {
+                  notifier.prevPage();
+                  _scrollController.jumpTo(0);
+                },
           icon: const Icon(Icons.arrow_back_ios),
         ),
         Row(
           children: [
             ...pageNumbers.map((i) => GestureDetector(
-              onTap: () {notifier.fetchImageListPage(context.read(), i);
-              _scrollController.jumpTo(0);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  '$i',
-                  style: TextStyle(
-                    color: currentPage == i ? Colors.blue : Colors.black,
-                    fontWeight: currentPage == i
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                    fontSize: 20,
+                  onTap: () {
+                    notifier.fetchImageListPage(i);
+                    _scrollController.jumpTo(0);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      '$i',
+                      style: TextStyle(
+                        color: currentPage == i ? Colors.blue : Colors.black,
+                        fontWeight: currentPage == i
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                        fontSize: 20,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            )),
+                )),
           ],
         ),
         IconButton(
-          onPressed: currentPage == pageUrlsList.length ? null : () {
-            notifier.nextPage(context.read());
-            _scrollController.jumpTo(0);
-          },
+          onPressed: currentPage == pageUrlsList.length
+              ? null
+              : () {
+                  notifier.nextPage();
+                  _scrollController.jumpTo(0);
+                },
           icon: const Icon(Icons.arrow_forward_ios),
         ),
       ],

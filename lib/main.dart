@@ -17,19 +17,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<BlackDesertWallpaperRepository>(
-          create: (_) => BlackDesertWallpaperRepository(),
-        ),
-        ChangeNotifierProxyProvider<BlackDesertWallpaperRepository, BlackDesertWallpaperNotifier>(
-          create: (_) => BlackDesertWallpaperNotifier(),
-          update: (_, repository, notifier) => notifier!..update(repository),
-        ),
-        Provider<DungeonAndFighterWallpaperRepository>(
-          create: (_) => DungeonAndFighterWallpaperRepository(),
-        ),
-        ChangeNotifierProxyProvider<DungeonAndFighterWallpaperRepository, DungeonAndFighterWallpaperNotifier>(
-          create: (_) => DungeonAndFighterWallpaperNotifier(),
-          update: (_, repository, notifier) => notifier!..update(repository),
+        ChangeNotifierProvider(
+            create: (_) => BlackDesertWallpaperNotifier()..update()),
+        ChangeNotifierProvider(
+          create: (_) => DungeonAndFighterWallpaperNotifier()..update(),
         ),
       ],
       child: const MaterialApp(

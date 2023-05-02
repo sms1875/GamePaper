@@ -5,7 +5,8 @@ import 'package:http/http.dart' as http;
 class BlackDesertWallpaperRepository {
   String baseUrl = 'https://www.kr.playblackdesert.com/ko-KR/Data/Wallpaper/';
 
-  Future<Wallpaper> fetchBlackDesertWallpaper(int page) async {
+  Future<Wallpaper> fetchBlackDesertWallpaper() async {
+    int page = 1;
     String getUrl = '?boardType=0&searchType=&searchText=&Page=$page';
     final response = await http.get(Uri.parse('$baseUrl$getUrl'));
     if (response.statusCode == 200) {
@@ -16,6 +17,23 @@ class BlackDesertWallpaperRepository {
           .map((a) => a.attributes['href']!)
           .toSet()
           .toList();
+      final wallpapers = await fetchpage(1, pageUrls);
+
+      return Wallpaper(
+        page: page,
+        pageUrls: pageUrls,
+        wallpapers: wallpapers,
+      );
+    } else {
+      throw Exception('Failed to load HTML');
+    }
+  }
+
+  Future<List<Map<String, String>>> fetchpage(int page, List<String> pageUrls) async {
+    String getUrl = '?boardType=0&searchType=&searchText=&Page=$page';
+    final response = await http.get(Uri.parse('$baseUrl$getUrl'));
+    if (response.statusCode == 200) {
+      final document = parse(response.body);
       var wallpaperList = document.querySelector('#wallpaper_list');
       final wallpapers = wallpaperList!.querySelectorAll('li').map((li) {
         final a = li.querySelector('a')!;
@@ -31,27 +49,19 @@ class BlackDesertWallpaperRepository {
         };
       }).toList();
 
-      return Wallpaper(
-        page: page,
-        pageUrls: pageUrls,
-        wallpapers: wallpapers,
-      );
+      return wallpapers;
     } else {
       throw Exception('Failed to load HTML');
     }
   }
 
-  Future<Wallpaper> fetchBlackDesertWallpaperOnError(int page) async {
+  Future<List<Map<String, String>>> fetchpageOnError(int page) async {
     String getUrl = '?boardType=0&searchType=&searchText=&Page=$page';
     final response = await http.get(Uri.parse('$baseUrl$getUrl'));
     if (response.statusCode == 200) {
-      final wallpaperListStartIndex = response.body
-              .indexOf('<ul class="wallpaper_list" id="wallpaper_list">') +
-          ('<ul class="wallpaper_list" id="wallpaper_list">').length;
-      final wallpaperListEndIndex =
-          response.body.indexOf('</ul>', wallpaperListStartIndex);
-      final wallpaperList1 = response.body
-          .substring(wallpaperListStartIndex, wallpaperListEndIndex);
+      final wallpaperListStartIndex = response.body.indexOf('<ul class="wallpaper_list" id="wallpaper_list">') + ('<ul class="wallpaper_list" id="wallpaper_list">').length;
+      final wallpaperListEndIndex = response.body.indexOf('</ul>', wallpaperListStartIndex);
+      final wallpaperList1 = response.body.substring(wallpaperListStartIndex, wallpaperListEndIndex);
 
       final wallpaperList = <Map<String, String>>[];
       final wallpaperListItems = wallpaperList1.split('</li>');
@@ -74,14 +84,8 @@ class BlackDesertWallpaperRepository {
           'src': itemTrimmed.substring(srcStart, srcEnd),
         });
       }
-      print(wallpaperList);
-      final pageUrls = [""];
 
-      return Wallpaper(
-        page: page,
-        pageUrls: pageUrls,
-        wallpapers: wallpaperList,
-      );
+      return wallpaperList;
     } else {
       throw Exception('Failed to load HTML');
     }

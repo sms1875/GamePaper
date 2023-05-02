@@ -13,8 +13,7 @@ class HomePage extends StatelessWidget {
           crossAxisCount: 2,
           children: [
             buildButton(context, 'BlackDesert', BlackDesertWallpaperScreen()),
-            buildButton(
-                context, 'Dungeon&Fighter', DungeonAndFighterWallpaperScreen()),
+            buildButton(context, 'Dungeon&Fighter', DungeonAndFighterWallpaperScreen()),
             //buildButton(context, 'LeagueOfLegends', LeagueOfLegendsWallpaperScreen()),
             //buildButton(context, 'MapleStory', MapleStoryWallpaperScreen()),
             //buildButton(context, 'LostArk', LostArkWallpaper()),
