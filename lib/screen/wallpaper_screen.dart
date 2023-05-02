@@ -1,8 +1,9 @@
 import 'package:async_wallpaper/async_wallpaper.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpaper/provider/wallpaper_provider.dart';
 
-mixin WallpaperScreen<T extends StatefulWidget> on State<T> {
+mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
   final scrollController = ScrollController();
 
   @override
@@ -11,38 +12,38 @@ mixin WallpaperScreen<T extends StatefulWidget> on State<T> {
     super.dispose();
   }
 
-  Widget wallPaperImage(String url) {
-    return Image.network(
-      url,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return const Center(child: CircularProgressIndicator());
-      },
-      errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+  Widget buildWallpaperImage(String url) {
+    return CachedNetworkImage(
+      imageUrl: url,
+      fit: BoxFit.cover,
+      placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+      errorWidget: (context, url, error) => const Icon(Icons.error),
     );
   }
 
-  Widget buildCardWidget(String url, {bool isMobileUnSupported = false}) {
+  Widget buildWallpaperCard(String url, {bool isMobileUnSupported = false}) {
     return Card(
       child: Column(
         children: [
           Expanded(
             child: InkWell(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (_) => Dialog(
-                      child: InkWell(
-                          onTap: () => Navigator.pop(context),
-                          child: wallPaperImage(url)),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (_) => Dialog(
+                    child: InkWell(
+                      onTap: () => Navigator.pop(context),
+                      child: buildWallpaperImage(url),
                     ),
-                  );
-                },
-                child: wallPaperImage(url)),
+                  ),
+                );
+              },
+              child: buildWallpaperImage(url),
+            ),
           ),
           isMobileUnSupported
               ? const Text("모바일은 지원하지 않습니다.")
-              : buildPlatformWidget(url)
+              : buildPlatformDependentWidget(url)
         ],
       ),
     );
@@ -50,45 +51,44 @@ mixin WallpaperScreen<T extends StatefulWidget> on State<T> {
 
   Widget buildPageNumbers(
       List<int> pageNumbers, int currentPage, WallpaperProvider provider) {
-    final wallpaperProvider = provider;
+    final gestureDetectors = List.generate(pageNumbers.length, (index) {
+      final page = pageNumbers[index];
+      return GestureDetector(
+        onTap: () async {
+          await provider.fetchPage(page);
+          scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            '$page',
+            style: TextStyle(
+              color: currentPage == page ? Colors.blue : Colors.black,
+              fontWeight: currentPage == page ? FontWeight.bold : FontWeight.normal,
+              fontSize: 20,
+            ),
+          ),
+        ),
+      );
+    });
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
           onPressed: currentPage == 1 ? null : () async {
-            wallpaperProvider.prevPage();
-            scrollController.jumpTo(0);
+            provider.prevPage();
+            scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
         Row(
-          children: [
-            ...pageNumbers.map((i) => GestureDetector(
-              onTap: () async {
-                await wallpaperProvider.fetchPage(i);
-                scrollController.jumpTo(0);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  '$i',
-                  style: TextStyle(
-                    color: currentPage == i ? Colors.blue : Colors.black,
-                    fontWeight: currentPage == i
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            )),
-          ],
+          children: gestureDetectors,
         ),
         IconButton(
           onPressed: currentPage == pageNumbers.length ? null : () async {
-            wallpaperProvider.nextPage();
-            scrollController.jumpTo(0);
+            provider.nextPage();
+            scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
           },
           icon: const Icon(Icons.arrow_forward_ios),
         ),
@@ -96,27 +96,28 @@ mixin WallpaperScreen<T extends StatefulWidget> on State<T> {
     );
   }
 
-  Widget buildPlatformWidget(String wallpaper) {
-    if (Theme.of(context).platform == TargetPlatform.android) {
-      return buildPlatformMobileWidget(wallpaper);
-    } else if (Theme.of(context).platform == TargetPlatform.iOS) {
-      return buildPlatformMobileWidget(wallpaper);
+  Widget buildPlatformDependentWidget(String wallpaper) {
+    final currentPlatform = Theme.of(context).platform;
+    if (currentPlatform == TargetPlatform.android) {
+      return buildMobileWallpaperWidget(wallpaper);
+    } else if (currentPlatform == TargetPlatform.iOS) {
+      return buildMobileWallpaperWidget(wallpaper);
     } else {
-      return buildPlatformDesktopWidget(wallpaper);
+      return buildDesktopWallpaperWidget(wallpaper);
     }
   }
 
-  Widget buildPlatformMobileWidget(String wallpaper) {
+  Widget buildMobileWallpaperWidget(String wallpaper) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        buildWallpaperButton(wallpaper, '잠금 화면'),
-        buildWallpaperButton(wallpaper, '홈 화면'),
+        buildSetWallpaperButton(wallpaper, '잠금 화면'),
+        buildSetWallpaperButton(wallpaper, '홈 화면'),
       ],
     );
   }
 
-  Widget buildWallpaperButton(String wallpaper, String text) {
+  Widget buildSetWallpaperButton(String wallpaper, String text) {
     return ElevatedButton(
       onPressed: () async {
         String result = 'Loading';
@@ -162,7 +163,7 @@ mixin WallpaperScreen<T extends StatefulWidget> on State<T> {
     );
   }
 
-  Widget buildPlatformDesktopWidget(String wallpaper) {
+  Widget buildDesktopWallpaperWidget(String wallpaper) {
     return const Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [Text("데스크탑은 준비중입니다")],

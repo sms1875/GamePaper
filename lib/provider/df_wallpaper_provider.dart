@@ -25,7 +25,6 @@ class DungeonAndFighterWallpaperProvider extends WallpaperProvider {
   @override
   Future<void> fetchPage(int page) async {
     currentPageIndex = page;
-
     try {
       final result = await _dungeonAndFighterWallpaperRepository.fetchPage(
           page, wallpaperPage.pageUrlsList);

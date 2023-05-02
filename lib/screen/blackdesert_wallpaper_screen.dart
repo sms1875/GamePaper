@@ -10,7 +10,7 @@ class BlackDesertWallpaperScreen extends StatefulWidget {
 }
 
 class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen>
-    with WallpaperScreen {
+    with WallpaperMixin {
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen>
                     if (!url!.startsWith('http')) {
                       url = wallpaper['src'];
                     }
-                    return buildCardWidget(url!,
+                    return buildWallpaperCard(url!,
                         isMobileUnSupported: url == wallpaper['src']);
                   },
                   controller: scrollController,

@@ -10,7 +10,7 @@ class DungeonAndFighterWallpaperScreen extends StatefulWidget {
 }
 
 class _DungeonAndFighterWallpaperScreenState
-    extends State<DungeonAndFighterWallpaperScreen> with WallpaperScreen {
+    extends State<DungeonAndFighterWallpaperScreen> with WallpaperMixin {
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +35,8 @@ class _DungeonAndFighterWallpaperScreenState
                     itemCount: wallpapers.length,
                     itemBuilder: (context, index) {
                       final wallpaper = wallpapers[index];
-                      var url = wallpaper['src']!;
-                      return buildCardWidget(url);
+                      final url = wallpaper['src']!;
+                      return buildWallpaperCard(url);
                     },
                     controller: scrollController),
               ),
