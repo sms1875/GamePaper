@@ -169,4 +169,20 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
       children: [Text("데스크탑은 준비중입니다")],
     );
   }
+
+  Widget buildErrorScreen() {
+    return const Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.close, color: Colors.white, size: 60),
+            SizedBox(height: 20),
+            Text("현재 사용할 수 없습니다", style: TextStyle(color: Colors.white, fontSize: 20)),
+          ],
+        ),
+      ),
+    );
+  }
 }

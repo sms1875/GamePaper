@@ -22,9 +22,11 @@ class _DungeonAndFighterWallpaperScreenState
         final wallpapers = dungeonAndFighterProvider.wallpaperPage.wallpapers;
         final pageNumbers = List.generate(
             dungeonAndFighterProvider.wallpaperPage.pageUrlsList.length,
-            (index) => index + 1);
+                (index) => index + 1);
         return Scaffold(
-          body: Column(
+          body: error != null
+              ? buildErrorScreen()
+              : Column(
             children: [
               Expanded(
                 child: GridView.builder(
