@@ -1,22 +1,16 @@
-import 'package:async_wallpaper/async_wallpaper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallpaper/notifier/df_wallpaper_notifier.dart';
+import 'package:wallpaper/screen/wallpaper_screen.dart';
 
-class DungeonAndFighterWallpaperScreen extends StatefulWidget {
+class DungeonAndFighterWallpaperScreen extends StatefulWidget{
 
   @override
   State<DungeonAndFighterWallpaperScreen> createState() => _DungeonAndFighterWallpaperScreenState();
 }
 
-class _DungeonAndFighterWallpaperScreenState extends State<DungeonAndFighterWallpaperScreen> {
+class _DungeonAndFighterWallpaperScreenState extends State<DungeonAndFighterWallpaperScreen> with WallpaperScreen {
   final _scrollController = ScrollController();
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,47 +33,14 @@ class _DungeonAndFighterWallpaperScreenState extends State<DungeonAndFighterWall
               itemBuilder: (context, index) {
                 final wallpaper = wallpapers[index];
                 var url = wallpaper['src']!;
-                return Card(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (_) => Dialog(
-                                child: InkWell(
-                                    onTap: () => Navigator.pop(context),
-                                    child: _wallPaperImage(url)
-                                ),
-                              ),
-                            );
-                          },
-                          child: _wallPaperImage(url),
-                        ),
-                      ),
-                      _buildPlatformWidget(url),
-                    ],
-                  ),
-                );
+                return buildCardWidget(url);
               },
-              controller: _scrollController, // ScrollController 할당
+              controller: _scrollController
             ),
           ),
-          _buildPageNumbers(pageNumbers, currentPage, notifier),
+          _buildPageNumbers(pageNumbers, currentPage, notifier)
         ],
       ),
-    );
-  }
-
-  Widget _wallPaperImage(String url) {
-    return Image.network(
-      url,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return const Center(child: CircularProgressIndicator());
-      },
-      errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
     );
   }
 
@@ -128,53 +89,6 @@ class _DungeonAndFighterWallpaperScreenState extends State<DungeonAndFighterWall
           icon: const Icon(Icons.arrow_forward_ios),
         ),
       ],
-    );
-  }
-
-  Widget _buildPlatformWidget(String wallpaper) {
-    if (Theme.of(context).platform == TargetPlatform.android) {
-      return _buildPlatformMobileWidget(wallpaper);
-    } else if (Theme.of(context).platform == TargetPlatform.iOS) {
-      return _buildPlatformMobileWidget(wallpaper);
-    } else {
-      return _buildPlatformDesktopWidget(wallpaper);
-    }
-  }
-
-  Widget _buildPlatformMobileWidget(String wallpaper) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        ElevatedButton(
-          onPressed: () async {
-            await AsyncWallpaper.setWallpaper(
-              url: wallpaper,
-              wallpaperLocation: AsyncWallpaper.LOCK_SCREEN,
-              toastDetails: ToastDetails(message: '잠금 화면이 성공적으로 설정되었습니다!'),
-              errorToastDetails: ToastDetails(message: '잠금 화면 설정에 실패했습니다.'),
-            );
-          },
-          child: const Text('잠금 화면'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            await AsyncWallpaper.setWallpaper(
-              url: wallpaper,
-              wallpaperLocation: AsyncWallpaper.HOME_SCREEN,
-              toastDetails: ToastDetails(message: '배경 화면이 성공적으로 설정되었습니다!'),
-              errorToastDetails: ToastDetails(message: '배경 화면 설정에 실패했습니다.'),
-            );
-          },
-          child: const Text('배경 화면'),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPlatformDesktopWidget(String wallpaper) {
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [Text("데스크탑은 준비중입니다")],
     );
   }
 }
