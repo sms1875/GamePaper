@@ -36,17 +36,19 @@ class DungeonAndFighterWallpaperRepository {
     List<String> urls = pageUrls[page - 1];
     List<Map<String, String>> wallpapers = [];
 
-    List<Future<void>> futures = urls.map((url) async {
+    List<Future<Map<String, String>>> futures = urls.map((url) async {
       final response = await http.get(Uri.parse('$baseUrl$url'));
       final document = parse(response.body);
-      wallpapers
-          .addAll(document.getElementsByClassName("wp_more_img").map((div) {
-        final src = div.querySelector('img')?.attributes['src'] ?? '';
-        return {'src': "https:$src"};
-      }).toList());
+      final src = document
+          .getElementsByClassName("wp_more_img")
+          .first
+          .querySelector('img')?.attributes['src'] ?? '';
+      return {'src': "https:$src", 'url': url};
     }).toList();
 
-    await Future.wait(futures);
+    List<Map<String, String>> results = await Future.wait(futures);
+    results.sort((a, b) => urls.indexOf(a['url']!).compareTo(urls.indexOf(b['url']!)));
+    wallpapers.addAll(results);
 
     return wallpapers;
   }
