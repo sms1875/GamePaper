@@ -7,13 +7,12 @@ import 'package:provider/provider.dart';
 import 'package:wallpaper/notifier/blackdesert_wallpaper_notifier.dart';
 
 class BlackDesertWallpaperScreen extends StatefulWidget {
+
   @override
-  State<BlackDesertWallpaperScreen> createState() =>
-      _BlackDesertWallpaperScreenState();
+  State<BlackDesertWallpaperScreen> createState() => _BlackDesertWallpaperScreenState();
 }
 
-class _BlackDesertWallpaperScreenState
-    extends State<BlackDesertWallpaperScreen> {
+class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen> {
   final _scrollController = ScrollController();
 
   @override
@@ -25,24 +24,24 @@ class _BlackDesertWallpaperScreenState
   @override
   Widget build(BuildContext context) {
     final notifier = context.watch<BlackDesertWallpaperNotifier>();
-    final pageUrls = notifier.wallpaperPage.pageUrls;
     final currentPage = notifier.currentPageIndex;
-    final isPlatformMobile = Platform.isAndroid || Platform.isIOS;
     final wallpapers = notifier.wallpaperPage.wallpapers;
+    final pageNumbers = List.generate(
+        notifier.wallpaperPage.pageUrls.length, (index) => index + 1);
 
     return Scaffold(
       body: Column(
         children: [
           Expanded(
             child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 9 / 16,
               ),
               itemCount: wallpapers.length,
               itemBuilder: (context, index) {
                 final wallpaper = wallpapers[index];
-                var url = isPlatformMobile
+                var url = Theme.of(context).platform == TargetPlatform.android || Theme.of(context).platform == TargetPlatform.iOS
                     ? wallpaper['attr-img_m']
                     : wallpaper['attr-img'];
                 //모바일이 지원 안되는 월페이퍼 구분
@@ -60,31 +59,17 @@ class _BlackDesertWallpaperScreenState
                               builder: (_) => Dialog(
                                 child: InkWell(
                                   onTap: () => Navigator.pop(context),
-                                  child: CachedNetworkImage(
-                                    imageUrl: url!,
-                                    placeholder: (context, url) =>
-                                    const CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                                  ),
+                                  child: _wallPaperImage(url!),
                                 ),
                               ),
                             );
                           },
-                          child: CachedNetworkImage(
-                            imageUrl: url!,
-                            placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                            errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                          ),
+                          child: _wallPaperImage(url!),
                         ),
                       ),
-                      isPlatformMobile
-                          ? url == wallpaper['src']
+                      url == wallpaper['src']
                           ? Text("모바일은 지원하지 않습니다.")
-                          : _buildPlatformMobileWidget(context, url)
-                          : _buildPlatformDesktopWidget(context, url),
+                          : _buildPlatformWidget(url),
                     ],
                   ),
                 );
@@ -92,65 +77,64 @@ class _BlackDesertWallpaperScreenState
               controller: _scrollController, // ScrollController 할당
             ),
           ),
-          _buildPageNumbers(context, pageUrls, currentPage),
+          _buildPageNumbers(pageNumbers, currentPage, notifier),
         ],
       ),
     );
   }
 
-  Widget _buildPageNumbers(
-      BuildContext context, List<String> pageUrls, int currentPage) {
-    final pageNumbers = List.generate(pageUrls.length, (index) => index + 1);
+  Widget _wallPaperImage(String url) {
+    return Image.network(
+      url,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return const Center(child: CircularProgressIndicator());
+      },
+      errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+    );
+  }
+
+  Widget _buildPageNumbers(List<int> pageNumbers, int currentPage , BlackDesertWallpaperNotifier notifier) {
+    final pageUrlsList = notifier.wallpaperPage.pageUrls;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          onPressed: currentPage == 1
-              ? null
-              : () {
-            context
-                .read<BlackDesertWallpaperNotifier>()
-                .prevPage();
-            _scrollController.jumpTo(0); // 스크롤 맨 위로 이동
+          onPressed: currentPage == 1 ? null : () async {
+            notifier.prevPage();
+            _scrollController.jumpTo(0);
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              ...pageNumbers.map((i) => GestureDetector(
-                onTap: () {
-                  context
-                      .read<BlackDesertWallpaperNotifier>()
-                      .fetchImageListPage(i);
-                  _scrollController.jumpTo(0);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '$i',
-                    style: TextStyle(
-                      color: currentPage == i ? Colors.blue : Colors.black,
-                      fontWeight: currentPage == i
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                      fontSize: 20,
-                    ),
+        Row(
+          children: [
+            ...pageNumbers.map((i) => GestureDetector(
+              onTap: () async {
+                await notifier.fetchImageListPage(i);
+                _scrollController.jumpTo(0);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '$i',
+                  style: TextStyle(
+                    color: currentPage == i ? Colors.blue : Colors.black,
+                    fontWeight: currentPage == i
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                    fontSize: 20,
                   ),
                 ),
-              )),
-            ],
-          ),
+              ),
+            )),
+          ],
         ),
         IconButton(
-          onPressed: currentPage == pageUrls.length
-              ? null
-              : () {
-            context
-                .read<BlackDesertWallpaperNotifier>()
-                .nextPage();
-            _scrollController.jumpTo(0); // 스크롤 맨 위로 이동
+          onPressed: currentPage == pageUrlsList.length
+              ? null : () async {
+            notifier.nextPage();
+            _scrollController.jumpTo(0);
           },
           icon: const Icon(Icons.arrow_forward_ios),
         ),
@@ -158,7 +142,17 @@ class _BlackDesertWallpaperScreenState
     );
   }
 
-  Widget _buildPlatformMobileWidget(BuildContext context, String wallpaper) {
+  Widget _buildPlatformWidget(String wallpaper) {
+    if (Theme.of(context).platform == TargetPlatform.android) {
+      return _buildPlatformMobileWidget(wallpaper);
+    } else if (Theme.of(context).platform == TargetPlatform.iOS) {
+      return _buildPlatformMobileWidget(wallpaper);
+    } else {
+      return _buildPlatformDesktopWidget(wallpaper);
+    }
+  }
+
+  Widget _buildPlatformMobileWidget(String wallpaper) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -171,7 +165,7 @@ class _BlackDesertWallpaperScreenState
               errorToastDetails: ToastDetails(message: '잠금 화면 설정에 실패했습니다.'),
             );
           },
-          child: Text('잠금 화면'),
+          child: const Text('잠금 화면'),
         ),
         ElevatedButton(
           onPressed: () async {
@@ -182,14 +176,14 @@ class _BlackDesertWallpaperScreenState
               errorToastDetails: ToastDetails(message: '배경 화면 설정에 실패했습니다.'),
             );
           },
-          child: Text('배경 화면'),
+          child: const Text('배경 화면'),
         ),
       ],
     );
   }
 
-  Widget _buildPlatformDesktopWidget(BuildContext context, String wallpaper) {
-    return Row(
+  Widget _buildPlatformDesktopWidget(String wallpaper) {
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [Text("데스크탑은 준비중입니다")],
     );
