@@ -110,29 +110,25 @@ mixin WallpaperScreen<T extends StatefulWidget> on State<T> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        ElevatedButton(
-          onPressed: () async {
-            await AsyncWallpaper.setWallpaper(
-              url: wallpaper,
-              wallpaperLocation: AsyncWallpaper.LOCK_SCREEN,
-              toastDetails: ToastDetails(message: '잠금 화면이 성공적으로 설정되었습니다!'),
-              errorToastDetails: ToastDetails(message: '잠금 화면 설정에 실패했습니다.'),
-            );
-          },
-          child: const Text('잠금 화면'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            await AsyncWallpaper.setWallpaper(
-              url: wallpaper,
-              wallpaperLocation: AsyncWallpaper.HOME_SCREEN,
-              toastDetails: ToastDetails(message: '배경 화면이 성공적으로 설정되었습니다!'),
-              errorToastDetails: ToastDetails(message: '배경 화면 설정에 실패했습니다.'),
-            );
-          },
-          child: const Text('배경 화면'),
-        ),
+        buildWallpaperButton(wallpaper, '잠금 화면'),
+        buildWallpaperButton(wallpaper, '홈 화면'),
       ],
+    );
+  }
+
+  Widget buildWallpaperButton(String wallpaper, String text) {
+    return ElevatedButton(
+      onPressed: () async {
+        await AsyncWallpaper.setWallpaper(
+          url: wallpaper,
+          wallpaperLocation: text=='잠금 화면'
+              ? AsyncWallpaper.LOCK_SCREEN
+              : AsyncWallpaper.HOME_SCREEN,
+          toastDetails: ToastDetails(message: '$text이 성공적으로 설정되었습니다!'),
+          errorToastDetails: ToastDetails(message: '$text 설정에 실패했습니다.'),
+        );
+      },
+      child: Text(text),
     );
   }
 

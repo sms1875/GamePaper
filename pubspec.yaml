@@ -32,7 +32,6 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  image_picker: ^0.8.4+1
   path_provider: ^2.0.8
   http: ^0.13.3
   html: ^0.15.0
@@ -41,7 +40,6 @@ dependencies:
 
   #배경화면 설정 관련 패키지
   flutter_cache_manager: ^3.0.0
-  desktop_wallpaper_set: ^0.0.3
   async_wallpaper: ^2.0.0
 
 
