@@ -119,13 +119,42 @@ mixin WallpaperScreen<T extends StatefulWidget> on State<T> {
   Widget buildWallpaperButton(String wallpaper, String text) {
     return ElevatedButton(
       onPressed: () async {
-        await AsyncWallpaper.setWallpaper(
-          url: wallpaper,
-          wallpaperLocation: text=='잠금 화면'
-              ? AsyncWallpaper.LOCK_SCREEN
-              : AsyncWallpaper.HOME_SCREEN,
-          toastDetails: ToastDetails(message: '$text이 성공적으로 설정되었습니다!'),
-          errorToastDetails: ToastDetails(message: '$text 설정에 실패했습니다.'),
+        String result = 'Loading';
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            return const AlertDialog(
+              title: Text('Loading'),
+              content: LinearProgressIndicator(),
+            );
+          },
+        );
+        try {
+          await AsyncWallpaper.setWallpaper(
+            url: wallpaper,
+            wallpaperLocation: text == '잠금 화면'
+                ? AsyncWallpaper.LOCK_SCREEN
+                : AsyncWallpaper.HOME_SCREEN,
+          );
+          result = '$text이 설정되었습니다';
+        } catch (e) {
+          result = '$text 설정에 실패했습니다';
+        }
+        Navigator.pop(context);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Text(result),
+              actions: [
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            );
+          },
         );
       },
       child: Text(text),
