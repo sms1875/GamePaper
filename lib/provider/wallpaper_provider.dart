@@ -38,12 +38,7 @@ abstract class WallpaperProvider extends ChangeNotifier {
   }
 
   void setError(Object error) {
+    print(error);
     _error = error;
-    setLoading(false);
-  }
-
-  void setWallpaper(Wallpaper wallpaper) {
-    _wallpaperPage = wallpaper;
-    setLoading(false);
   }
 }

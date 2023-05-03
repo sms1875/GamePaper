@@ -10,20 +10,19 @@ class DungeonAndFighterWallpaperProvider extends WallpaperProvider {
 
   @override
   Future<void> update() async {
+    setLoading(true);
     try {
       wallpaperPage = ( await _dungeonAndFighterWallpaperRepository.fetchDungeonAndFighterWallpaper());
-      setLoading(false);
     } catch (e) {
-      wallpaperPage =
-          DungeonAndFighterWallpaper(page: 1, pageUrlsList: [], wallpapers: []);
-      setLoading(false);
       setError(e);
     }
+    setLoading(false);
     notifyListeners();
   }
 
   @override
   Future<void> fetchPage(int page) async {
+    setLoading(true);
     currentPageIndex = page;
     try {
       final result = await _dungeonAndFighterWallpaperRepository.fetchPage(
@@ -32,11 +31,7 @@ class DungeonAndFighterWallpaperProvider extends WallpaperProvider {
           page: page,
           pageUrlsList: wallpaperPage.pageUrlsList,
           wallpapers: result);
-      setLoading(false);
     } catch (e) {
-      wallpaperPage = DungeonAndFighterWallpaper(
-          page: page, pageUrlsList: [], wallpapers: []);
-      setLoading(false);
       setError(e);
     }
     notifyListeners();

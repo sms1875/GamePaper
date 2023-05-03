@@ -6,37 +6,34 @@ class BlackDesertWallpaperProvider extends WallpaperProvider {
   final BlackDesertWallpaperRepository _blackDesertWallpaperRepository = BlackDesertWallpaperRepository();
 
   @override
-  Wallpaper get wallpaperPage => _wallpaperPage;
-  Wallpaper _wallpaperPage = Wallpaper(page: 1, pageUrls: [], wallpapers: []);
+  Wallpaper wallpaperPage = Wallpaper(page: 1, pageUrls: [], wallpapers: []);
 
   @override
   Future<void> update() async {
+    setLoading(true);
     try {
-      _wallpaperPage = (await _blackDesertWallpaperRepository.fetchBlackDesertWallpaper());
-
-      setLoading(false);
+      wallpaperPage = (await _blackDesertWallpaperRepository.fetchBlackDesertWallpaper());
     } catch (e) {
-      _wallpaperPage = Wallpaper(page: 1, pageUrls: [], wallpapers: []);
-      setLoading(false);
       setError(e);
     }
+    setLoading(false);
     notifyListeners();
   }
 
   @override
   Future<void> fetchPage(int page) async {
+    setLoading(true);
     currentPageIndex = page;
     try{
       final result = await _blackDesertWallpaperRepository
           .fetchpage(page, wallpaperPage.pageUrls)
           .catchError((e) => _blackDesertWallpaperRepository.fetchpageOnError(page))
           .catchError((e) => e);
-      _wallpaperPage = Wallpaper(
+      wallpaperPage = Wallpaper(
           page: page,
           pageUrls: wallpaperPage.pageUrls,
           wallpapers: result);}
     catch(e){
-      setLoading(false);
       setError(e);
     }
     notifyListeners();

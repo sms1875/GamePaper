@@ -57,10 +57,9 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
       return GestureDetector(
         onTap: () async {
           if (!provider.isLoading) {
-            provider.setLoading(true);
             await provider.fetchPage(page);
             scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-            await Future.delayed(const Duration(seconds: 2)); // 2초 대기
+            await Future.delayed(const Duration(seconds: 2));
             provider.setLoading(false);
           }
         },
@@ -87,10 +86,9 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
               ? null
               : () async {
             if (!provider.isLoading) {
-              provider.setLoading(true);
               provider.prevPage();
               scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-              await Future.delayed(const Duration(seconds: 2)); // 2초 대기
+              await Future.delayed(const Duration(seconds: 2));
               provider.setLoading(false);
             }
           },
@@ -102,10 +100,9 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
         IconButton(
           onPressed: currentPage == pageNumbers.length ? null : () async {
             if (!provider.isLoading) {
-              provider.setLoading(true);
               provider.nextPage();
               scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-              await Future.delayed(const Duration(seconds: 2)); // 2초 대기
+              await Future.delayed(const Duration(seconds: 2));
               provider.setLoading(false);
             }
           },
@@ -142,8 +139,9 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
         onTap: () async {
           if (!provider.isLoading) {
             await provider.fetchPage(1);
-            scrollController.animateTo(
-                0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+            scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+            await Future.delayed(const Duration(seconds: 2));
+            provider.setLoading(false);
           }
         },
         child: Padding(
@@ -170,8 +168,9 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
         onTap: () async {
           if (!provider.isLoading) {
             await provider.fetchPage(page);
-            scrollController.animateTo(
-                0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+            scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+            await Future.delayed(const Duration(seconds: 2));
+            provider.setLoading(false);
           }
         },
         child: Padding(
@@ -197,8 +196,9 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
         onTap: () async {
           if (!provider.isLoading) {
             await provider.fetchPage(pageNumbers.length);
-            scrollController.animateTo(
-                0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+            scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+            await Future.delayed(const Duration(seconds: 2));
+            provider.setLoading(false);
           }
         },
         child: Padding(
