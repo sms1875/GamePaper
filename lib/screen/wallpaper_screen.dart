@@ -51,12 +51,18 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
 
   Widget buildPageNumbers(
       List<int> pageNumbers, int currentPage, WallpaperProvider provider) {
-    final gestureDetectors = List.generate(pageNumbers.length, (index) {
+    final gestureDetectors = pageNumbers.length < 9
+        ? List.generate(pageNumbers.length, (index) {
       final page = pageNumbers[index];
       return GestureDetector(
         onTap: () async {
-          await provider.fetchPage(page);
-          scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+          if (!provider.isLoading) {
+            provider.setLoading(true);
+            await provider.fetchPage(page);
+            scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+            await Future.delayed(const Duration(seconds: 2)); // 2초 대기
+            provider.setLoading(false);
+          }
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -70,15 +76,23 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
           ),
         ),
       );
-    });
+    })
+        : buildPageNumbera(currentPage, pageNumbers, provider);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          onPressed: currentPage == 1 ? null : () async {
-            provider.prevPage();
-            scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+          onPressed: currentPage == 1
+              ? null
+              : () async {
+            if (!provider.isLoading) {
+              provider.setLoading(true);
+              provider.prevPage();
+              scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+              await Future.delayed(const Duration(seconds: 2)); // 2초 대기
+              provider.setLoading(false);
+            }
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
@@ -87,13 +101,120 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
         ),
         IconButton(
           onPressed: currentPage == pageNumbers.length ? null : () async {
-            provider.nextPage();
-            scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+            if (!provider.isLoading) {
+              provider.setLoading(true);
+              provider.nextPage();
+              scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+              await Future.delayed(const Duration(seconds: 2)); // 2초 대기
+              provider.setLoading(false);
+            }
           },
           icon: const Icon(Icons.arrow_forward_ios),
         ),
       ],
     );
+  }
+
+  List<Widget> buildPageNumbera(int currentPage, List<int> pageNumbers, WallpaperProvider provider){
+    List<Widget> gestureDetectors = [];
+    final List<int> displayedPageNumbers = [];
+
+    int startingPage;
+    int endingPage;
+
+    if (currentPage <= 3) {
+      startingPage = 1;
+      endingPage = 5;
+    } else if (currentPage >= pageNumbers.length - 2) {
+      startingPage = pageNumbers.length - 4;
+      endingPage = pageNumbers.length;
+    } else {
+      startingPage = currentPage - 2;
+      endingPage = currentPage + 2;
+    }
+
+    for (int i = startingPage; i <= endingPage; i++) {
+      displayedPageNumbers.add(i);
+    }
+
+    if (startingPage > 1) {
+      gestureDetectors.add(GestureDetector(
+        onTap: () async {
+          if (!provider.isLoading) {
+            await provider.fetchPage(1);
+            scrollController.animateTo(
+                0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            '1',
+            style: TextStyle(
+              color: currentPage == 1 ? Colors.blue : Colors.black,
+              fontWeight: currentPage == 1 ? FontWeight.bold : FontWeight.normal,
+              fontSize: 20,
+            ),
+          ),
+        ),
+      ));
+
+      if (startingPage > 2) {
+        gestureDetectors.add(const Text('...'));
+      }
+    }
+
+    for (int i = 0; i < displayedPageNumbers.length; i++) {
+      final page = displayedPageNumbers[i];
+      gestureDetectors.add(GestureDetector(
+        onTap: () async {
+          if (!provider.isLoading) {
+            await provider.fetchPage(page);
+            scrollController.animateTo(
+                0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            '$page',
+            style: TextStyle(
+              color: currentPage == page ? Colors.blue : Colors.black,
+              fontWeight: currentPage == page ? FontWeight.bold : FontWeight.normal,
+              fontSize: 20,
+            ),
+          ),
+        ),
+      ));
+    }
+
+    if (endingPage < pageNumbers.length) {
+      if (endingPage < pageNumbers.length - 1) {
+        gestureDetectors.add(const Text('...'));
+      }
+
+      gestureDetectors.add(GestureDetector(
+        onTap: () async {
+          if (!provider.isLoading) {
+            await provider.fetchPage(pageNumbers.length);
+            scrollController.animateTo(
+                0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            '${pageNumbers.length}',
+            style: TextStyle(
+              color: currentPage == pageNumbers.length ? Colors.blue : Colors.black,
+              fontWeight: currentPage == pageNumbers.length ? FontWeight.bold : FontWeight.normal,
+              fontSize: 20,
+            ),
+          ),
+        ),
+      ));
+    }
+    return gestureDetectors;
   }
 
   Widget buildPlatformDependentWidget(String wallpaper) {
