@@ -9,8 +9,13 @@ abstract class WallpaperProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   Object? _error;
-  Object? get error => _error;
+  Object? get error {
+    final error=_error;
+    _error= null;
+    return error;
+  }
 
+  List<int> pageNumbers = [];
   int currentPageIndex = 1;
 
   Future<void> update() async {}

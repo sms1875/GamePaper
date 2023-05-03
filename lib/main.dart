@@ -16,9 +16,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => BlackDesertWallpaperProvider()..update()),
+            create: (_) => BlackDesertWallpaperProvider()),
         ChangeNotifierProvider(
-          create: (_) => DungeonAndFighterWallpaperProvider()..update()),
+          create: (_) => DungeonAndFighterWallpaperProvider()),
       ],
       child: const MaterialApp(
         title: 'Wallpaper Changer',

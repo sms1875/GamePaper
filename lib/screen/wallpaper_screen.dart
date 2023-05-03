@@ -119,14 +119,14 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
     int startingPage;
     int endingPage;
 
-    if (currentPage <= 3) {
+    if (currentPage <= 3) {    //1 2 3 4 5 ....
       startingPage = 1;
       endingPage = 5;
-    } else if (currentPage >= pageNumbers.length - 2) {
+    } else if (currentPage >= pageNumbers.length - 2) { // 1 ... 6 7 8 9 10
       startingPage = pageNumbers.length - 4;
       endingPage = pageNumbers.length;
     } else {
-      startingPage = currentPage - 2;
+      startingPage = currentPage - 2;  // ... 6 7 8 9 10  ...
       endingPage = currentPage + 2;
     }
 
@@ -219,12 +219,14 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
 
   Widget buildPlatformDependentWidget(String wallpaper) {
     final currentPlatform = Theme.of(context).platform;
-    if (currentPlatform == TargetPlatform.android) {
-      return buildMobileWallpaperWidget(wallpaper);
-    } else if (currentPlatform == TargetPlatform.iOS) {
-      return buildMobileWallpaperWidget(wallpaper);
-    } else {
-      return buildDesktopWallpaperWidget(wallpaper);
+
+    switch (currentPlatform){
+      case TargetPlatform.android:
+        return buildMobileWallpaperWidget(wallpaper);
+      case TargetPlatform.iOS:
+        return buildMobileWallpaperWidget(wallpaper);
+      default:
+        return buildDesktopWallpaperWidget(wallpaper);
     }
   }
 
@@ -300,7 +302,7 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
           children: [
             Icon(Icons.close, color: Colors.white, size: 60),
             SizedBox(height: 20),
-            Text("현재 사용할 수 없습니다", style: TextStyle(color: Colors.white, fontSize: 20)),
+            Text("지금은 사용할 수 없습니다 \n 잠시후 다시 시도해주세요", style: TextStyle(color: Colors.white, fontSize: 20)),
           ],
         ),
       ),

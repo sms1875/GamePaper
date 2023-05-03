@@ -12,7 +12,9 @@ class DungeonAndFighterWallpaperProvider extends WallpaperProvider {
   Future<void> update() async {
     setLoading(true);
     try {
+      currentPageIndex = 1;
       wallpaperPage = ( await _dungeonAndFighterWallpaperRepository.fetchDungeonAndFighterWallpaper());
+      pageNumbers = List.generate(wallpaperPage.pageUrlsList.length, (index) => index + 1);
     } catch (e) {
       setError(e);
     }

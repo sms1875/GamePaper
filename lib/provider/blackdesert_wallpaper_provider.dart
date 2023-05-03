@@ -12,7 +12,9 @@ class BlackDesertWallpaperProvider extends WallpaperProvider {
   Future<void> update() async {
     setLoading(true);
     try {
+      currentPageIndex = 1;
       wallpaperPage = (await _blackDesertWallpaperRepository.fetchBlackDesertWallpaper());
+      pageNumbers = List.generate(wallpaperPage.pageUrls.length, (index) => index + 1);
     } catch (e) {
       setError(e);
     }

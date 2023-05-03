@@ -9,8 +9,14 @@ class DungeonAndFighterWallpaperScreen extends StatefulWidget {
       _DungeonAndFighterWallpaperScreenState();
 }
 
-class _DungeonAndFighterWallpaperScreenState
-    extends State<DungeonAndFighterWallpaperScreen> with WallpaperMixin {
+class _DungeonAndFighterWallpaperScreenState extends State<DungeonAndFighterWallpaperScreen>
+    with WallpaperMixin {
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Provider.of<DungeonAndFighterWallpaperProvider>(context, listen: false).update();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +25,8 @@ class _DungeonAndFighterWallpaperScreenState
         final isLoading = dungeonAndFighterProvider.isLoading;
         final error = dungeonAndFighterProvider.error;
         final currentPage = dungeonAndFighterProvider.currentPageIndex;
+        final pageNumbers = dungeonAndFighterProvider.pageNumbers;
         final wallpapers = dungeonAndFighterProvider.wallpaperPage.wallpapers;
-        final pageNumbers = List.generate(
-            dungeonAndFighterProvider.wallpaperPage.pageUrlsList.length,
-                (index) => index + 1);
         return Scaffold(
           body: error != null
               ? buildErrorScreen()

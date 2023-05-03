@@ -13,16 +13,20 @@ class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen>
     with WallpaperMixin {
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Provider.of<BlackDesertWallpaperProvider>(context, listen: false).update();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<BlackDesertWallpaperProvider>(
       builder: (context, blackDesertProvider, child) {
         final isLoading = blackDesertProvider.isLoading;
         final error = blackDesertProvider.error;
         final currentPage = blackDesertProvider.currentPageIndex;
+        final pageNumbers = blackDesertProvider.pageNumbers;
         final wallpapers = blackDesertProvider.wallpaperPage.wallpapers;
-        final pageNumbers = List.generate(
-            blackDesertProvider.wallpaperPage.pageUrls.length,
-                (index) => index + 1);
         return Scaffold(
           body: error != null
               ? buildErrorScreen()
