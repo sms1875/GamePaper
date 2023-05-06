@@ -1,29 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/screen/blackdesert_wallpaper_screen.dart';
 import 'package:wallpaper/screen/df_wallpaper_screen.dart';
-
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: GridView.count(
-          crossAxisCount: 2,
-          children: [
-            buildButton(context, 'BlackDesert', BlackDesertWallpaperScreen()),
-            buildButton(context, 'Dungeon&Fighter', DungeonAndFighterWallpaperScreen()),
-            //buildButton(context, 'LeagueOfLegends', LeagueOfLegendsWallpaperScreen()),
-            //buildButton(context, 'MapleStory', MapleStoryWallpaperScreen()),
-            //buildButton(context, 'LostArk', LostArkWallpaper()),
-          ],
-        ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20),
+          Text("온라인 게임", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+          Expanded(
+            child: GridView.builder(
+              shrinkWrap: true,
+              itemCount: onlineGames.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 1,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                return buildButton(context, onlineGames[index]['title'], onlineGames[index]['image'], onlineGames[index]['page']);
+              },
+            ),
+          ),
+          SizedBox(height: 20),
+          const Text("콘솔 게임", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+          Expanded(
+            child: GridView.builder(
+              shrinkWrap: true,
+              itemCount: onlineGames.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 1,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                return buildButton(context, onlineGames[index]['title'], onlineGames[index]['image'], onlineGames[index]['page']);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget buildButton(BuildContext context, String title, Widget nextPage) {
+  Widget buildButton(BuildContext context, String title, String image, Widget nextPage) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -41,7 +63,7 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/${title.toLowerCase()}.png',
+              image,
               height: 100,
             ),
             SizedBox(height: 10),
@@ -55,3 +77,17 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+final List<Map<String, dynamic>> onlineGames =
+[
+  {
+    'title': 'Black Desert',
+    'image': 'assets/images/blackdesert.png',
+    'page': BlackDesertWallpaperScreen(),
+  },
+  {
+    'title': 'Dungeon & Fighter',
+    'image': 'assets/images/dungeon&fighter.png',
+    'page': DungeonAndFighterWallpaperScreen(),
+  },
+];

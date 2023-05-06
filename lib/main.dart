@@ -20,7 +20,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => DungeonAndFighterWallpaperProvider()),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Wallpaper Changer',
         home: HomePage(),
       ),
