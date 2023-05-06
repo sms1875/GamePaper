@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sms1875.wallpaper">
     <application
-        android:label="검은사막 월페이퍼"
+        android:label="게임 월페이퍼"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
