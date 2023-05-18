@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:wallpaper/screen/apexlegends_wallpaper_screen.dart';
 import 'package:wallpaper/screen/blackdesert_wallpaper_screen.dart';
 import 'package:wallpaper/screen/df_wallpaper_screen.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -13,35 +15,30 @@ class HomePage extends StatelessWidget {
           SizedBox(height: 20),
           Text("온라인 게임", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
           Expanded(
-            child: GridView.builder(
-              shrinkWrap: true,
-              itemCount: onlineGames.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 1,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return buildButton(context, onlineGames[index]['title'], onlineGames[index]['image'], onlineGames[index]['page']);
-              },
-            ),
+            child: buildGameGrid(context, onlineGames),
           ),
+          /*
           SizedBox(height: 20),
-          const Text("콘솔 게임", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+          Text("콘솔 게임", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
           Expanded(
-            child: GridView.builder(
-              shrinkWrap: true,
-              itemCount: onlineGames.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 1,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return buildButton(context, onlineGames[index]['title'], onlineGames[index]['image'], onlineGames[index]['page']);
-              },
-            ),
-          ),
+            child: buildGameGrid(context, consoleGames),
+          ),*/
         ],
       ),
+    );
+  }
+
+  Widget buildGameGrid(BuildContext context, List<Map<String, dynamic>> games) {
+    return GridView.builder(
+      shrinkWrap: true,
+      itemCount: games.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        childAspectRatio: 1,
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        return buildButton(context, games[index]['title'], games[index]['image'], games[index]['page']);
+      },
     );
   }
 
@@ -78,8 +75,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-final List<Map<String, dynamic>> onlineGames =
-[
+final List<Map<String, dynamic>> onlineGames = [
   {
     'title': 'Black Desert',
     'image': 'assets/images/blackdesert.png',
@@ -90,4 +86,13 @@ final List<Map<String, dynamic>> onlineGames =
     'image': 'assets/images/dungeon&fighter.png',
     'page': DungeonAndFighterWallpaperScreen(),
   },
+  {
+    'title': 'Apex Legends',
+    'image': 'assets/images/apexlegends.webp',
+    'page': ApexLegendsWallpaperScreen(),
+  },
+];
+
+final List<Map<String, dynamic>> consoleGames = [
+  // 콘솔 게임에 대한 데이터 추가
 ];
