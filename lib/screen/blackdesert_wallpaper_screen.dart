@@ -9,8 +9,7 @@ class BlackDesertWallpaperScreen extends StatefulWidget {
       _BlackDesertWallpaperScreenState();
 }
 
-class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen>
-    with WallpaperMixin {
+class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen> with WallpaperMixin {
 
   @override
   void didChangeDependencies() {

@@ -18,8 +18,8 @@ class BlackDesertWallpaperProvider extends WallpaperProvider {
     } catch (e) {
       setError(e);
     }
-    setLoading(false);
     notifyListeners();
+    setLoading(false);
   }
 
   @override

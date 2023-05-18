@@ -1,9 +1,9 @@
 import 'package:wallpaper/data/wallpaper.dart';
 import 'package:wallpaper/provider/wallpaper_provider.dart';
-import 'package:wallpaper/repository/df_wallpaper_repository.dart';
+import 'package:wallpaper/repository/apexlegends_wallpaper_repository.dart';
 
-class DungeonAndFighterWallpaperProvider extends WallpaperProvider {
-  final DungeonAndFighterWallpaperRepository _dungeonAndFighterWallpaperRepository = DungeonAndFighterWallpaperRepository();
+class ApexLegendsWallpaperProvider extends WallpaperProvider {
+  final ApexLegendsWallpaperRepository _apexLegendsWallpaperRepository = ApexLegendsWallpaperRepository();
 
   @override
   PagingWallpaper wallpaperPage = PagingWallpaper(page: 1, pageUrlsList: [], wallpapers: []);
@@ -13,7 +13,7 @@ class DungeonAndFighterWallpaperProvider extends WallpaperProvider {
     setLoading(true);
     try {
       currentPageIndex = 1;
-      wallpaperPage = ( await _dungeonAndFighterWallpaperRepository.fetchDungeonAndFighterWallpaper());
+      wallpaperPage = ( await _apexLegendsWallpaperRepository.fetchApexLegendsWallpaper());
       pageNumbers = List.generate(wallpaperPage.pageUrlsList.length, (index) => index + 1);
     } catch (e) {
       setError(e);
@@ -27,7 +27,7 @@ class DungeonAndFighterWallpaperProvider extends WallpaperProvider {
     setLoading(true);
     currentPageIndex = page;
     try {
-      final result = await _dungeonAndFighterWallpaperRepository.fetchPage(
+      final result = await _apexLegendsWallpaperRepository.fetchPage(
           page, wallpaperPage.pageUrlsList);
       wallpaperPage = PagingWallpaper(
           page: page,

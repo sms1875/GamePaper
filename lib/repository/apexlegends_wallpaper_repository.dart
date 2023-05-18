@@ -2,11 +2,11 @@ import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:wallpaper/data/wallpaper.dart';
 
-class DungeonAndFighterWallpaperRepository {
-  String baseUrl = 'https://df.nexon.com/df/pg/dfonwallpaper';
+class ApexLegendsWallpaperRepository {
+  String baseUrl = 'https://www.ea.com/ko-kr/games/apex-legends/media#wallpapers';
   PagingWallpaper? cachedWallpaper;
 
-  Future<PagingWallpaper> fetchDungeonAndFighterWallpaper() async {
+  Future<PagingWallpaper> fetchApexLegendsWallpaper() async {
     if (cachedWallpaper != null) {
       return cachedWallpaper!;
     }
@@ -15,20 +15,17 @@ class DungeonAndFighterWallpaperRepository {
     if (response.statusCode == 200) {
       final document = parse(response.body);
       final paging = document
-          .getElementById("wallpaper_container")!
-          .querySelectorAll('a')
+          .querySelectorAll('ea-game-box a')
           .map((a) => a.attributes['href']!)
-          .toSet()
+          .where((href) => href.contains('mobile'))
           .toList();
-
       int pageSize = 20;
       List<List<String>> pageUrlsList = List.generate(
           (paging.length / pageSize).ceil(),
               (i) => paging.skip(i * pageSize).take(pageSize).toList());
 
       print(pageUrlsList);
-      final wallpapers = await fetchPage(1, pageUrlsList); //초기화면
-      print(wallpapers);
+      final wallpapers = await fetchPage(1, pageUrlsList); // 초기화면
       final wallpaperData = PagingWallpaper(
         page: 1,
         pageUrlsList: pageUrlsList,
@@ -46,13 +43,7 @@ class DungeonAndFighterWallpaperRepository {
     List<Map<String, String>> wallpapers = [];
 
     List<Future<Map<String, String>>> futures = urls.map((url) async {
-      final response = await http.get(Uri.parse('$baseUrl$url'));
-      final document = parse(response.body);
-      final src = document
-          .getElementsByClassName("wp_more_img")
-          .first
-          .querySelector('img')?.attributes['src'] ?? '';
-      return {'src': "https:$src", 'url': url};
+      return {'src': url, 'url': url};
     }).toList();
 
     List<Map<String, String>> results = await Future.wait(futures);

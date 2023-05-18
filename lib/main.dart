@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wallpaper/provider/apexlegends_wallpaper_provider.dart';
 import 'package:wallpaper/provider/blackdesert_wallpaper_provider.dart';
 import 'package:wallpaper/provider/df_wallpaper_provider.dart';
 import 'package:wallpaper/screen/home_page.dart';
@@ -19,6 +20,8 @@ class MyApp extends StatelessWidget {
             create: (_) => BlackDesertWallpaperProvider()),
         ChangeNotifierProvider(
           create: (_) => DungeonAndFighterWallpaperProvider()),
+        ChangeNotifierProvider(
+            create: (_) => ApexLegendsWallpaperProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

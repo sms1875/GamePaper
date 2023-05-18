@@ -9,8 +9,7 @@ class DungeonAndFighterWallpaperScreen extends StatefulWidget {
       _DungeonAndFighterWallpaperScreenState();
 }
 
-class _DungeonAndFighterWallpaperScreenState extends State<DungeonAndFighterWallpaperScreen>
-    with WallpaperMixin {
+class _DungeonAndFighterWallpaperScreenState extends State<DungeonAndFighterWallpaperScreen> with WallpaperMixin {
 
   @override
   void didChangeDependencies() {
@@ -44,7 +43,8 @@ class _DungeonAndFighterWallpaperScreenState extends State<DungeonAndFighterWall
                       final url = wallpaper['src']!;
                       return buildWallpaperCard(url);
                     },
-                    controller: scrollController),
+                    controller: scrollController
+                ),
               ),
               buildPageNumbers(pageNumbers, currentPage, dungeonAndFighterProvider)
             ],

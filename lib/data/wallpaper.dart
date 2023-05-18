@@ -21,10 +21,10 @@ class Wallpaper {
   }
 }
 
-class DungeonAndFighterWallpaper extends Wallpaper {
+class PagingWallpaper extends Wallpaper {
   final List<List<String>> pageUrlsList;
 
-  DungeonAndFighterWallpaper({
+  PagingWallpaper({
     required int page,
     required this.pageUrlsList,
     required List<Map<String, String>> wallpapers,
@@ -34,12 +34,12 @@ class DungeonAndFighterWallpaper extends Wallpaper {
           wallpapers: wallpapers,
         );
 
-  factory DungeonAndFighterWallpaper.fromJson(Map<String, dynamic> json) {
+  factory PagingWallpaper.fromJson(Map<String, dynamic> json) {
     final int page = json['page'];
     final pageUrlsList = json['pageUrls'] as List<List<String>>;
     final wallpapers = json['wallpapers'] as List<Map<String, String>>;
 
-    return DungeonAndFighterWallpaper(
+    return PagingWallpaper(
       page: page,
       pageUrlsList: pageUrlsList,
       wallpapers: wallpapers,
