@@ -4,8 +4,13 @@ import 'package:wallpaper/data/wallpaper.dart';
 
 class DungeonAndFighterWallpaperRepository {
   String baseUrl = 'https://df.nexon.com/df/pg/dfonwallpaper';
+  DungeonAndFighterWallpaper? cachedWallpaper;
 
   Future<DungeonAndFighterWallpaper> fetchDungeonAndFighterWallpaper() async {
+    if (cachedWallpaper != null) {
+      return cachedWallpaper!;
+    }
+
     final response = await http.get(Uri.parse(baseUrl));
     if (response.statusCode == 200) {
       final document = parse(response.body);
@@ -19,14 +24,16 @@ class DungeonAndFighterWallpaperRepository {
       int pageSize = 20;
       List<List<String>> pageUrlsList = List.generate(
           (paging.length / pageSize).ceil(),
-          (i) => paging.skip(i * pageSize).take(pageSize).toList());
+              (i) => paging.skip(i * pageSize).take(pageSize).toList());
 
       final wallpapers = await fetchPage(1, pageUrlsList); //초기화면
-      return DungeonAndFighterWallpaper(
+      final wallpaperData = DungeonAndFighterWallpaper(
         page: 1,
         pageUrlsList: pageUrlsList,
         wallpapers: wallpapers,
       );
+      cachedWallpaper = wallpaperData;
+      return wallpaperData;
     } else {
       throw Exception('Failed to load HTML');
     }

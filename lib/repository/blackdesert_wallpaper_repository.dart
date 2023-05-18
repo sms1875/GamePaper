@@ -4,8 +4,13 @@ import 'package:http/http.dart' as http;
 
 class BlackDesertWallpaperRepository {
   String baseUrl = 'https://www.kr.playblackdesert.com/ko-KR/Data/Wallpaper/';
+  Wallpaper? cachedWallpaper;
 
   Future<Wallpaper> fetchBlackDesertWallpaper() async {
+    if (cachedWallpaper != null) {
+      return cachedWallpaper!;
+    }
+
     int page = 1;
     String getUrl = '?boardType=0&searchType=&searchText=&Page=$page';
     final response = await http.get(Uri.parse('$baseUrl$getUrl'));
@@ -18,12 +23,13 @@ class BlackDesertWallpaperRepository {
           .toSet()
           .toList();
       final wallpapers = await fetchpage(1, pageUrls);
-
-      return Wallpaper(
+      final wallpaperData = Wallpaper(
         page: page,
         pageUrls: pageUrls,
         wallpapers: wallpapers,
       );
+      cachedWallpaper = wallpaperData;
+      return wallpaperData;
     } else {
       throw Exception('Failed to load HTML');
     }
