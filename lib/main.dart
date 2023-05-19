@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:wallpaper/provider/apexlegends_wallpaper_provider.dart';
 import 'package:wallpaper/provider/blackdesert_wallpaper_provider.dart';
 import 'package:wallpaper/provider/df_wallpaper_provider.dart';
+import 'package:wallpaper/provider/eldenring_wallpaper_provider.dart';
 import 'package:wallpaper/screen/home_page.dart';
 
 void main() {
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => BlackDesertWallpaperProvider()),
         ChangeNotifierProvider(create: (_) => DungeonAndFighterWallpaperProvider()),
         ChangeNotifierProvider(create: (_) => ApexLegendsWallpaperProvider()),
+        ChangeNotifierProvider(create: (_) => EldenRingWallpaperProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

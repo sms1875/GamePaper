@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpaper/screen/apexlegends_wallpaper_screen.dart';
 import 'package:wallpaper/screen/blackdesert_wallpaper_screen.dart';
 import 'package:wallpaper/screen/df_wallpaper_screen.dart';
+import 'package:wallpaper/screen/eldenring_wallpaper_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,12 +18,11 @@ class HomePage extends StatelessWidget {
           Expanded(
             child: buildGameGrid(context, onlineGames),
           ),
-          /*
           SizedBox(height: 20),
           Text("콘솔 게임", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
           Expanded(
             child: buildGameGrid(context, consoleGames),
-          ),*/
+          ),
         ],
       ),
     );
@@ -94,5 +94,9 @@ final List<Map<String, dynamic>> onlineGames = [
 ];
 
 final List<Map<String, dynamic>> consoleGames = [
-  // 콘솔 게임에 대한 데이터 추가
+  {
+    'title': 'Elden Ring',
+    'image': 'assets/images/eldenring.jpg',
+    'page': EldenringWallpaperScreen(),
+  },
 ];
