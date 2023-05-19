@@ -28,8 +28,8 @@ class BlackDesertWallpaperProvider extends WallpaperProvider {
     currentPageIndex = page;
     try{
       final result = await _blackDesertWallpaperRepository
-          .fetchpage(page, wallpaperPage.pageUrls)
-          .catchError((e) => _blackDesertWallpaperRepository.fetchpageOnError(page))
+          .fetchPage(page, wallpaperPage.pageUrls)
+          .catchError((e) => _blackDesertWallpaperRepository.fetchNonMobileWallpapers(page))
           .catchError((e) => e);
       wallpaperPage = Wallpaper(
           page: page,

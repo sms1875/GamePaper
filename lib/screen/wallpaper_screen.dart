@@ -49,42 +49,12 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
     );
   }
 
-  Widget buildPageNumbers(
-      List<int> pageNumbers, int currentPage, WallpaperProvider provider) {
-    final gestureDetectors = pageNumbers.length < 9
-        ? List.generate(pageNumbers.length, (index) {
-      final page = pageNumbers[index];
-      return GestureDetector(
-        onTap: () async {
-          if (!provider.isLoading) {
-            await provider.fetchPage(page);
-            scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-            await Future.delayed(const Duration(seconds: 2));
-            provider.setLoading(false);
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            '$page',
-            style: TextStyle(
-              color: currentPage == page ? Colors.blue : Colors.black,
-              fontWeight: currentPage == page ? FontWeight.bold : FontWeight.normal,
-              fontSize: 20,
-            ),
-          ),
-        ),
-      );
-    })
-        : buildPageNumbera(currentPage, pageNumbers, provider);
-
+  Widget buildPageNumbers(List<int> pageNumbers, int currentPage, WallpaperProvider provider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          onPressed: currentPage == 1
-              ? null
-              : () async {
+          onPressed: currentPage == 1 ? null : () async {
             if (!provider.isLoading) {
               provider.prevPage();
               scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
@@ -94,8 +64,31 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
-        Row(
-          children: gestureDetectors,
+        Row(children: pageNumbers.length < 9 ? List.generate(pageNumbers.length, (index) {
+            final page = pageNumbers[index];
+            return GestureDetector(
+              onTap: () async {
+                if (!provider.isLoading) {
+                  await provider.fetchPage(page);
+                  scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                  await Future.delayed(const Duration(seconds: 2));
+                  provider.setLoading(false);
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '$page',
+                  style: TextStyle(
+                    color: currentPage == page ? Colors.blue : Colors.black,
+                    fontWeight: currentPage == page ? FontWeight.bold : FontWeight.normal,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            );
+          })
+            : buildPageNumber(currentPage, pageNumbers, provider),
         ),
         IconButton(
           onPressed: currentPage == pageNumbers.length ? null : () async {
@@ -112,9 +105,8 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
     );
   }
 
-  List<Widget> buildPageNumbera(int currentPage, List<int> pageNumbers, WallpaperProvider provider){
+  List<Widget> buildPageNumber(int currentPage, List<int> pageNumbers, WallpaperProvider provider){
     List<Widget> gestureDetectors = [];
-    final List<int> displayedPageNumbers = [];
 
     int startingPage;
     int endingPage;
@@ -130,9 +122,7 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
       endingPage = currentPage + 2;
     }
 
-    for (int i = startingPage; i <= endingPage; i++) {
-      displayedPageNumbers.add(i);
-    }
+    final List<int> displayedPageNumbers = List<int>.generate(endingPage - startingPage + 1, (index) => startingPage + index);
 
     if (startingPage > 1) {
       gestureDetectors.add(GestureDetector(
@@ -156,7 +146,6 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
           ),
         ),
       ));
-
       if (startingPage > 2) {
         gestureDetectors.add(const Text('...'));
       }
@@ -219,7 +208,6 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
 
   Widget buildPlatformDependentWidget(String wallpaper) {
     final currentPlatform = Theme.of(context).platform;
-
     switch (currentPlatform){
       case TargetPlatform.android:
         return buildMobileWallpaperWidget(wallpaper);

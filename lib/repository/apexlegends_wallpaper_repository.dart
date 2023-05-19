@@ -24,7 +24,6 @@ class ApexLegendsWallpaperRepository {
           (paging.length / pageSize).ceil(),
               (i) => paging.skip(i * pageSize).take(pageSize).toList());
 
-      print(pageUrlsList);
       final wallpapers = await fetchPage(1, pageUrlsList); // 초기화면
       final wallpaperData = PagingWallpaper(
         page: 1,
@@ -40,16 +39,15 @@ class ApexLegendsWallpaperRepository {
 
   Future<List<Map<String, String>>> fetchPage(int page, List<List<String>> pageUrls) async {
     List<String> urls = pageUrls[page - 1];
-    List<Map<String, String>> wallpapers = [];
-
-    List<Future<Map<String, String>>> futures = urls.map((url) async {
-      return {'src': url, 'url': url};
-    }).toList();
-
+    List<Future<Map<String, String>>> futures = urls.map((url) => fetchWallpaperInfo(url)).toList();
     List<Map<String, String>> results = await Future.wait(futures);
     results.sort((a, b) => urls.indexOf(a['url']!).compareTo(urls.indexOf(b['url']!)));
-    wallpapers.addAll(results);
 
-    return wallpapers;
+    return results;
   }
+
+  Future<Map<String, String>> fetchWallpaperInfo(String url) async {
+    return {'src': url, 'url': url};
+  }
+
 }

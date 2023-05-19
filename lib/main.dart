@@ -16,12 +16,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-            create: (_) => BlackDesertWallpaperProvider()),
-        ChangeNotifierProvider(
-          create: (_) => DungeonAndFighterWallpaperProvider()),
-        ChangeNotifierProvider(
-            create: (_) => ApexLegendsWallpaperProvider()),
+        ChangeNotifierProvider(create: (_) => BlackDesertWallpaperProvider()),
+        ChangeNotifierProvider(create: (_) => DungeonAndFighterWallpaperProvider()),
+        ChangeNotifierProvider(create: (_) => ApexLegendsWallpaperProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

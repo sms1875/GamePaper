@@ -26,9 +26,7 @@ class DungeonAndFighterWallpaperRepository {
           (paging.length / pageSize).ceil(),
               (i) => paging.skip(i * pageSize).take(pageSize).toList());
 
-      print(pageUrlsList);
       final wallpapers = await fetchPage(1, pageUrlsList); //초기화면
-      print(wallpapers);
       final wallpaperData = PagingWallpaper(
         page: 1,
         pageUrlsList: pageUrlsList,
@@ -43,22 +41,20 @@ class DungeonAndFighterWallpaperRepository {
 
   Future<List<Map<String, String>>> fetchPage(int page, List<List<String>> pageUrls) async {
     List<String> urls = pageUrls[page - 1];
-    List<Map<String, String>> wallpapers = [];
-
-    List<Future<Map<String, String>>> futures = urls.map((url) async {
-      final response = await http.get(Uri.parse('$baseUrl$url'));
-      final document = parse(response.body);
-      final src = document
-          .getElementsByClassName("wp_more_img")
-          .first
-          .querySelector('img')?.attributes['src'] ?? '';
-      return {'src': "https:$src", 'url': url};
-    }).toList();
-
+    List<Future<Map<String, String>>> futures = urls.map((url) => fetchWallpaperInfo(url)).toList();
     List<Map<String, String>> results = await Future.wait(futures);
     results.sort((a, b) => urls.indexOf(a['url']!).compareTo(urls.indexOf(b['url']!)));
-    wallpapers.addAll(results);
 
-    return wallpapers;
+    return results;
+  }
+
+  Future<Map<String, String>> fetchWallpaperInfo(String url) async {
+    final response = await http.get(Uri.parse('$baseUrl$url'));
+    final document = parse(response.body);
+    final src = document
+        .getElementsByClassName("wp_more_img")
+        .first
+        .querySelector('img')?.attributes['src'] ?? '';
+    return {'src': "https:$src", 'url': url};
   }
 }

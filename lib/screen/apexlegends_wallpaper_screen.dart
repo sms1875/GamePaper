@@ -19,37 +19,38 @@ class _ApexLegendsWallpaperScreenState extends State<ApexLegendsWallpaperScreen>
 
   @override
   Widget build(BuildContext context) {
-    final apexLegendsProvider = Provider.of<ApexLegendsWallpaperProvider>(context);
-    final isLoading = apexLegendsProvider.isLoading;
-    final error = apexLegendsProvider.error;
-    final currentPage = apexLegendsProvider.currentPageIndex;
-    final pageNumbers = apexLegendsProvider.pageNumbers;
-    final wallpapers = apexLegendsProvider.wallpaperPage.wallpapers;
-
-    return Scaffold(
-      body: error != null
-          ? buildErrorScreen()
-          : Column(
-        children: [
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 9 / 16,
+    return Consumer<ApexLegendsWallpaperProvider>(
+      builder: (context, apexLegendsProvider, child) {
+        final isLoading = apexLegendsProvider.isLoading;
+        final error = apexLegendsProvider.error;
+        final currentPage = apexLegendsProvider.currentPageIndex;
+        final pageNumbers = apexLegendsProvider.pageNumbers;
+        final wallpapers = apexLegendsProvider.wallpaperPage.wallpapers;
+        return Scaffold(
+          body: error != null
+              ? buildErrorScreen()
+              : Column(
+            children: [
+              Expanded(
+                child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 9 / 16,
+                    ),
+                    itemCount: apexLegendsProvider.wallpaperPage.wallpapers.length,
+                    itemBuilder: (context, index) {
+                      final wallpaper = wallpapers[index];
+                      final url = wallpaper['src']!;
+                      return buildWallpaperCard(url);
+                    },
+                    controller: scrollController
+                ),
               ),
-              itemCount: wallpapers.length,
-              itemBuilder: (context, index) {
-                final wallpaper = wallpapers[index];
-                final url = wallpaper['src']!;
-                return buildWallpaperCard(url);
-              },
-              controller: scrollController,
-            ),
+              buildPageNumbers(pageNumbers, currentPage, apexLegendsProvider)
+            ],
           ),
-          buildPageNumbers(pageNumbers, currentPage, apexLegendsProvider),
-        ],
-      ),
+        );
+      },
     );
   }
-
 }
