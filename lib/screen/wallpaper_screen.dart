@@ -21,7 +21,7 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
     );
   }
 
-  Widget buildWallpaperCard(String url, {bool isMobileUnSupported = false}) {
+  Widget buildWallpaperCard(String url) {
     return Card(
       child: Column(
         children: [
@@ -41,9 +41,7 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
               child: buildWallpaperImage(url),
             ),
           ),
-          isMobileUnSupported
-              ? const Text("모바일은 지원하지 않습니다.")
-              : buildPlatformDependentWidget(url)
+          buildWallpaperSettingBtnWidget(url),
         ],
       ),
     );
@@ -206,19 +204,7 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
     return gestureDetectors;
   }
 
-  Widget buildPlatformDependentWidget(String wallpaper) {
-    final currentPlatform = Theme.of(context).platform;
-    switch (currentPlatform){
-      case TargetPlatform.android:
-        return buildMobileWallpaperWidget(wallpaper);
-      case TargetPlatform.iOS:
-        return buildMobileWallpaperWidget(wallpaper);
-      default:
-        return buildDesktopWallpaperWidget(wallpaper);
-    }
-  }
-
-  Widget buildMobileWallpaperWidget(String wallpaper) {
+  Widget buildWallpaperSettingBtnWidget(String wallpaper) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -271,13 +257,6 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
         );
       },
       child: Text(text),
-    );
-  }
-
-  Widget buildDesktopWallpaperWidget(String wallpaper) {
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [Text("데스크탑은 준비중입니다")],
     );
   }
 

@@ -33,29 +33,20 @@ class _BlackDesertWallpaperScreenState extends State<BlackDesertWallpaperScreen>
             children: [
               Expanded(
                 child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 9 / 16,
-                  ),
-                  itemCount: wallpapers.length,
-                  itemBuilder: (context, index) {
-                    final wallpaper = wallpapers[index];
-                    var url =
-                    Theme.of(context).platform == TargetPlatform.android ||
-                        Theme.of(context).platform == TargetPlatform.iOS
-                        ? wallpaper['attr-img_m']
-                        : wallpaper['attr-img'];
-                    //모바일이 지원 안되는 월페이퍼 구분
-                    if (!url!.startsWith('http')) {
-                      url = wallpaper['src'];
-                    }
-                    return buildWallpaperCard(url!,
-                        isMobileUnSupported: url == wallpaper['src']);
-                  },
-                  controller: scrollController,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 9 / 16,
+                    ),
+                    itemCount: wallpapers.length,
+                    itemBuilder: (context, index) {
+                      final wallpaper = wallpapers[index];
+                      final url = wallpaper['src']!;
+                      return buildWallpaperCard(url);
+                    },
+                    controller: scrollController
                 ),
               ),
-              buildPageNumbers(pageNumbers, currentPage, blackDesertProvider),
+              buildPageNumbers(pageNumbers, currentPage, blackDesertProvider)
             ],
           ),
         );

@@ -6,15 +6,15 @@ class BlackDesertWallpaperProvider extends WallpaperProvider {
   final BlackDesertWallpaperRepository _blackDesertWallpaperRepository = BlackDesertWallpaperRepository();
 
   @override
-  Wallpaper wallpaperPage = Wallpaper(page: 1, pageUrls: [], wallpapers: []);
+  Wallpaper wallpaperPage = Wallpaper(page: 1, pageUrlsList: [], wallpapers: []);
 
   @override
   Future<void> update() async {
     setLoading(true);
     try {
       currentPageIndex = 1;
-      wallpaperPage = (await _blackDesertWallpaperRepository.fetchBlackDesertWallpaper());
-      pageNumbers = List.generate(wallpaperPage.pageUrls.length, (index) => index + 1);
+      wallpaperPage = await _blackDesertWallpaperRepository.fetchWallpaper();
+      pageNumbers = List.generate(wallpaperPage.pageUrlsList.length, (index) => index + 1);
     } catch (e) {
       setError(e);
     }
@@ -26,16 +26,14 @@ class BlackDesertWallpaperProvider extends WallpaperProvider {
   Future<void> fetchPage(int page) async {
     setLoading(true);
     currentPageIndex = page;
-    try{
-      final result = await _blackDesertWallpaperRepository
-          .fetchPage(page, wallpaperPage.pageUrls)
-          .catchError((e) => _blackDesertWallpaperRepository.fetchNonMobileWallpapers(page))
-          .catchError((e) => e);
+    try {
+      final result = await _blackDesertWallpaperRepository.fetchPage(
+          page, wallpaperPage.pageUrlsList);
       wallpaperPage = Wallpaper(
           page: page,
-          pageUrls: wallpaperPage.pageUrls,
-          wallpapers: result);}
-    catch(e){
+          pageUrlsList: wallpaperPage.pageUrlsList,
+          wallpapers: result);
+    } catch (e) {
       setError(e);
     }
     notifyListeners();

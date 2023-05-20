@@ -6,14 +6,14 @@ class EldenRingWallpaperProvider extends WallpaperProvider {
   final EldenRingWallpaperRepository _eldenRingWallpaperRepository = EldenRingWallpaperRepository();
 
   @override
-  PagingWallpaper wallpaperPage = PagingWallpaper(page: 1, pageUrlsList: [], wallpapers: []);
+  Wallpaper wallpaperPage = Wallpaper(page: 1, pageUrlsList: [], wallpapers: []);
 
   @override
   Future<void> update() async {
     setLoading(true);
     try {
       currentPageIndex = 1;
-      wallpaperPage = ( await _eldenRingWallpaperRepository.fetchEldenRingWallpaper());
+      wallpaperPage = await _eldenRingWallpaperRepository.fetchWallpaper();
       pageNumbers = List.generate(wallpaperPage.pageUrlsList.length, (index) => index + 1);
     } catch (e) {
       setError(e);
@@ -29,7 +29,7 @@ class EldenRingWallpaperProvider extends WallpaperProvider {
     try {
       final result = await _eldenRingWallpaperRepository.fetchPage(
           page, wallpaperPage.pageUrlsList);
-      wallpaperPage = PagingWallpaper(
+      wallpaperPage = Wallpaper(
           page: page,
           pageUrlsList: wallpaperPage.pageUrlsList,
           wallpapers: result);

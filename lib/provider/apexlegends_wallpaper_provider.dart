@@ -6,14 +6,14 @@ class ApexLegendsWallpaperProvider extends WallpaperProvider {
   final ApexLegendsWallpaperRepository _apexLegendsWallpaperRepository = ApexLegendsWallpaperRepository();
 
   @override
-  PagingWallpaper wallpaperPage = PagingWallpaper(page: 1, pageUrlsList: [], wallpapers: []);
+  Wallpaper wallpaperPage = Wallpaper(page: 1, pageUrlsList: [], wallpapers: []);
 
   @override
   Future<void> update() async {
     setLoading(true);
     try {
       currentPageIndex = 1;
-      wallpaperPage = ( await _apexLegendsWallpaperRepository.fetchApexLegendsWallpaper());
+      wallpaperPage = await _apexLegendsWallpaperRepository.fetchWallpaper();
       pageNumbers = List.generate(wallpaperPage.pageUrlsList.length, (index) => index + 1);
     } catch (e) {
       setError(e);
@@ -29,7 +29,7 @@ class ApexLegendsWallpaperProvider extends WallpaperProvider {
     try {
       final result = await _apexLegendsWallpaperRepository.fetchPage(
           page, wallpaperPage.pageUrlsList);
-      wallpaperPage = PagingWallpaper(
+      wallpaperPage = Wallpaper(
           page: page,
           pageUrlsList: wallpaperPage.pageUrlsList,
           wallpapers: result);

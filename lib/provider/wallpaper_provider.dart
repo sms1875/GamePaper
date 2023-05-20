@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpaper/data/wallpaper.dart';
 
 abstract class WallpaperProvider extends ChangeNotifier {
-  Wallpaper _wallpaperPage = Wallpaper(page: 1, pageUrls: [], wallpapers: []);
+  Wallpaper _wallpaperPage = Wallpaper(page: 1, pageUrlsList: [], wallpapers: []);
   Wallpaper get wallpaperPage => _wallpaperPage;
 
   bool _isLoading = true;
@@ -26,7 +26,7 @@ abstract class WallpaperProvider extends ChangeNotifier {
 
   void nextPage() {
     final nextPage = wallpaperPage.page + 1;
-    if (nextPage <= wallpaperPage.pageUrls.length) {
+    if (nextPage <= wallpaperPage.pageUrlsList.length) {
       fetchPage(nextPage);
     }
   }
