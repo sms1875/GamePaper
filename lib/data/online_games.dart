@@ -25,7 +25,7 @@ final List<Map<String, dynamic>> onlineGames = [
   },
   {
     'title': 'Mabinogi',
-    'image': 'assets/images/apexlegends.webp',
+    'image': 'assets/images/mabinogi.png',
     'page': MabinogiWallpaperScreen(provider: MabinogiWallpaperProvider()),
   },
 ];

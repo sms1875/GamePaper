@@ -40,6 +40,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
+
   Widget buildButton(BuildContext context, String title, String image, Widget nextPage) {
     return GestureDetector(
       onTap: () {
@@ -64,7 +65,19 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               title,
-              style: const TextStyle(fontSize: 18),
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.white,
+                decoration: TextDecoration.none,
+                fontWeight: FontWeight.normal,
+                shadows: [
+                  Shadow(
+                    color: Colors.black,
+                    offset: Offset(0.5, 0.5),
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

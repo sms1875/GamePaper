@@ -6,7 +6,7 @@ import 'package:wallpaper/screen/monsterhunter_wallpaper_screen.dart';
 final List<Map<String, dynamic>> consoleGames = [
   {
     'title': 'Elden Ring',
-    'image': 'assets/images/eldenring.jpg',
+    'image': 'assets/images/eldenring.png',
     'page': EldenringWallpaperScreen(provider: EldenRingWallpaperProvider()),
   },
   {
