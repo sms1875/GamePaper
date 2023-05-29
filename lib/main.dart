@@ -4,6 +4,7 @@ import 'package:wallpaper/provider/apexlegends_wallpaper_provider.dart';
 import 'package:wallpaper/provider/blackdesert_wallpaper_provider.dart';
 import 'package:wallpaper/provider/df_wallpaper_provider.dart';
 import 'package:wallpaper/provider/eldenring_wallpaper_provider.dart';
+import 'package:wallpaper/provider/mabinogi_wallpaper_provider.dart';
 import 'package:wallpaper/provider/monsterhunter_wallpaper_provider.dart';
 import 'package:wallpaper/screen/home_page.dart';
 
@@ -23,8 +24,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ApexLegendsWallpaperProvider()),
         ChangeNotifierProvider(create: (_) => EldenRingWallpaperProvider()),
         ChangeNotifierProvider(create: (_) => MonsterHunterWallpaperProvider()),
+        ChangeNotifierProvider(create: (_) => MabinogiWallpaperProvider()),
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Wallpaper Changer',
         home: HomePage(),
