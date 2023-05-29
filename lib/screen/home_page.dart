@@ -11,13 +11,13 @@ class HomePage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20),
-          Text("온라인 게임", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 20),
+          const Text("온라인 게임", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
           Expanded(
             child: buildGameGrid(context, onlineGames),
           ),
-          SizedBox(height: 20),
-          Text("콘솔 게임", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 20),
+          const Text("콘솔 게임", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
           Expanded(
             child: buildGameGrid(context, consoleGames),
           ),
@@ -49,7 +49,7 @@ class HomePage extends StatelessWidget {
         );
       },
       child: Container(
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.grey[300],
@@ -61,10 +61,10 @@ class HomePage extends StatelessWidget {
               image,
               height: 100,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               title,
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
           ],
         ),

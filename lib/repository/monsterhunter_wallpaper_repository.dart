@@ -10,7 +10,6 @@ class MonsterHunterWallpaperRepository extends WallpaperRepository {
     return document
         .querySelectorAll('.wallpaperBox_ver > ul > li > p.btn > a')
         .map((a) => a.attributes['href']!)
-        .toSet()
         .toList();
   }
 

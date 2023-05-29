@@ -3,13 +3,71 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpaper/provider/wallpaper_provider.dart';
 
-mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
+abstract class AbstractWallpaperScreen extends StatefulWidget {
+  final WallpaperProvider wallpaperProvider;
+
+  const AbstractWallpaperScreen({super.key, required this.wallpaperProvider});
+
+  @override
+  State<StatefulWidget> createState() => _AbstractWallpaperScreenState();
+}
+
+class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
   final scrollController = ScrollController();
+  late WallpaperProvider wallpaperProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    wallpaperProvider = widget.wallpaperProvider;
+    wallpaperProvider.update(); //페이지 업데이트
+    wallpaperProvider.addListener(updatePageNumbers); // 페이지 번호 갱신을 위해 리스너 추가
+  }
 
   @override
   void dispose() {
     scrollController.dispose();
+    wallpaperProvider.removeListener(updatePageNumbers); // 리스너 제거
     super.dispose();
+  }
+
+  void updatePageNumbers() {
+    setState(() {}); // 상태 변경을 통해 build 메서드 호출
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isLoading = wallpaperProvider.isLoading;
+    final error = wallpaperProvider.error;
+    final currentPage = wallpaperProvider.currentPageIndex;
+    final pageNumbers = wallpaperProvider.pageNumbers;
+    final wallpapers = wallpaperProvider.wallpaperPage.wallpapers;
+
+    return Scaffold(
+      body: error != null
+          ? buildErrorScreen()
+          : Column(
+        children: [
+          Expanded(
+            child: GridView.builder(
+              gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 9 / 16,
+              ),
+              itemCount: wallpapers.length,
+              itemBuilder: (context, index) {
+                final wallpaper = wallpapers[index];
+                final url = wallpaper['src']!;
+                return buildWallpaperCard(url);
+              },
+              controller: scrollController,
+            ),
+          ),
+          buildPageNumbers(pageNumbers, currentPage, wallpaperProvider),
+        ],
+      ),
+    );
   }
 
   Widget buildWallpaperImage(String url) {
@@ -63,29 +121,29 @@ mixin WallpaperMixin<T extends StatefulWidget> on State<T> {
           icon: const Icon(Icons.arrow_back_ios),
         ),
         Row(children: pageNumbers.length < 9 ? List.generate(pageNumbers.length, (index) {
-            final page = pageNumbers[index];
-            return GestureDetector(
-              onTap: () async {
-                if (!provider.isLoading) {
-                  await provider.fetchPage(page);
-                  scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                  await Future.delayed(const Duration(seconds: 2));
-                  provider.setLoading(false);
-                }
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  '$page',
-                  style: TextStyle(
-                    color: currentPage == page ? Colors.blue : Colors.black,
-                    fontWeight: currentPage == page ? FontWeight.bold : FontWeight.normal,
-                    fontSize: 20,
-                  ),
+          final page = pageNumbers[index];
+          return GestureDetector(
+            onTap: () async {
+              if (!provider.isLoading) {
+                await provider.fetchPage(page);
+                scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                await Future.delayed(const Duration(seconds: 2));
+                provider.setLoading(false);
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                '$page',
+                style: TextStyle(
+                  color: currentPage == page ? Colors.blue : Colors.black,
+                  fontWeight: currentPage == page ? FontWeight.bold : FontWeight.normal,
+                  fontSize: 20,
                 ),
               ),
-            );
-          })
+            ),
+          );
+        })
             : buildPageNumber(currentPage, pageNumbers, provider),
         ),
         IconButton(

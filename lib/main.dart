@@ -1,11 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:wallpaper/provider/apexlegends_wallpaper_provider.dart';
-import 'package:wallpaper/provider/blackdesert_wallpaper_provider.dart';
-import 'package:wallpaper/provider/df_wallpaper_provider.dart';
-import 'package:wallpaper/provider/eldenring_wallpaper_provider.dart';
-import 'package:wallpaper/provider/mabinogi_wallpaper_provider.dart';
-import 'package:wallpaper/provider/monsterhunter_wallpaper_provider.dart';
 import 'package:wallpaper/screen/home_page.dart';
 
 void main() {
@@ -17,20 +10,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => BlackDesertWallpaperProvider()),
-        ChangeNotifierProvider(create: (_) => DungeonAndFighterWallpaperProvider()),
-        ChangeNotifierProvider(create: (_) => ApexLegendsWallpaperProvider()),
-        ChangeNotifierProvider(create: (_) => EldenRingWallpaperProvider()),
-        ChangeNotifierProvider(create: (_) => MonsterHunterWallpaperProvider()),
-        ChangeNotifierProvider(create: (_) => MabinogiWallpaperProvider()),
-      ],
-      child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Wallpaper Changer',
-        home: HomePage(),
-      ),
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Wallpaper Changer',
+      home: HomePage(),
     );
   }
 }
