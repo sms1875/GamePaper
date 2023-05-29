@@ -1,5 +1,4 @@
 import 'package:html/parser.dart';
-import 'package:wallpaper/data/wallpaper.dart';
 import 'package:http/http.dart' as http;
 import 'package:wallpaper/repository/wallpaper_repository.dart';
 
