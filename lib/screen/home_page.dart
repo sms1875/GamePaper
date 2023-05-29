@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaper/screen/apexlegends_wallpaper_screen.dart';
-import 'package:wallpaper/screen/blackdesert_wallpaper_screen.dart';
-import 'package:wallpaper/screen/df_wallpaper_screen.dart';
-import 'package:wallpaper/screen/eldenring_wallpaper_screen.dart';
-import 'package:wallpaper/screen/monsterhunter_wallpaper_screen.dart';
+import 'package:wallpaper/data/console_games.dart';
+import 'package:wallpaper/data/online_games.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -75,34 +72,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
-final List<Map<String, dynamic>> onlineGames = [
-  {
-    'title': 'Black Desert',
-    'image': 'assets/images/blackdesert.png',
-    'page': BlackDesertWallpaperScreen(),
-  },
-  {
-    'title': 'Dungeon & Fighter',
-    'image': 'assets/images/dungeon&fighter.png',
-    'page': DungeonAndFighterWallpaperScreen(),
-  },
-  {
-    'title': 'Apex Legends',
-    'image': 'assets/images/apexlegends.webp',
-    'page': ApexLegendsWallpaperScreen(),
-  },
-];
-
-final List<Map<String, dynamic>> consoleGames = [
-  {
-    'title': 'Elden Ring',
-    'image': 'assets/images/eldenring.jpg',
-    'page': EldenringWallpaperScreen(),
-  },
-  {
-    'title': 'Monster Hunter',
-    'image': 'assets/images/monster_hunter.webp',
-    'page': MonsterHunterWallpaperScreen(),
-  },
-];

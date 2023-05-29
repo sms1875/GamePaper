@@ -1,4 +1,3 @@
-import 'package:wallpaper/data/wallpaper.dart';
 import 'package:wallpaper/provider/wallpaper_provider.dart';
 import 'package:wallpaper/repository/eldenring_wallpaper_repository.dart';
 
