@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/data/wallpaper.dart';
+import 'package:wallpaper/repository/wallpaper_repository.dart';
 
 abstract class WallpaperProvider extends ChangeNotifier {
-  Wallpaper _wallpaperPage = Wallpaper(page: 1, pageUrlsList: [], wallpapers: []);
-  Wallpaper get wallpaperPage => _wallpaperPage;
+  final WallpaperRepository _wallpaperRepository;
+  Wallpaper wallpaperPage = Wallpaper(page: 1, pageUrlsList: [], wallpapers: []);
+
+  WallpaperProvider(this._wallpaperRepository);
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -18,10 +21,33 @@ abstract class WallpaperProvider extends ChangeNotifier {
   List<int> pageNumbers = [];
   int currentPageIndex = 1;
 
-  Future<void> update() async {}
+  Future<void> update() async {
+    setLoading(true);
+    try {
+      currentPageIndex = 1;
+      wallpaperPage = await _wallpaperRepository.fetchWallpaper();
+      pageNumbers = List.generate(wallpaperPage.pageUrlsList.length, (index) => index + 1);
+    } catch (e) {
+      setError(e);
+    }
+    notifyListeners();
+    setLoading(false);
+  }
 
   Future<void> fetchPage(int page) async {
+    setLoading(true);
     currentPageIndex = page;
+    try {
+      final result = await _wallpaperRepository.fetchPage(
+          page, wallpaperPage.pageUrlsList);
+      wallpaperPage = Wallpaper(
+          page: page,
+          pageUrlsList: wallpaperPage.pageUrlsList,
+          wallpapers: result);
+    } catch (e) {
+      setError(e);
+    }
+    notifyListeners();
   }
 
   void nextPage() {
