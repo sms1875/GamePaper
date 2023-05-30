@@ -1,25 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaper/data/console_games.dart';
-import 'package:wallpaper/data/online_games.dart';
+import 'package:wallpaper/data/game_list.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    gameList.sort((a, b) => a['title'].compareTo(b['title'])); // 알파벳 순서 정렬
+
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20),
-          const Text("온라인 게임", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
           Expanded(
-            child: buildGameGrid(context, onlineGames),
-          ),
-          const SizedBox(height: 20),
-          const Text("콘솔 게임", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-          Expanded(
-            child: buildGameGrid(context, consoleGames),
+            child: buildGameGrid(context, gameList),
           ),
         ],
       ),
@@ -27,21 +21,67 @@ class HomePage extends StatelessWidget {
   }
 
   Widget buildGameGrid(BuildContext context, List<Map<String, dynamic>> games) {
-    return GridView.builder(
+    final gameMap = groupGamesByAlphabet(games);
+
+    return ListView.builder(
       shrinkWrap: true,
-      itemCount: games.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 1,
-      ),
+      itemCount: gameMap.length,
       itemBuilder: (BuildContext context, int index) {
-        return buildButton(context, games[index]['title'], games[index]['image'], games[index]['page']);
+        final alphabet = gameMap.keys.elementAt(index);
+        final gamesByAlphabet = gameMap[alphabet]!;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text(
+                alphabet.toUpperCase(),
+                style: const TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 7 * 4),
+              ),
+              itemCount: gamesByAlphabet.length,
+              itemBuilder: (BuildContext context, int index) {
+                final game = gamesByAlphabet[index];
+                return buildGameShortcut(
+                  context,
+                  game['title'],
+                  game['image'],
+                  game['page'],
+                );
+              },
+            ),
+          ],
+        );
       },
     );
   }
 
+  Map<String, List<Map<String, dynamic>>> groupGamesByAlphabet(List<Map<String, dynamic>> games) {
+    final gameMap = <String, List<Map<String, dynamic>>>{};
 
-  Widget buildButton(BuildContext context, String title, String image, Widget nextPage) {
+    for (final game in games) {
+      final title = game['title'];
+      final alphabet = title[0].toUpperCase();
+
+      gameMap.putIfAbsent(alphabet, () => <Map<String, dynamic>>[]);
+      gameMap[alphabet]!.add(game);
+    }
+
+    return gameMap;
+  }
+
+  Widget buildGameShortcut(BuildContext context, String title, String image, Widget nextPage) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -49,24 +89,19 @@ class HomePage extends StatelessWidget {
           MaterialPageRoute(builder: (context) => nextPage),
         );
       },
-      child: Container(
-        margin: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.grey[300],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              image,
-              height: 100,
-            ),
-            const SizedBox(height: 10),
-            Text(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            image,
+            height: 80,
+            width: 80,
+          ),
+          Expanded(
+            child: Text(
               title,
               style: const TextStyle(
-                fontSize: 18,
+                fontSize: 17,
                 color: Colors.white,
                 decoration: TextDecoration.none,
                 fontWeight: FontWeight.normal,
@@ -78,9 +113,12 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
+              maxLines: 2, // 최대 두 줄까지 표시
+              textAlign: TextAlign.center, // 글자를 가운데로 정렬
+              overflow: TextOverflow.ellipsis, // 넘치는 글자는 ...으로 표시
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
