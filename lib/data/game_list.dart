@@ -2,12 +2,14 @@ import 'package:wallpaper/provider/apexlegends_wallpaper_provider.dart';
 import 'package:wallpaper/provider/blackdesert_wallpaper_provider.dart';
 import 'package:wallpaper/provider/df_wallpaper_provider.dart';
 import 'package:wallpaper/provider/eldenring_wallpaper_provider.dart';
+import 'package:wallpaper/provider/finalfantasy14_wallpaper_provider.dart';
 import 'package:wallpaper/provider/mabinogi_wallpaper_provider.dart';
 import 'package:wallpaper/provider/monsterhunter_wallpaper_provider.dart';
 import 'package:wallpaper/screen/apexlegends_wallpaper_screen.dart';
 import 'package:wallpaper/screen/blackdesert_wallpaper_screen.dart';
 import 'package:wallpaper/screen/df_wallpaper_screen.dart';
 import 'package:wallpaper/screen/eldenring_wallpaper_screen.dart';
+import 'package:wallpaper/screen/finalfantasy14_wallpaper_screen.dart';
 import 'package:wallpaper/screen/mabinogi_wallpaper_screen.dart';
 import 'package:wallpaper/screen/monsterhunter_wallpaper_screen.dart';
 
@@ -41,6 +43,11 @@ final List<Map<String, dynamic>> gameList = [
     'title': 'Monster Hunter',
     'image': 'assets/images/monster_hunter.webp',
     'page': MonsterHunterWallpaperScreen(provider: MonsterHunterWallpaperProvider()),
+  },
+  {
+    'title': 'Final Fantasy XIV',
+    'image': 'assets/images/finalfantasy14.png',
+    'page': FinalFantasyWallpaperScreen(provider: FinalFantasy14WallpaperProvider()),
   },
 ];
 
