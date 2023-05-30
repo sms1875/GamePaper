@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
-                childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 7 * 4),
+                childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 6 * 4),
               ),
               itemCount: gamesByAlphabet.length,
               itemBuilder: (BuildContext context, int index) {
