@@ -7,6 +7,7 @@ import 'package:wallpaper/provider/finalfantasy14_wallpaper_provider.dart';
 import 'package:wallpaper/provider/mabinogi_wallpaper_provider.dart';
 import 'package:wallpaper/provider/maplestory2_wallpaper_provider.dart';
 import 'package:wallpaper/provider/monsterhunter_wallpaper_provider.dart';
+import 'package:wallpaper/provider/worldofthanks_wallpaper_provider.dart';
 import 'package:wallpaper/screen/apexlegends_wallpaper_screen.dart';
 import 'package:wallpaper/screen/blackdesert_wallpaper_screen.dart';
 import 'package:wallpaper/screen/df_wallpaper_screen.dart';
@@ -15,6 +16,7 @@ import 'package:wallpaper/screen/finalfantasy14_wallpaper_screen.dart';
 import 'package:wallpaper/screen/mabinogi_wallpaper_screen.dart';
 import 'package:wallpaper/screen/maplestory2_wallpaper_screen.dart';
 import 'package:wallpaper/screen/monsterhunter_wallpaper_screen.dart';
+import 'package:wallpaper/screen/worldoftanks_wallpaper_screen.dart';
 
 final List<Map<String, dynamic>> gameList = [
   {
@@ -61,6 +63,11 @@ final List<Map<String, dynamic>> gameList = [
     'title': 'Elder Scrolls Online',
     'image': 'assets/images/elderscrollsonline.png',
     'page': EldenringWallpaperScreen(provider: ElderScrollsOnlineWallpaperProvider()),
+  },
+  {
+    'title': 'World of Tanks',
+    'image': 'assets/images/worldoftanks.webp',
+    'page': WorldOfTanksWallpaperScreen(provider: WorldOfTanksWallpaperProvider()),
   },
 ];
 
