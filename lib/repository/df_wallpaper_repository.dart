@@ -1,8 +1,8 @@
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
-import 'package:wallpaper/repository/wallpaper_repository.dart';
+import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
-class DungeonAndFighterWallpaperRepository extends WallpaperRepository {
+class DungeonAndFighterWallpaperRepository extends AbstractWallpaperRepository {
   DungeonAndFighterWallpaperRepository()
       : super('https://df.nexon.com/df/pg/dfonwallpaper');
 

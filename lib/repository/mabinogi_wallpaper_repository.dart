@@ -1,6 +1,6 @@
-import 'package:wallpaper/repository/wallpaper_repository.dart';
+import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
-class MabinogiWallpaperRepository extends WallpaperRepository {
+class MabinogiWallpaperRepository extends AbstractWallpaperRepository {
   MabinogiWallpaperRepository()
       : super('https://mabinogi.nexon.com/page/pds/gallery_wallpaper.asp');
 

@@ -1,8 +1,8 @@
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
-import 'package:wallpaper/repository/wallpaper_repository.dart';
+import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
-class FinalFantasy14WallpaperRepository extends WallpaperRepository {
+class FinalFantasy14WallpaperRepository extends AbstractWallpaperRepository {
   FinalFantasy14WallpaperRepository()
       : super('https://na.finalfantasyxiv.com/lodestone/special/fankit/smartphone_wallpaper/2_0/#nav_fankit');
 

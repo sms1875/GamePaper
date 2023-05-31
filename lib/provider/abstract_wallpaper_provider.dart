@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/data/wallpaper.dart';
-import 'package:wallpaper/repository/wallpaper_repository.dart';
+import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
-abstract class WallpaperProvider extends ChangeNotifier {
-  final WallpaperRepository _wallpaperRepository;
+abstract class AbstractWallpaperProvider extends ChangeNotifier {
+  final AbstractWallpaperRepository _wallpaperRepository;
   Wallpaper wallpaperPage = Wallpaper(page: 1, pageUrlsList: [], wallpapers: []);
 
-  WallpaperProvider(this._wallpaperRepository);
+  AbstractWallpaperProvider(this._wallpaperRepository);
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;

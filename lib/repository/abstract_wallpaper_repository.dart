@@ -3,12 +3,12 @@ import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:wallpaper/data/wallpaper.dart';
 
-abstract class WallpaperRepository {
+abstract class AbstractWallpaperRepository {
   String baseUrl;
   Wallpaper? cachedWallpaper;
   Map<int, List<Map<String, String>>> pageCaches = {};
 
-  WallpaperRepository(this.baseUrl);
+  AbstractWallpaperRepository(this.baseUrl);
 
   Future<Wallpaper> fetchWallpaper() async {
     if (cachedWallpaper != null) {

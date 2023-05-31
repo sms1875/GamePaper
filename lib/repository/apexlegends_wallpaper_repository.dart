@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
-import 'package:wallpaper/repository/wallpaper_repository.dart';
+import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
-class ApexLegendsWallpaperRepository extends WallpaperRepository {
+class ApexLegendsWallpaperRepository extends AbstractWallpaperRepository {
   ApexLegendsWallpaperRepository()
       : super('https://www.ea.com/ko-kr/games/apex-legends/media#wallpapers');
 

@@ -1,8 +1,8 @@
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
-import 'package:wallpaper/repository/wallpaper_repository.dart';
+import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
-class BlackDesertWallpaperRepository extends WallpaperRepository {
+class BlackDesertWallpaperRepository extends AbstractWallpaperRepository {
   BlackDesertWallpaperRepository()
       : super('https://www.kr.playblackdesert.com/ko-KR/Data/Wallpaper/');
 

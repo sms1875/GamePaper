@@ -1,6 +1,6 @@
-import 'package:wallpaper/repository/wallpaper_repository.dart';
+import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
-class MonsterHunterWallpaperRepository extends WallpaperRepository {
+class MonsterHunterWallpaperRepository extends AbstractWallpaperRepository {
   MonsterHunterWallpaperRepository()
       : super('https://www.monsterhunter.com/mha/en/wallpaper_gift/');
 

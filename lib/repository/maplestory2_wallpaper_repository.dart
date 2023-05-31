@@ -1,8 +1,8 @@
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
-import 'package:wallpaper/repository/wallpaper_repository.dart';
+import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
-class MapleStory2WallpaperRepository extends WallpaperRepository {
+class MapleStory2WallpaperRepository extends AbstractWallpaperRepository {
   MapleStory2WallpaperRepository()
       : super('https://maplestory2.nexon.com/Main/SearchNewsCategory?page=1&tk=%5B갤럭시%5D&t=media');
 

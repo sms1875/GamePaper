@@ -1,10 +1,10 @@
 import 'package:async_wallpaper/async_wallpaper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:wallpaper/provider/wallpaper_provider.dart';
+import 'package:wallpaper/provider/abstract_wallpaper_provider.dart';
 
 abstract class AbstractWallpaperScreen extends StatefulWidget {
-  final WallpaperProvider wallpaperProvider;
+  final AbstractWallpaperProvider wallpaperProvider;
 
   const AbstractWallpaperScreen({super.key, required this.wallpaperProvider});
 
@@ -14,7 +14,7 @@ abstract class AbstractWallpaperScreen extends StatefulWidget {
 
 class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
   final scrollController = ScrollController();
-  late WallpaperProvider wallpaperProvider;
+  late AbstractWallpaperProvider wallpaperProvider;
 
   @override
   void initState() {
@@ -105,7 +105,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
     );
   }
 
-  Widget buildPageNumbers(List<int> pageNumbers, int currentPage, WallpaperProvider provider) {
+  Widget buildPageNumbers(List<int> pageNumbers, int currentPage, AbstractWallpaperProvider provider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -161,7 +161,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
     );
   }
 
-  List<Widget> buildPageNumber(int currentPage, List<int> pageNumbers, WallpaperProvider provider){
+  List<Widget> buildPageNumber(int currentPage, List<int> pageNumbers, AbstractWallpaperProvider provider){
     List<Widget> gestureDetectors = [];
 
     int startingPage;

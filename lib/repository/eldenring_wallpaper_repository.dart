@@ -1,6 +1,6 @@
-import 'package:wallpaper/repository/wallpaper_repository.dart';
+import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
-class EldenRingWallpaperRepository extends WallpaperRepository {
+class EldenRingWallpaperRepository extends AbstractWallpaperRepository {
   EldenRingWallpaperRepository()
       : super('https://eldenring.bn-ent.net/kr/special/');
 

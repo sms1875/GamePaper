@@ -1,6 +1,6 @@
-import 'package:wallpaper/repository/wallpaper_repository.dart';
+import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
-class ElderScrollsOnlineWallpaperRepository extends WallpaperRepository {
+class ElderScrollsOnlineWallpaperRepository extends AbstractWallpaperRepository {
   ElderScrollsOnlineWallpaperRepository()
       : super('https://www.elderscrollsonline.com/en-us/media/category/wallpapers/');
 
