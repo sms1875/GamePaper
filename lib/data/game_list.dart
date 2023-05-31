@@ -2,6 +2,7 @@ import 'package:wallpaper/provider/apexlegends_wallpaper_provider.dart';
 import 'package:wallpaper/provider/blackdesert_wallpaper_provider.dart';
 import 'package:wallpaper/provider/df_wallpaper_provider.dart';
 import 'package:wallpaper/provider/eldenring_wallpaper_provider.dart';
+import 'package:wallpaper/provider/elderscrollsonline_wallpaper_provider.dart';
 import 'package:wallpaper/provider/finalfantasy14_wallpaper_provider.dart';
 import 'package:wallpaper/provider/mabinogi_wallpaper_provider.dart';
 import 'package:wallpaper/provider/maplestory2_wallpaper_provider.dart';
@@ -55,6 +56,11 @@ final List<Map<String, dynamic>> gameList = [
     'title': 'Maple Story 2',
     'image': 'assets/images/maplestory2.png',
     'page': MapleStory2WallpaperScreen(provider: MapleStory2WallpaperProvider()),
+  },
+  {
+    'title': 'Elder Scrolls Online',
+    'image': 'assets/images/elderscrollsonline.png',
+    'page': EldenringWallpaperScreen(provider: ElderScrollsOnlineWallpaperProvider()),
   },
 ];
 
