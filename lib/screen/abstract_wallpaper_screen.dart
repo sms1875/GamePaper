@@ -125,7 +125,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
           return GestureDetector(
             onTap: () async {
               if (!provider.isLoading) {
-                await provider.fetchPage(page);
+                await provider.getPage(page);
                 scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
                 await Future.delayed(const Duration(seconds: 2));
                 provider.setLoading(false);
@@ -184,7 +184,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
       gestureDetectors.add(GestureDetector(
         onTap: () async {
           if (!provider.isLoading) {
-            await provider.fetchPage(1);
+            await provider.getPage(1);
             scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
             await Future.delayed(const Duration(seconds: 2));
             provider.setLoading(false);
@@ -212,7 +212,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
       gestureDetectors.add(GestureDetector(
         onTap: () async {
           if (!provider.isLoading) {
-            await provider.fetchPage(page);
+            await provider.getPage(page);
             scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
             await Future.delayed(const Duration(seconds: 2));
             provider.setLoading(false);
@@ -240,7 +240,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
       gestureDetectors.add(GestureDetector(
         onTap: () async {
           if (!provider.isLoading) {
-            await provider.fetchPage(pageNumbers.length);
+            await provider.getPage(pageNumbers.length);
             scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
             await Future.delayed(const Duration(seconds: 2));
             provider.setLoading(false);

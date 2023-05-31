@@ -6,6 +6,7 @@ import 'package:wallpaper/data/wallpaper.dart';
 abstract class WallpaperRepository {
   String baseUrl;
   Wallpaper? cachedWallpaper;
+  Map<int, List<Map<String, String>>> pageCaches = {};
 
   WallpaperRepository(this.baseUrl);
 
@@ -18,7 +19,7 @@ abstract class WallpaperRepository {
     if (response.statusCode == 200) {
       final paging = parsePaging(response);
       final pageUrlsList = generatePageUrlsList(paging);
-      final wallpapers = await fetchPage(1, pageUrlsList); // 초기화면
+      final wallpapers = await fetchPageCache(1, pageUrlsList); // 초기화면
       final wallpaperData = Wallpaper(
         page: 1,
         pageUrlsList: pageUrlsList,
@@ -48,12 +49,21 @@ abstract class WallpaperRepository {
     );
   }
 
+  Future<List<Map<String, String>>> fetchPageCache(int page, List<List<String>> pageUrlsList) async {
+    if (pageCaches.containsKey(page)) {
+      return pageCaches[page]!;
+    } else {
+      List<Map<String, String>> results = await fetchPage(page, pageUrlsList);
+      pageCaches[page] = results;
+      return results;
+    }
+  }
+
   Future<List<Map<String, String>>> fetchPage(int page, List<List<String>> pageUrlsList) async {
     List<String> urls = pageUrlsList[page - 1];
     List<Future<Map<String, String>>> futures = urls.map((url) => fetchWallpaperInfo(url)).toList();
     List<Map<String, String>> results = await Future.wait(futures);
     results.sort((a, b) => urls.indexOf(a['url']!).compareTo(urls.indexOf(b['url']!)));
-
     return results;
   }
 

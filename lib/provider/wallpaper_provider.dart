@@ -34,11 +34,11 @@ abstract class WallpaperProvider extends ChangeNotifier {
     setLoading(false);
   }
 
-  Future<void> fetchPage(int page) async {
+  Future<void> getPage(int page) async {
     setLoading(true);
     currentPageIndex = page;
     try {
-      final result = await _wallpaperRepository.fetchPage(
+      final result = await _wallpaperRepository.fetchPageCache(
           page, wallpaperPage.pageUrlsList);
       wallpaperPage = Wallpaper(
           page: page,
@@ -53,14 +53,14 @@ abstract class WallpaperProvider extends ChangeNotifier {
   void nextPage() {
     final nextPage = wallpaperPage.page + 1;
     if (nextPage <= wallpaperPage.pageUrlsList.length) {
-      fetchPage(nextPage);
+      getPage(nextPage);
     }
   }
 
   void prevPage() {
     final prevPage = wallpaperPage.page - 1;
     if (prevPage > 0) {
-      fetchPage(prevPage);
+      getPage(prevPage);
     }
   }
 
