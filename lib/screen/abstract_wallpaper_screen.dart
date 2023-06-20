@@ -74,7 +74,6 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
     );
   }
 
-
   Widget buildWallpaperCard(String url) {
     final wallpaperImage = CachedNetworkImage(
       imageUrl: url,
@@ -274,55 +273,49 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        buildSetWallpaperButton(wallpaper, '잠금 화면'),
-        buildSetWallpaperButton(wallpaper, '홈 화면'),
+        ElevatedButton(
+          onPressed: () => setWallpaper(wallpaper, '잠금 화면'),
+          child: Text('잠금 화면'),
+        ),
+        ElevatedButton(
+          onPressed: () => setWallpaper(wallpaper, '홈 화면'),
+          child: Text('홈 화면'),
+        ),
       ],
     );
   }
 
-  Widget buildSetWallpaperButton(String wallpaper, String text) {
-    return ElevatedButton(
-      onPressed: () async {
-        String result = 'Loading';
-        showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) {
-            return const AlertDialog(
-              title: Text('Loading'),
-              content: LinearProgressIndicator(),
-            );
-          },
-        );
-        try {
-          await AsyncWallpaper.setWallpaper(
-            url: wallpaper,
-            wallpaperLocation: text == '잠금 화면'
-                ? AsyncWallpaper.LOCK_SCREEN
-                : AsyncWallpaper.HOME_SCREEN,
-          );
-          result = '$text이 설정되었습니다';
-        } catch (e) {
-          result = '$text 설정에 실패했습니다';
-        }
-        Navigator.pop(context);
-        showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(result),
-              actions: [
-                TextButton(
-                  child: Text('OK'),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            );
-          },
-        );
-      },
-      child: Text(text),
+  Future<void> setWallpaper(String wallpaper, String text) async {
+    // 로딩 다이어로그
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (_) => const AlertDialog(
+        title: Text('설정 중입니다...'),
+        content: LinearProgressIndicator(),
+      )
+    );
+
+    await setAsynWallpaper(wallpaper, text);
+
+    // 로딩 다이어로그 닫기
+    Navigator.of(context).pop();
+  }
+
+  // AsyncWallpaper 화면설정
+  Future<void> setAsynWallpaper(String wallpaper, String text) async {
+    await AsyncWallpaper.setWallpaper(
+      url: wallpaper,
+      wallpaperLocation: text == '잠금 화면'
+          ? AsyncWallpaper.LOCK_SCREEN
+          : AsyncWallpaper.HOME_SCREEN,
+      goToHome: false,
+      toastDetails: ToastDetails(
+        message: '$text 설정이 완료되었습니다',
+      ),
+      errorToastDetails: ToastDetails(
+        message: '$text 설정에 실패했습니다',
+      ),
     );
   }
 
