@@ -82,6 +82,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
     );
 
     return Card(
+      color: Colors.black,
       margin: const EdgeInsets.all(1),
       child: GestureDetector(
         // 누적 동작을 허용하여 전체 영역을 탭할 수 있도록 함
