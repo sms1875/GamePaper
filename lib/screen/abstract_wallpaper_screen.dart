@@ -213,7 +213,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
           child: Text(
             '1',
             style: TextStyle(
-              color: currentPage == 1 ? Colors.blue : Colors.black,
+              color: currentPage == 1 ? Colors.blue : Colors.white,
               fontWeight: currentPage == 1 ? FontWeight.bold : FontWeight.normal,
               fontSize: 20,
             ),
@@ -221,7 +221,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
         ),
       ));
       if (startingPage > 2) {
-        gestureDetectors.add(const Text('...'));
+        gestureDetectors.add(const Text('...', style: TextStyle(color: Colors.white)));
       }
     }
 
@@ -241,7 +241,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
           child: Text(
             '$page',
             style: TextStyle(
-              color: currentPage == page ? Colors.blue : Colors.black,
+              color: currentPage == page ? Colors.blue : Colors.white,
               fontWeight: currentPage == page ? FontWeight.bold : FontWeight.normal,
               fontSize: 20,
             ),
@@ -252,7 +252,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
 
     if (endingPage < pageNumbers.length) {
       if (endingPage < pageNumbers.length - 1) {
-        gestureDetectors.add(const Text('...'));
+        gestureDetectors.add(const Text('...', style: TextStyle(color: Colors.white)));
       }
 
       gestureDetectors.add(GestureDetector(
@@ -269,7 +269,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
           child: Text(
             '${pageNumbers.length}',
             style: TextStyle(
-              color: currentPage == pageNumbers.length ? Colors.blue : Colors.black,
+              color: currentPage == pageNumbers.length ? Colors.blue : Colors.white,
               fontWeight: currentPage == pageNumbers.length ? FontWeight.bold : FontWeight.normal,
               fontSize: 20,
             ),
