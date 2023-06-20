@@ -74,16 +74,15 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
     );
   }
 
-  Widget buildWallpaperImage(String url) {
-    return CachedNetworkImage(
+
+  Widget buildWallpaperCard(String url) {
+    final wallpaperImage = CachedNetworkImage(
       imageUrl: url,
       fit: BoxFit.cover,
       placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
       errorWidget: (context, url, error) => const Icon(Icons.error),
     );
-  }
 
-  Widget buildWallpaperCard(String url) {
     return Card(
       child: Column(
         children: [
@@ -95,12 +94,12 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
                   builder: (_) => Dialog(
                     child: InkWell(
                       onTap: () => Navigator.pop(context),
-                      child: buildWallpaperImage(url),
+                      child: wallpaperImage,
                     ),
                   ),
                 );
               },
-              child: buildWallpaperImage(url),
+              child: wallpaperImage,
             ),
           ),
           buildWallpaperSettingBtnWidget(url),
