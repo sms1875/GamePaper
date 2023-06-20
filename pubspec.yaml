@@ -41,7 +41,7 @@ dependencies:
 
   #배경화면 설정 관련 패키지
   flutter_cache_manager: ^3.0.0
-  async_wallpaper: ^2.0.0
+  async_wallpaper: ^2.0.3
 
   #압축 파일
   archive: ^3.3.7
