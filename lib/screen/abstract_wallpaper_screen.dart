@@ -20,19 +20,23 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
   void initState() {
     super.initState();
     wallpaperProvider = widget.wallpaperProvider;
-    wallpaperProvider.update(); //페이지 업데이트
-    wallpaperProvider.addListener(updatePageNumbers); // 페이지 번호 갱신을 위해 리스너 추가
+    // 페이지 업데이트
+    wallpaperProvider.update();
+    // 페이지 번호 갱신을 위해 리스너 추가
+    wallpaperProvider.addListener(updatePageNumbers);
   }
 
   @override
   void dispose() {
     scrollController.dispose();
-    wallpaperProvider.removeListener(updatePageNumbers); // 리스너 제거
+    // 리스너 제거
+    wallpaperProvider.removeListener(updatePageNumbers);
     super.dispose();
   }
 
   void updatePageNumbers() {
-    setState(() {}); // 상태 변경을 통해 build 메서드 호출
+    // 상태 변경을 통해 build 메서드 호출
+    setState(() {});
   }
 
   @override
@@ -167,14 +171,19 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
     int startingPage;
     int endingPage;
 
-    if (currentPage <= 3) {    //1 2 3 4 5 ....
+    // 1 2 3 4 5 ....
+    if (currentPage <= 3) {
       startingPage = 1;
       endingPage = 5;
-    } else if (currentPage >= pageNumbers.length - 2) { // 1 ... 6 7 8 9 10
+    }
+    // ... 6 7 8 9 10
+    else if (currentPage >= pageNumbers.length - 2) {
       startingPage = pageNumbers.length - 4;
       endingPage = pageNumbers.length;
-    } else {
-      startingPage = currentPage - 2;  // ... 6 7 8 9 10  ...
+    }
+    // ... 6 7 8 9 10  ...
+    else {
+      startingPage = currentPage - 2;
       endingPage = currentPage + 2;
     }
 

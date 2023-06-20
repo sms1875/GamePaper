@@ -19,12 +19,14 @@ class BlackDesertWallpaperRepository extends AbstractWallpaperRepository {
 
   @override
   List<List<String>> generatePageUrlsList(List<String> paging) {
-    int pageSize = 1; //[[$page=1], [$page=2], ...]
+    // [[$page=1], [$page=2], ...]
+    int pageSize = 1;
     List<List<String>> pageUrlsList = List.generate(
       (paging.length / pageSize).ceil(),
           (i) => paging.skip(i * pageSize).take(pageSize).toList(),
     );
-    pageUrlsList.removeLast(); // 마지막 페이지는 모바일 월페이퍼가 없어서 페이지목록에서 제거
+    // 마지막 페이지는 모바일 월페이퍼가 없어서 페이지목록에서 제거
+    pageUrlsList.removeLast();
     return pageUrlsList;
   }
 
@@ -47,7 +49,7 @@ class BlackDesertWallpaperRepository extends AbstractWallpaperRepository {
 
       return wallpapers;
     } else {
-      throw Exception('Failed to load HTML');
+      throw Exception('Failed to load blackdesert wallpaper');
     }
   }
 

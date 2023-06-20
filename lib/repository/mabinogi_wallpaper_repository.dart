@@ -8,7 +8,7 @@ class MabinogiWallpaperRepository extends AbstractWallpaperRepository {
   List<String> parsePaging(response) {
     final document = getDocument(response.body);
 
-    //"javascript:viewWall2('https://ssl.nexon.com/s2/game/mabinogi/MabiWeb/wallpaper/illust_088_1125x2436.jpg', 6)" 파싱
+    // "javascript:viewWall2('https://ssl.nexon.com/s2/game/mabinogi/MabiWeb/wallpaper/illust_088_1125x2436.jpg', 6)" 파싱
     final hrefList = document
         .getElementById('div_contents')!
         .querySelectorAll('a')

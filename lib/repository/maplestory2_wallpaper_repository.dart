@@ -15,13 +15,15 @@ class MapleStory2WallpaperRepository extends AbstractWallpaperRepository {
         .map((a) => a.attributes['href']!)
         .toList();
 
-    pages.insert(0,"/Main/SearchNewsCategory?page=1&tk=%5B갤럭시%5D&t=media"); //1페이지 추가
+    //1페이지 추가
+    pages.insert(0,"/Main/SearchNewsCategory?page=1&tk=%5B갤럭시%5D&t=media");
     return pages;
   }
 
   @override
   List<List<String>> generatePageUrlsList(List<String> paging) {
-    int pageSize = 1; //[[$page=1], [$page=2], ...]
+    //[[$page=1], [$page=2], ...]
+    int pageSize = 1;
     List<List<String>> pageUrlsList = List.generate(
       (paging.length / pageSize).ceil(),
           (i) => paging.skip(i * pageSize).take(pageSize).toList(),
@@ -36,7 +38,7 @@ class MapleStory2WallpaperRepository extends AbstractWallpaperRepository {
     if (response.statusCode == 200) {
       final document = parse(response.body);
 
-      //검색 결과 게시글들
+      //검색 결과 게시글 목록
       final searchResults=document
           .querySelector('.result_sec')!
           .querySelectorAll('a')
@@ -57,13 +59,13 @@ class MapleStory2WallpaperRepository extends AbstractWallpaperRepository {
           final hrefMap = await Future.wait(galaxyHref.map((href) => fetchWallpaperInfo(href)));
           return hrefMap.reduce((mergedMap, currentMap) => mergedMap..addAll(currentMap));
         } else {
-          throw Exception('Failed to load HTML');
+          throw Exception('Failed to load maplestory2 wallpaper');
         }
       });
       final wallpapers = await Future.wait(wallpaperInfoFutures.toList());
       return wallpapers;
     } else {
-      throw Exception('Failed to load HTML');
+      throw Exception('Failed to load maplestory2 wallpaper search result');
     }
   }
 

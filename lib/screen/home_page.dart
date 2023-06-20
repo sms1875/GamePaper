@@ -6,7 +6,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    gameList.sort((a, b) => a['title'].compareTo(b['title'])); // 알파벳 순서 정렬
+    // 알파벳 순서 정렬
+    gameList.sort((a, b) => a['title'].compareTo(b['title']));
 
     return Scaffold(
       body: Column(
@@ -46,9 +47,9 @@ class HomePage extends StatelessWidget {
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
-                childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 6 * 4),
+                childAspectRatio: 0.8,
               ),
               itemCount: gamesByAlphabet.length,
               itemBuilder: (BuildContext context, int index) {
@@ -113,9 +114,10 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
-              maxLines: 2, // 최대 두 줄까지 표시
-              textAlign: TextAlign.center, // 글자를 가운데로 정렬
-              overflow: TextOverflow.ellipsis, // 넘치는 글자는 ...으로 표시
+              // 최대 두 줄까지, 글자를 가운데로 정렬, 넘치는 글자는 ...으로 표시
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
