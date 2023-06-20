@@ -48,6 +48,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
     final wallpapers = wallpaperProvider.wallpaperPage.wallpapers;
 
     return Scaffold(
+      backgroundColor: Colors.black,
       body: error != null
           ? buildErrorScreen()
           : Column(
@@ -56,14 +57,12 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
             child: GridView.builder(
               gridDelegate:
               const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+                crossAxisCount: 3,
                 childAspectRatio: 9 / 16,
               ),
               itemCount: wallpapers.length,
               itemBuilder: (context, index) {
-                final wallpaper = wallpapers[index];
-                final url = wallpaper['src']!;
-                return buildWallpaperCard(url);
+                return buildWallpaperCard(wallpapers[index]['src']!);
               },
               controller: scrollController,
             ),
@@ -83,26 +82,38 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
     );
 
     return Card(
-      child: Column(
-        children: [
-          Expanded(
-            child: InkWell(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (_) => Dialog(
-                    child: InkWell(
+      margin: const EdgeInsets.all(1),
+      child: GestureDetector(
+        // 누적 동작을 허용하여 전체 영역을 탭할 수 있도록 함
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (_) {
+              return Dialog(
+                insetPadding: const EdgeInsets.all(0),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    InkWell(
                       onTap: () => Navigator.pop(context),
                       child: wallpaperImage,
                     ),
-                  ),
-                );
-              },
-              child: wallpaperImage,
-            ),
-          ),
-          buildWallpaperSettingBtnWidget(url),
-        ],
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: FractionallySizedBox(
+                        alignment: Alignment.topCenter,
+                        heightFactor: 0.2,
+                        child: buildWallpaperSettingBtnWidget(url),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+        child: wallpaperImage,
       ),
     );
   }
@@ -120,7 +131,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
               provider.setLoading(false);
             }
           },
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
         Row(children: pageNumbers.length < 9 ? List.generate(pageNumbers.length, (index) {
           final page = pageNumbers[index];
@@ -138,7 +149,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
               child: Text(
                 '$page',
                 style: TextStyle(
-                  color: currentPage == page ? Colors.blue : Colors.black,
+                  color: currentPage == page ? Colors.blue : Colors.white,
                   fontWeight: currentPage == page ? FontWeight.bold : FontWeight.normal,
                   fontSize: 20,
                 ),
@@ -157,7 +168,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
               provider.setLoading(false);
             }
           },
-          icon: const Icon(Icons.arrow_forward_ios),
+          icon: const Icon(Icons.arrow_forward_ios, color: Colors.white),
         ),
       ],
     );
@@ -288,12 +299,12 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
   Future<void> setWallpaper(String wallpaper, String text) async {
     // 로딩 다이어로그
     showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (_) => const AlertDialog(
-        title: Text('설정 중입니다...'),
-        content: LinearProgressIndicator(),
-      )
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => const AlertDialog(
+          title: Text('설정 중입니다...'),
+          content: LinearProgressIndicator(),
+        )
     );
 
     await setAsynWallpaper(wallpaper, text);

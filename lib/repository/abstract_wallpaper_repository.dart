@@ -43,7 +43,7 @@ abstract class AbstractWallpaperRepository {
   // 사이트에서 페이지가 없을 경우 [[url1, url2, url3, ...], [url21, url22, url23, ...], ...]로 분할
   // 페이지가 존재할 경우 [[$page=1], [$page=2], ...]로 각 페이지 요청
   List<List<String>> generatePageUrlsList(List<String> paging) {
-    int pageSize = 20;
+    int pageSize = 21;
     return List.generate(
       (paging.length / pageSize).ceil(),
           (i) => paging.skip(i * pageSize).take(pageSize).toList(),
