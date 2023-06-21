@@ -19,7 +19,6 @@ class WorldOfTanksWallpaperRepository extends AbstractWallpaperRepository {
     return List<String>.generate(
         maxPageNum, (index) => '/ko/media/tag/11/?page=${index + 1}');
   }
-
   @override
   List<List<String>> generatePageUrlsList(List<String> paging) {
     int pageSize = 1;
@@ -35,8 +34,7 @@ class WorldOfTanksWallpaperRepository extends AbstractWallpaperRepository {
   Future<List<Map<String, String>>> fetchPage(int page, List<List<String>> pageUrlsList) async {
     String urls = pageUrlsList[page - 1].first;
 
-    final response =
-    await http.get(Uri.parse('http://worldoftanks.asia$urls'));
+    final response = await http.get(Uri.parse('http://worldoftanks.asia$urls'));
     if (response.statusCode == 200) {
       final document = parse(response.body);
 
@@ -48,10 +46,17 @@ class WorldOfTanksWallpaperRepository extends AbstractWallpaperRepository {
 
       // 검색 결과의 각 게시글 href 링크로 들어가서 갤럭시 월페이퍼 링크를 가져옴
       final wallpaperInfoFutures = searchResults.map((p) => compute(fetchWallpaperInfoFromSearchResult, p));
-      final wallpapers = await Future.wait(wallpaperInfoFutures.toList());
+      final wallpaperInfoList = await Future.wait(wallpaperInfoFutures.toList());
 
-      // 예외처리된 월페이퍼 제거
-      wallpapers.removeWhere((element) => element['url'] == '');
+      // fetchWallpaperInfoFromSearchResult를 통해 받아온 wallpaperInfoList 정보를 wallpapers에 더하기
+      List<Map<String, String>> wallpapers = [];
+      for (var wallpaperList in wallpaperInfoList) {
+        wallpapers.addAll(wallpaperList);
+      }
+
+      // 빈 값이나 예외처리된 월페이퍼 제거
+      wallpapers.removeWhere((element) => element['url'] == '' || element.isEmpty);
+
       return wallpapers;
     } else {
       throw Exception('Failed to load HTML');
@@ -59,7 +64,7 @@ class WorldOfTanksWallpaperRepository extends AbstractWallpaperRepository {
   }
 
   // 멀티쓰레딩을 위한 함수 분리
-  Future<Map<String, String>> fetchWallpaperInfoFromSearchResult(String p) async {
+  Future<List<Map<String, String>>> fetchWallpaperInfoFromSearchResult(String p) async {
     final response = await http.get(Uri.parse('https://worldoftanks.asia$p'));
     if (response.statusCode == 200) {
       final document = parse(response.body);
@@ -73,10 +78,10 @@ class WorldOfTanksWallpaperRepository extends AbstractWallpaperRepository {
 
       // 갤럭시 월페이퍼가 없는 경우 예외처리
       if (galaxyHref.isEmpty) galaxyHref.add('');
-      final wallpaperInfoList = await Future.wait(galaxyHref.map((href) => fetchWallpaperInfo(href)).toList());
 
-      // 결과 합치기
-      return wallpaperInfoList.reduce((mergedInfo, currentInfo) => mergedInfo..addAll(currentInfo));
+      final wallpaperInfoFutures = galaxyHref.map((href) => fetchWallpaperInfo(href));
+      final wallpaperInfoList = await Future.wait(wallpaperInfoFutures.toList());
+      return wallpaperInfoList;
     } else {
       throw Exception('Failed to load HTML');
     }
