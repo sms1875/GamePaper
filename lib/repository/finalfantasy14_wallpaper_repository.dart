@@ -15,8 +15,9 @@ class FinalFantasy14WallpaperRepository extends AbstractWallpaperRepository {
         .map((a) => a.attributes['href']!)
         .where((href) => href.contains('smartphone_wallpaper'))
         .toList();
-    hrefList.add('/lodestone/special/fankit/smartphone_wallpaper/2_0/#nav_fankit');
 
+    // 1페이지 추가
+    hrefList.add('/lodestone/special/fankit/smartphone_wallpaper/2_0/#nav_fankit');
     return hrefList;
   }
 
@@ -43,6 +44,7 @@ class FinalFantasy14WallpaperRepository extends AbstractWallpaperRepository {
           .map((li) => li.querySelectorAll('p'));
 
       final wallpaperInfoFutures = wallpaperInfo.first.map((p) {
+        // 다양한 해상도중에 마지막에 있는 아이폰용 해상도로 가져옴
         final href = p.querySelectorAll('a').last.attributes['href'];
         return fetchWallpaperInfo(href!);
       });

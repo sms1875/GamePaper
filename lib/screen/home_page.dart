@@ -31,6 +31,7 @@ class HomePage extends StatelessWidget {
         final alphabet = gameMap.keys.elementAt(index);
         final gamesByAlphabet = gameMap[alphabet]!;
 
+        // 알파벳과 해당 알파벳으로 시작하는 게임 그룹
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -68,6 +69,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  // 알파벳 순서로 게임을 그룹화
   Map<String, List<Map<String, dynamic>>> groupGamesByAlphabet(List<Map<String, dynamic>> games) {
     final gameMap = <String, List<Map<String, dynamic>>>{};
 
@@ -82,6 +84,7 @@ class HomePage extends StatelessWidget {
     return gameMap;
   }
 
+  // 게임 바로가기 위젯
   Widget buildGameShortcut(BuildContext context, String title, String image, Widget nextPage) {
     return GestureDetector(
       onTap: () {
@@ -93,11 +96,13 @@ class HomePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          // 아이콘 이미지
           Image.asset(
             image,
             height: 80,
             width: 80,
           ),
+          // 아이콘 타이틀
           Expanded(
             child: Text(
               title,

@@ -85,8 +85,8 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
       color: Colors.black,
       margin: const EdgeInsets.all(1),
       child: GestureDetector(
-        // 전체 영역을 터치 가능하도록 설정
         behavior: HitTestBehavior.translucent,
+        // 이미지를 누르면 확대
         onTap: () {
           showDialog(
             context: context,
@@ -100,6 +100,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
                       onTap: () => Navigator.pop(context),
                       child: wallpaperImage,
                     ),
+                    // 배경화면 설정 버튼
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: FractionallySizedBox(
@@ -243,6 +244,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
       }
     }
 
+    // 페이지 번호 표시
     for (int i = 0; i < displayedPageNumbers.length; i++) {
       final page = displayedPageNumbers[i];
       gestureDetectors.add(GestureDetector(
@@ -302,19 +304,33 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        ElevatedButton(
-          onPressed: () => setWallpaper(wallpaper, '잠금 화면'),
-          child: Text('잠금 화면'),
+        GestureDetector(
+          onTap: () => setWallpaper(wallpaper, AsyncWallpaper.LOCK_SCREEN),
+          child: const CircleAvatar(
+            backgroundColor: Colors.grey, // 회색 배경
+            radius: 30, // 반지름 크기
+            child: Icon(
+              Icons.lock,
+              color: Colors.white, // 흰 아이콘
+            ),
+          ),
         ),
-        ElevatedButton(
-          onPressed: () => setWallpaper(wallpaper, '홈 화면'),
-          child: Text('홈 화면'),
+        GestureDetector(
+          onTap: () => setWallpaper(wallpaper, AsyncWallpaper.HOME_SCREEN),
+          child: const CircleAvatar(
+            backgroundColor: Colors.grey, // 회색 배경
+            radius: 30, // 반지름 크기
+            child: Icon(
+              Icons.home,
+              color: Colors.white, // 흰 아이콘
+            ),
+          ),
         ),
       ],
     );
   }
 
-  Future<void> setWallpaper(String wallpaper, String text) async {
+  Future<void> setWallpaper(String wallpaper, dynamic screen) async {
     // 로딩 다이어로그
     showDialog(
         barrierDismissible: false,
@@ -325,19 +341,18 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
         )
     );
 
-    await setAsynWallpaper(wallpaper, text);
+    await setAsynWallpaper(wallpaper, screen);
 
     // 로딩 다이어로그 닫기
     Navigator.of(context).pop();
   }
 
   // AsyncWallpaper 화면설정
-  Future<void> setAsynWallpaper(String wallpaper, String text) async {
+  Future<void> setAsynWallpaper(String wallpaper, dynamic screen) async {
+    String text = screen == AsyncWallpaper.LOCK_SCREEN ? '잠금 화면' : '홈 화면';
     await AsyncWallpaper.setWallpaper(
       url: wallpaper,
-      wallpaperLocation: text == '잠금 화면'
-          ? AsyncWallpaper.LOCK_SCREEN
-          : AsyncWallpaper.HOME_SCREEN,
+      wallpaperLocation: screen,
       goToHome: false,
       toastDetails: ToastDetails(
         message: '$text 설정이 완료되었습니다',
