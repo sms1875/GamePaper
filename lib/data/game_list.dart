@@ -4,6 +4,7 @@ import 'package:wallpaper/provider/df_wallpaper_provider.dart';
 import 'package:wallpaper/provider/eldenring_wallpaper_provider.dart';
 import 'package:wallpaper/provider/elderscrollsonline_wallpaper_provider.dart';
 import 'package:wallpaper/provider/finalfantasy14_wallpaper_provider.dart';
+import 'package:wallpaper/provider/heavenburnsred_wallpaper_provider.dart';
 import 'package:wallpaper/provider/mabinogi_wallpaper_provider.dart';
 import 'package:wallpaper/provider/maplestory2_wallpaper_provider.dart';
 import 'package:wallpaper/provider/monsterhunter_wallpaper_provider.dart';
@@ -13,6 +14,7 @@ import 'package:wallpaper/screen/blackdesert_wallpaper_screen.dart';
 import 'package:wallpaper/screen/df_wallpaper_screen.dart';
 import 'package:wallpaper/screen/eldenring_wallpaper_screen.dart';
 import 'package:wallpaper/screen/finalfantasy14_wallpaper_screen.dart';
+import 'package:wallpaper/screen/heavenburnsred_wallpaper_screen.dart';
 import 'package:wallpaper/screen/mabinogi_wallpaper_screen.dart';
 import 'package:wallpaper/screen/maplestory2_wallpaper_screen.dart';
 import 'package:wallpaper/screen/monsterhunter_wallpaper_screen.dart';
@@ -68,6 +70,11 @@ final List<Map<String, dynamic>> gameList = [
     'title': 'World of Tanks',
     'image': 'assets/images/worldoftanks.webp',
     'page': WorldOfTanksWallpaperScreen(provider: WorldOfTanksWallpaperProvider()),
+  },
+  {
+    'title': 'Heaven Burns Red',
+    'image': 'assets/images/heavenburnsred.png',
+    'page': HeavenBurnsRedWallpaperScreen(provider: HeavenBurnsRedWallpaperProvider()),
   },
 ];
 
