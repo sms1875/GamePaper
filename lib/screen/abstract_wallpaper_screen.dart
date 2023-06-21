@@ -85,7 +85,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
       color: Colors.black,
       margin: const EdgeInsets.all(1),
       child: GestureDetector(
-        // 누적 동작을 허용하여 전체 영역을 탭할 수 있도록 함
+        // 전체 영역을 터치 가능하도록 설정
         behavior: HitTestBehavior.translucent,
         onTap: () {
           showDialog(
@@ -120,11 +120,16 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
   }
 
   Widget buildPageNumbers(List<int> pageNumbers, int currentPage, AbstractWallpaperProvider provider) {
-    return Row(
+    return pageNumbers.isEmpty
+        ? const SizedBox()
+        : Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        // 이전 버튼
         IconButton(
-          onPressed: currentPage == 1 ? null : () async {
+          onPressed: currentPage == 1
+              ? null
+              : () async {
             if (!provider.isLoading) {
               provider.prevPage();
               scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
@@ -132,36 +137,46 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
               provider.setLoading(false);
             }
           },
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: currentPage == 1 || pageNumbers.isEmpty
+              ? const Icon(Icons.arrow_back_ios, color: Colors.grey)
+              : const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
-        Row(children: pageNumbers.length < 9 ? List.generate(pageNumbers.length, (index) {
-          final page = pageNumbers[index];
-          return GestureDetector(
-            onTap: () async {
-              if (!provider.isLoading) {
-                await provider.getPage(page);
-                scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                await Future.delayed(const Duration(seconds: 2));
-                provider.setLoading(false);
-              }
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                '$page',
-                style: TextStyle(
-                  color: currentPage == page ? Colors.blue : Colors.white,
-                  fontWeight: currentPage == page ? FontWeight.bold : FontWeight.normal,
-                  fontSize: 20,
+        // 페이지 번호 표시
+        Row(
+          children: pageNumbers.length < 9
+          // 페이지 번호가 9개 이하인 경우
+              ? List.generate(pageNumbers.length, (index) {
+            final page = pageNumbers[index];
+            return GestureDetector(
+              onTap: () async {
+                if (!provider.isLoading) {
+                  await provider.getPage(page);
+                  scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                  await Future.delayed(const Duration(seconds: 2));
+                  provider.setLoading(false);
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '$page',
+                  style: TextStyle(
+                    color: currentPage == page ? Colors.blue : Colors.white,
+                    fontWeight: currentPage == page ? FontWeight.bold : FontWeight.normal,
+                    fontSize: 20,
+                  ),
                 ),
               ),
-            ),
-          );
-        })
-            : buildPageNumber(currentPage, pageNumbers, provider),
+            );
+          })
+          // 페이지 번호가 9개 이상인 경우
+              : buildPageNumber(currentPage, pageNumbers, provider),
         ),
+        // 다음 버튼
         IconButton(
-          onPressed: currentPage == pageNumbers.length ? null : () async {
+          onPressed: currentPage == pageNumbers.length
+              ? null
+              : () async {
             if (!provider.isLoading) {
               provider.nextPage();
               scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
@@ -169,7 +184,9 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
               provider.setLoading(false);
             }
           },
-          icon: const Icon(Icons.arrow_forward_ios, color: Colors.white),
+          icon:currentPage == pageNumbers.length || pageNumbers.isEmpty
+              ? const Icon(Icons.arrow_forward_ios, color: Colors.grey)
+              : const Icon(Icons.arrow_forward_ios, color: Colors.white),
         ),
       ],
     );
