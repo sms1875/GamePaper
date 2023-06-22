@@ -62,14 +62,6 @@ final List<Map<String, dynamic>> gameList = [
     'title': 'Maple Story 2',
     'image': 'assets/images/maplestory2.png',
     'page': MapleStory2WallpaperScreen(provider: MapleStory2WallpaperProvider()),
-  },  {
-    'title': 'Maple Story 22',
-    'image': 'assets/images/maplestory2.png',
-    'page': MapleStory2WallpaperScreen(provider: MapleStory2WallpaperProvider()),
-  },  {
-    'title': 'Maple Story 222',
-    'image': 'assets/images/maplestory2.png',
-    'page': MapleStory2WallpaperScreen(provider: MapleStory2WallpaperProvider()),
   },
   {
     'title': 'Elder Scrolls Online',
