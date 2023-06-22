@@ -109,7 +109,7 @@ class HomePage extends StatelessWidget {
           Container(
             height: 70,
             width: 70,
-            //color: Colors.white,
+            color: Colors.white,
             child: Image.asset(
               image,
             ),
