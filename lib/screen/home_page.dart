@@ -120,7 +120,7 @@ class HomePage extends StatelessWidget {
             child: Text(
               title,
               style: const TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 color: Colors.white,
                 decoration: TextDecoration.none,
                 fontWeight: FontWeight.normal,
