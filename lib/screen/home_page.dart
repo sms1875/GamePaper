@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
                     context,
                     game['title'],
                     game['image'],
-                    game['provider'],
+                    GameProviderFactory.createProvider(game['repository']),
                   );
                 },
               ),

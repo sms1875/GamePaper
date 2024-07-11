@@ -1,75 +1,75 @@
-import 'package:wallpaper/provider/apexlegends_wallpaper_provider.dart';
-import 'package:wallpaper/provider/blackdesert_wallpaper_provider.dart';
-import 'package:wallpaper/provider/df_wallpaper_provider.dart';
-import 'package:wallpaper/provider/eldenring_wallpaper_provider.dart';
-import 'package:wallpaper/provider/elderscrollsonline_wallpaper_provider.dart';
-import 'package:wallpaper/provider/finalfantasy14_wallpaper_provider.dart';
-import 'package:wallpaper/provider/heavenburnsred_wallpaper_provider.dart';
-import 'package:wallpaper/provider/mabinogi_wallpaper_provider.dart';
-import 'package:wallpaper/provider/maplestory2_wallpaper_provider.dart';
-import 'package:wallpaper/provider/monsterhunter_wallpaper_provider.dart';
-import 'package:wallpaper/provider/priconne_wallpaper_provider.dart';
-import 'package:wallpaper/provider/worldofthanks_wallpaper_provider.dart';
+import 'package:wallpaper/repository/apexlegends_wallpaper_repository.dart';
+import 'package:wallpaper/repository/blackdesert_wallpaper_repository.dart';
+import 'package:wallpaper/repository/df_wallpaper_repository.dart';
+import 'package:wallpaper/repository/eldenring_wallpaper_repository.dart';
+import 'package:wallpaper/repository/elderscrollsonline_wallpaper_repository.dart';
+import 'package:wallpaper/repository/finalfantasy14_wallpaper_repository.dart';
+import 'package:wallpaper/repository/heavenburnsred_wallpaper_repository.dart';
+import 'package:wallpaper/repository/mabinogi_wallpaper_repository.dart';
+import 'package:wallpaper/repository/maplestory2_wallpaper_repository.dart';
+import 'package:wallpaper/repository/monsterhunter_wallpaper_repository.dart';
+import 'package:wallpaper/repository/priconne_wallpaper_repository.dart';
+import 'package:wallpaper/repository/worldoftanks_wallpaper_repository.dart';
 
 final List<Map<String, dynamic>> gameList = [
   {
     'title': 'Black Desert',
     'image': 'assets/images/blackdesert.png',
-    'provider': BlackDesertWallpaperProvider(),
+    'repository': BlackDesertWallpaperRepository(),
   },
   {
     'title': 'Dungeon & Fighter',
     'image': 'assets/images/dungeon&fighter.png',
-    'provider': DungeonAndFighterWallpaperProvider(),
+    'repository': DungeonAndFighterWallpaperRepository(),
   },
   {
     'title': 'Apex Legends',
     'image': 'assets/images/apexlegends.webp',
-    'provider': ApexLegendsWallpaperProvider(),
+    'repository': ApexLegendsWallpaperRepository(),
   },
   {
     'title': 'Mabinogi',
     'image': 'assets/images/mabinogi.png',
-    'provider': MabinogiWallpaperProvider(),
+    'repository': MabinogiWallpaperRepository(),
   },
   {
     'title': 'Elden Ring',
     'image': 'assets/images/eldenring.png',
-    'provider': EldenRingWallpaperProvider(),
+    'repository': EldenRingWallpaperRepository(),
   },
   {
     'title': 'Monster Hunter',
     'image': 'assets/images/monster_hunter.webp',
-    'provider': MonsterHunterWallpaperProvider(),
+    'repository': MonsterHunterWallpaperRepository(),
   },
   {
     'title': 'Final Fantasy XIV',
     'image': 'assets/images/finalfantasy14.png',
-    'provider': FinalFantasy14WallpaperProvider(),
+    'repository': FinalFantasy14WallpaperRepository(),
   },
   {
     'title': 'Maple Story 2',
     'image': 'assets/images/maplestory2.png',
-    'provider': MapleStory2WallpaperProvider(),
+    'repository': MapleStory2WallpaperRepository(),
   },
   {
     'title': 'Elder Scrolls Online',
     'image': 'assets/images/elderscrollsonline.png',
-    'provider': ElderScrollsOnlineWallpaperProvider(),
+    'repository': ElderScrollsOnlineWallpaperRepository(),
   },
   {
     'title': 'World of Tanks',
     'image': 'assets/images/worldoftanks.webp',
-    'provider': WorldOfTanksWallpaperProvider(),
+    'repository': WorldOfTanksWallpaperRepository(),
   },
   {
     'title': 'Heaven Burns Red',
     'image': 'assets/images/heavenburnsred.png',
-    'provider': HeavenBurnsRedWallpaperProvider(),
+    'repository': HeavenBurnsRedWallpaperRepository(),
   },
   {
     'title': 'Princess Connect Re:Dive',
     'image': 'assets/images/priconne.png',
-    'provider': PriConneWallpaperProvider(),
+    'repository': PriConneWallpaperRepository(),
   },
 ];
