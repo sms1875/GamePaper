@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/data/game_list.dart';
+import 'package:wallpaper/screen/concrete_wallpaper_screen.dart';
+
+import '../provider/abstract_wallpaper_provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -67,7 +70,7 @@ class HomePage extends StatelessWidget {
                     context,
                     game['title'],
                     game['image'],
-                    game['page'],
+                    game['provider'],
                   );
                 },
               ),
@@ -94,12 +97,12 @@ class HomePage extends StatelessWidget {
   }
 
   // 게임 바로가기 위젯
-  Widget buildGameShortcut(BuildContext context, String title, String image, Widget nextPage) {
+  Widget buildGameShortcut(BuildContext context, String title, String image, AbstractWallpaperProvider provider) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => nextPage),
+          MaterialPageRoute(builder: (context) => ConcreteWallpaperScreen(wallpaperProvider: provider)),
         );
       },
       child: Column(

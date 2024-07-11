@@ -55,8 +55,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
         children: [
           Expanded(
             child: GridView.builder(
-              gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 childAspectRatio: 9 / 16,
               ),
@@ -86,7 +85,6 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
       margin: const EdgeInsets.all(1),
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
-        // 이미지를 누르면 확대
         onTap: () {
           showDialog(
             context: context,
@@ -100,7 +98,6 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
                       onTap: () => Navigator.pop(context),
                       child: wallpaperImage,
                     ),
-                    // 배경화면 설정 버튼
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: FractionallySizedBox(
@@ -126,7 +123,6 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
         : Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // 이전 버튼
         IconButton(
           onPressed: currentPage == 1
               ? null
@@ -142,10 +138,8 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
               ? const Icon(Icons.arrow_back_ios, color: Colors.grey)
               : const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
-        // 페이지 번호 표시
         Row(
           children: pageNumbers.length < 9
-          // 페이지 번호가 9개 이하인 경우
               ? List.generate(pageNumbers.length, (index) {
             final page = pageNumbers[index];
             return GestureDetector(
@@ -170,10 +164,8 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
               ),
             );
           })
-          // 페이지 번호가 9개 이상인 경우
               : buildPageNumber(currentPage, pageNumbers, provider),
         ),
-        // 다음 버튼
         IconButton(
           onPressed: currentPage == pageNumbers.length
               ? null
@@ -185,7 +177,7 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
               provider.setLoading(false);
             }
           },
-          icon:currentPage == pageNumbers.length || pageNumbers.isEmpty
+          icon: currentPage == pageNumbers.length || pageNumbers.isEmpty
               ? const Icon(Icons.arrow_forward_ios, color: Colors.grey)
               : const Icon(Icons.arrow_forward_ios, color: Colors.white),
         ),
@@ -193,24 +185,19 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
     );
   }
 
-  List<Widget> buildPageNumber(int currentPage, List<int> pageNumbers, AbstractWallpaperProvider provider){
+  List<Widget> buildPageNumber(int currentPage, List<int> pageNumbers, AbstractWallpaperProvider provider) {
     List<Widget> gestureDetectors = [];
 
     int startingPage;
     int endingPage;
 
-    // 1 2 3 4 5 ....
     if (currentPage <= 3) {
       startingPage = 1;
       endingPage = 5;
-    }
-    // ... 6 7 8 9 10
-    else if (currentPage >= pageNumbers.length - 2) {
+    } else if (currentPage >= pageNumbers.length - 2) {
       startingPage = pageNumbers.length - 4;
       endingPage = pageNumbers.length;
-    }
-    // ... 6 7 8 9 10  ...
-    else {
+    } else {
       startingPage = currentPage - 2;
       endingPage = currentPage + 2;
     }
@@ -244,7 +231,6 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
       }
     }
 
-    // 페이지 번호 표시
     for (int i = 0; i < displayedPageNumbers.length; i++) {
       final page = displayedPageNumbers[i];
       gestureDetectors.add(GestureDetector(
@@ -297,83 +283,68 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
         ),
       ));
     }
+
     return gestureDetectors;
   }
 
-  Widget buildWallpaperSettingBtnWidget(String wallpaper) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        GestureDetector(
-          onTap: () => setWallpaper(wallpaper, AsyncWallpaper.LOCK_SCREEN),
-          child: const CircleAvatar(
-            backgroundColor: Colors.grey, // 회색 배경
-            radius: 30, // 반지름 크기
-            child: Icon(
-              Icons.lock,
-              color: Colors.white, // 흰 아이콘
-            ),
-          ),
-        ),
-        GestureDetector(
-          onTap: () => setWallpaper(wallpaper, AsyncWallpaper.HOME_SCREEN),
-          child: const CircleAvatar(
-            backgroundColor: Colors.grey, // 회색 배경
-            radius: 30, // 반지름 크기
-            child: Icon(
-              Icons.home,
-              color: Colors.white, // 흰 아이콘
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> setWallpaper(String wallpaper, dynamic screen) async {
-    // 로딩 다이어로그
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (_) => const AlertDialog(
-          title: Text('설정 중입니다...'),
-          content: LinearProgressIndicator(),
-        )
-    );
-
-    await setAsynWallpaper(wallpaper, screen);
-
-    // 로딩 다이어로그 닫기
-    Navigator.of(context).pop();
-  }
-
-  // AsyncWallpaper 화면설정
-  Future<void> setAsynWallpaper(String wallpaper, dynamic screen) async {
-    String text = screen == AsyncWallpaper.LOCK_SCREEN ? '잠금 화면' : '홈 화면';
-    await AsyncWallpaper.setWallpaper(
-      url: wallpaper,
-      wallpaperLocation: screen,
-      goToHome: false,
-      toastDetails: ToastDetails(
-        message: '$text 설정이 완료되었습니다',
-      ),
-      errorToastDetails: ToastDetails(
-        message: '$text 설정에 실패했습니다',
-      ),
-    );
-  }
-
   Widget buildErrorScreen() {
-    return const Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.close, color: Colors.white, size: 60),
-            SizedBox(height: 20),
-            Text("지금은 사용할 수 없습니다 \n 잠시후 다시 시도해주세요", style: TextStyle(color: Colors.white, fontSize: 20)),
-          ],
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error, color: Colors.white, size: 48),
+          const SizedBox(height: 16),
+          const Text(
+            'An error occurred while fetching wallpapers.',
+            style: TextStyle(color: Colors.white, fontSize: 16),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {
+              wallpaperProvider.update();
+            },
+            child: const Text('Retry'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildWallpaperSettingBtnWidget(String url) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.7),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        ),
+      ),
+      child: Center(
+        child: IconButton(
+          onPressed: () async {
+            try {
+              final result = await AsyncWallpaper.setWallpaper(url: url);
+              if (result) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Wallpaper set successfully!'),
+                  ),
+                );
+              }
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Failed to set wallpaper.'),
+                ),
+              );
+            }
+          },
+          icon: const Icon(
+            Icons.wallpaper,
+            color: Colors.white,
+            size: 36.0,
+          ),
         ),
       ),
     );
