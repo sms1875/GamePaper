@@ -41,7 +41,6 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = wallpaperProvider.isLoading;
     final error = wallpaperProvider.error;
     final currentPage = wallpaperProvider.currentPageIndex;
     final pageNumbers = wallpaperProvider.pageNumbers;
@@ -131,7 +130,6 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
               provider.prevPage();
               scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
               await Future.delayed(const Duration(seconds: 2));
-              provider.setLoading(false);
             }
           },
           icon: currentPage == 1 || pageNumbers.isEmpty
@@ -148,7 +146,6 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
                   await provider.getPage(page);
                   scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
                   await Future.delayed(const Duration(seconds: 2));
-                  provider.setLoading(false);
                 }
               },
               child: Padding(
@@ -174,7 +171,6 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
               provider.nextPage();
               scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
               await Future.delayed(const Duration(seconds: 2));
-              provider.setLoading(false);
             }
           },
           icon: currentPage == pageNumbers.length || pageNumbers.isEmpty
@@ -211,7 +207,6 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
             await provider.getPage(1);
             scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
             await Future.delayed(const Duration(seconds: 2));
-            provider.setLoading(false);
           }
         },
         child: Padding(
@@ -239,7 +234,6 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
             await provider.getPage(page);
             scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
             await Future.delayed(const Duration(seconds: 2));
-            provider.setLoading(false);
           }
         },
         child: Padding(
@@ -267,7 +261,6 @@ class _AbstractWallpaperScreenState extends State<AbstractWallpaperScreen> {
             await provider.getPage(pageNumbers.length);
             scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
             await Future.delayed(const Duration(seconds: 2));
-            provider.setLoading(false);
           }
         },
         child: Padding(

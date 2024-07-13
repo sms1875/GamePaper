@@ -13,8 +13,8 @@ abstract class AbstractWallpaperProvider extends ChangeNotifier {
 
   Object? _error;
   Object? get error {
-    final error=_error;
-    _error= null;
+    final error = _error;
+    _error = null;
     return error;
   }
 
@@ -22,55 +22,52 @@ abstract class AbstractWallpaperProvider extends ChangeNotifier {
   int currentPageIndex = 1;
 
   Future<void> update() async {
-    setLoading(true);
+    _setLoading(true);
     try {
       currentPageIndex = 1;
       wallpaperPage = await _wallpaperRepository.fetchWallpaper();
       pageNumbers = List.generate(wallpaperPage.pageUrlsList.length, (index) => index + 1);
     } catch (e) {
-      setError(e);
+      _setError(e);
     }
-    notifyListeners();
-    setLoading(false);
+    _setLoading(false);
   }
 
   Future<void> getPage(int page) async {
-    setLoading(true);
+    _setLoading(true);
     currentPageIndex = page;
     try {
-      final result = await _wallpaperRepository.fetchPageCache(
-          page, wallpaperPage.pageUrlsList);
-      wallpaperPage = Wallpaper(
-          page: page,
-          pageUrlsList: wallpaperPage.pageUrlsList,
-          wallpapers: result);
+      final result = await _wallpaperRepository.fetchPageCache(page, wallpaperPage.pageUrlsList);
+      wallpaperPage = Wallpaper(page: page, pageUrlsList: wallpaperPage.pageUrlsList, wallpapers: result);
     } catch (e) {
-      setError(e);
+      _setError(e);
     }
-    notifyListeners();
+    _setLoading(false);
   }
 
   void nextPage() {
-    final nextPage = wallpaperPage.page + 1;
-    if (nextPage <= wallpaperPage.pageUrlsList.length) {
+    final nextPage = currentPageIndex + 1;
+    if (nextPage <= pageNumbers.length) {
       getPage(nextPage);
     }
   }
 
   void prevPage() {
-    final prevPage = wallpaperPage.page - 1;
+    final prevPage = currentPageIndex - 1;
     if (prevPage > 0) {
       getPage(prevPage);
     }
   }
 
-  void setLoading(bool isLoading) {
+  void _setLoading(bool isLoading) {
     _isLoading = isLoading;
+    notifyListeners();
   }
 
-  void setError(Object error) {
+  void _setError(Object error) {
     print(error);
     _error = error;
+    notifyListeners();
   }
 }
 
