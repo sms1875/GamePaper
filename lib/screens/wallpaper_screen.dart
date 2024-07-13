@@ -5,7 +5,7 @@ import 'package:wallpaper/widgets/error_display.dart';
 import 'package:wallpaper/providers/abstract_wallpaper_provider.dart';
 
 class WallpaperScreen extends StatefulWidget {
-  final WallpaperProvider wallpaperProvider;
+  final AbstractWallpaperProvider wallpaperProvider;
 
   const WallpaperScreen({Key? key, required this.wallpaperProvider}) : super(key: key);
 
@@ -14,7 +14,7 @@ class WallpaperScreen extends StatefulWidget {
 }
 
 class _WallpaperScreenState extends State<WallpaperScreen> {
-  late WallpaperProvider _wallpaperProvider;
+  late AbstractWallpaperProvider _wallpaperProvider;
   final ScrollController _scrollController = ScrollController();
 
   @override

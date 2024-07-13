@@ -3,8 +3,7 @@ import 'package:wallpaper/data/game_list.dart';
 import 'package:wallpaper/models/game.dart';
 import 'package:wallpaper/screens/wallpaper_screen.dart';
 import 'package:wallpaper/widgets/game_grid.dart';
-
-import '../providers/abstract_wallpaper_provider.dart';
+import 'package:wallpaper/providers/wallpaper_provider_factory.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -58,7 +57,7 @@ class HomeScreen extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => WallpaperScreen(
-          wallpaperProvider: WallpaperProvider(game.repository),
+          wallpaperProvider: WallpaperProviderFactory.createProvider(game.repository),
         ),
       ),
     );

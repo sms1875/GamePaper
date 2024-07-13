@@ -70,13 +70,3 @@ abstract class AbstractWallpaperProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-class WallpaperProvider extends AbstractWallpaperProvider {
-  WallpaperProvider(AbstractWallpaperRepository repository) : super(repository);
-}
-
-class GameProviderFactory {
-  static AbstractWallpaperProvider createProvider(AbstractWallpaperRepository repository) {
-    return WallpaperProvider(repository);
-  }
-}
