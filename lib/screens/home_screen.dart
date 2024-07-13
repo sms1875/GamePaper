@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/data/game_list.dart';
 import 'package:wallpaper/models/game.dart';
+import 'package:wallpaper/screens/wallpaper_screen.dart';
 import 'package:wallpaper/widgets/game_grid.dart';
+
+import '../providers/abstract_wallpaper_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -38,11 +41,25 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                GameGrid(games: gamesByAlphabet),
+                GameGrid(
+                  games: gamesByAlphabet,
+                  onGameTap: (Game game) => _navigateToWallpaperScreen(context, game),
+                ),
               ],
             ),
           );
         },
+      ),
+    );
+  }
+
+  void _navigateToWallpaperScreen(BuildContext context, Game game) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WallpaperScreen(
+          wallpaperProvider: WallpaperProvider(game.repository),
+        ),
       ),
     );
   }

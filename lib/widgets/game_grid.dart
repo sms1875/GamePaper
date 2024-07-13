@@ -4,8 +4,13 @@ import 'package:wallpaper/widgets/game_shortcut.dart';
 
 class GameGrid extends StatelessWidget {
   final List<Game> games;
+  final Function(Game) onGameTap;
 
-  const GameGrid({Key? key, required this.games}) : super(key: key);
+  const GameGrid({
+    Key? key,
+    required this.games,
+    required this.onGameTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,10 @@ class GameGrid extends StatelessWidget {
       ),
       itemCount: games.length,
       itemBuilder: (BuildContext context, int index) {
-        return GameShortcut(game: games[index]);
+        return GameShortcut(
+          game: games[index],
+          onTap: () => onGameTap(games[index]),
+        );
       },
     );
   }

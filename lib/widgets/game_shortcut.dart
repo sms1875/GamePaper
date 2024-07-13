@@ -1,26 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/models/game.dart';
-import 'package:wallpaper/providers/abstract_wallpaper_provider.dart';
-import 'package:wallpaper/screens/concrete_wallpaper_screen.dart';
 
 class GameShortcut extends StatelessWidget {
   final Game game;
+  final VoidCallback onTap;
 
-  const GameShortcut({Key? key, required this.game}) : super(key: key);
+  const GameShortcut({
+    Key? key,
+    required this.game,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ConcreteWallpaperScreen(
-              wallpaperProvider: GameProviderFactory.createProvider(game.repository),
-            ),
-          ),
-        );
-      },
+      onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -28,7 +22,9 @@ class GameShortcut extends StatelessWidget {
             height: 70,
             width: 70,
             color: Colors.white,
-            child: Image.asset(game.image),
+            child: Image.asset(
+              game.image,
+            ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
