@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/data/game_list.dart';
 import 'package:wallpaper/screen/concrete_wallpaper_screen.dart';
-
-import '../provider/abstract_wallpaper_provider.dart';
+import 'package:wallpaper/provider/abstract_wallpaper_provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,72 +11,60 @@ class HomePage extends StatelessWidget {
     // 알파벳 순서 정렬
     gameList.sort((a, b) => a['title'].compareTo(b['title']));
 
+    final gameMap = groupGamesByAlphabet(gameList);
+
     return Scaffold(
       backgroundColor: Colors.grey[800],
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: buildGameGrid(context, gameList),
-          ),
-        ],
-      ),
-    );
-  }
+      body: ListView.builder(
+        itemCount: gameMap.length,
+        itemBuilder: (BuildContext context, int index) {
+          final alphabet = gameMap.keys.elementAt(index);
+          final gamesByAlphabet = gameMap[alphabet]!;
 
-  Widget buildGameGrid(BuildContext context, List<Map<String, dynamic>> games) {
-    final gameMap = groupGamesByAlphabet(games);
-
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: gameMap.length,
-      itemBuilder: (BuildContext context, int index) {
-        final alphabet = gameMap.keys.elementAt(index);
-        final gamesByAlphabet = gameMap[alphabet]!;
-
-        // 알파벳과 해당 알파벳으로 시작하는 게임 그룹
-        return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: Colors.grey[900],
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                child: Text(
-                  alphabet.toUpperCase(),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+          // 알파벳과 해당 알파벳으로 시작하는 게임 그룹
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.grey[900],
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  child: Text(
+                    alphabet.toUpperCase(),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
-              ),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  childAspectRatio: 0.8,
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    childAspectRatio: 0.8,
+                  ),
+                  itemCount: gamesByAlphabet.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final game = gamesByAlphabet[index];
+                    return buildGameShortcut(
+                      context,
+                      game['title'],
+                      game['image'],
+                      GameProviderFactory.createProvider(game['repository']),
+                    );
+                  },
                 ),
-                itemCount: gamesByAlphabet.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final game = gamesByAlphabet[index];
-                  return buildGameShortcut(
-                    context,
-                    game['title'],
-                    game['image'],
-                    GameProviderFactory.createProvider(game['repository']),
-                  );
-                },
-              ),
-            ],
-          ),
-        );
-      },
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
