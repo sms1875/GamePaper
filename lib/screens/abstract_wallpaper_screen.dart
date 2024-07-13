@@ -1,7 +1,7 @@
 import 'package:async_wallpaper/async_wallpaper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:wallpaper/provider/abstract_wallpaper_provider.dart';
+import 'package:wallpaper/providers/abstract_wallpaper_provider.dart';
 
 abstract class AbstractWallpaperScreen extends StatefulWidget {
   final AbstractWallpaperProvider wallpaperProvider;
