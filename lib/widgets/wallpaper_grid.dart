@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpaper/widgets/wallpaper_card.dart';
 
 class WallpaperGrid extends StatelessWidget {
-  final List<Map<String, String>> wallpapers;
+  final List<String> wallpapers;
   final ScrollController scrollController;
 
   const WallpaperGrid({
@@ -20,7 +20,7 @@ class WallpaperGrid extends StatelessWidget {
       ),
       itemCount: wallpapers.length,
       itemBuilder: (context, index) {
-        return WallpaperCard(imageUrl: wallpapers[index]['src']!);
+        return WallpaperCard(imageUrl: wallpapers[index]);
       },
       controller: scrollController,
     );

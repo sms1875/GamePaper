@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaper/data/wallpaper.dart';
+import 'package:wallpaper/models/wallpaper.dart';
 import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
 abstract class AbstractWallpaperProvider extends ChangeNotifier {

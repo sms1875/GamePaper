@@ -3,19 +3,17 @@ import 'package:http/http.dart' as http;
 import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
 class FinalFantasy14WallpaperRepository extends AbstractWallpaperRepository {
-  FinalFantasy14WallpaperRepository()
-      : super('https://na.finalfantasyxiv.com/lodestone/special/fankit/smartphone_wallpaper/2_0/#nav_fankit');
+  FinalFantasy14WallpaperRepository(String baseUrl)
+      : super(
+    baseUrl: baseUrl,
+    selector: '#pc_wallpaper > div > div > ul.nav_select.clearfix > li > a',
+    attributeName: 'href',
+    customFilterCondition: (href) => href.contains('smartphone_wallpaper'),
+  );
 
   @override
-  List<String> parsePaging(response) {
-    final document = getDocument(response.body);
-    final hrefList=document
-        .getElementById('pc_wallpaper')!
-        .querySelectorAll('a')
-        .map((a) => a.attributes['href']!)
-        .where((href) => href.contains('smartphone_wallpaper'))
-        .toList();
-
+  List<String> parsePaging(http.Response response) {
+    List<String> hrefList = super.parsePaging(response);
     // 1페이지 추가
     hrefList.add('/lodestone/special/fankit/smartphone_wallpaper/2_0/#nav_fankit');
     return hrefList;
@@ -33,7 +31,7 @@ class FinalFantasy14WallpaperRepository extends AbstractWallpaperRepository {
   }
 
   @override
-  Future<List<Map<String, String>>> fetchPage(int page, List<List<String>> pageUrlsList) async {
+  Future<List<String>> fetchPage(int page, List<List<String>> pageUrlsList) async {
     String urls = pageUrlsList[page - 1].first;
     final response = await http.get(Uri.parse('https://na.finalfantasyxiv.com$urls'));
     if (response.statusCode == 200) {
@@ -55,10 +53,5 @@ class FinalFantasy14WallpaperRepository extends AbstractWallpaperRepository {
     } else {
       throw Exception('Failed to load finalfantasy14 wallpaper');
     }
-  }
-
-  @override
-  Future<Map<String, String>> fetchWallpaperInfo(String url) async {
-    return {'url': url, 'src': url,};
   }
 }

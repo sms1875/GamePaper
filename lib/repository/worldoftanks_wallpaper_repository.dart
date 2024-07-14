@@ -4,58 +4,54 @@ import 'package:flutter/foundation.dart';
 import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
 class WorldOfTanksWallpaperRepository extends AbstractWallpaperRepository {
-  WorldOfTanksWallpaperRepository()
-      : super('https://worldoftanks.asia/ko/media/tag/11/');
+  WorldOfTanksWallpaperRepository(String baseUrl) : super(
+    baseUrl: baseUrl,
+    selector: '.content-wrapper .b-pager_item__pages a:last-child',
+    attributeName: 'href',
+  );
 
   @override
-  List<String> parsePaging(response) {
+  List<String> parsePaging(http.Response response) {
     final document = getDocument(response.body);
+    final lastPageHref = document.find(selector)?.attributes['href'];
 
-    final pagenum = document
-        .querySelector('.content-wrapper .b-pager_item__pages a:last-child')!
-        .attributes['href']!;
+    if (lastPageHref == null) {
+      return [];
+    }
 
-    final maxPageNum = int.parse(pagenum.split('page=')[1]) - 4;
+    final maxPageNum = int.parse(lastPageHref.split('page=')[1]) - 4;
     return List<String>.generate(
         maxPageNum, (index) => '/ko/media/tag/11/?page=${index + 1}');
   }
+
   @override
   List<List<String>> generatePageUrlsList(List<String> paging) {
     int pageSize = 1;
-    // [[$page=1], [$page=2], ...]
-    List<List<String>> pageUrlsList = List.generate(
+    return List.generate(
       (paging.length / pageSize).ceil(),
           (i) => paging.skip(i * pageSize).take(pageSize).toList(),
     );
-    return pageUrlsList;
   }
 
   @override
-  Future<List<Map<String, String>>> fetchPage(int page, List<List<String>> pageUrlsList) async {
+  Future<List<String>> fetchPage(int page, List<List<String>> pageUrlsList) async {
     String urls = pageUrlsList[page - 1].first;
 
     final response = await http.get(Uri.parse('http://worldoftanks.asia$urls'));
     if (response.statusCode == 200) {
       final document = parse(response.body);
 
-      // 월페이퍼 검색 결과
       final searchResults = document
           .querySelector('.content-wrapper')!
           .getElementsByClassName('b-img-signature_link')
           .map((a) => a.attributes['href']!);
 
-      // 검색 결과의 각 게시글 href 링크로 들어가서 갤럭시 월페이퍼 링크를 가져옴
       final wallpaperInfoFutures = searchResults.map((p) => compute(fetchWallpaperInfoFromSearchResult, p));
       final wallpaperInfoList = await Future.wait(wallpaperInfoFutures.toList());
 
-      // fetchWallpaperInfoFromSearchResult를 통해 받아온 wallpaperInfoList 정보를 wallpapers에 더하기
-      List<Map<String, String>> wallpapers = [];
-      for (var wallpaperList in wallpaperInfoList) {
-        wallpapers.addAll(wallpaperList);
-      }
+      List<String> wallpapers = wallpaperInfoList.expand((list) => list).toList();
 
-      // 빈 값이나 예외처리된 월페이퍼 제거
-      wallpapers.removeWhere((element) => element['url'] == '' || element.isEmpty);
+      wallpapers.removeWhere((element) => element.isEmpty);
 
       return wallpapers;
     } else {
@@ -64,7 +60,7 @@ class WorldOfTanksWallpaperRepository extends AbstractWallpaperRepository {
   }
 
   // 멀티쓰레딩을 위한 함수 분리
-  Future<List<Map<String, String>>> fetchWallpaperInfoFromSearchResult(String p) async {
+  Future<List<String>> fetchWallpaperInfoFromSearchResult(String p) async {
     final response = await http.get(Uri.parse('https://worldoftanks.asia$p'));
     if (response.statusCode == 200) {
       final document = parse(response.body);
@@ -76,19 +72,12 @@ class WorldOfTanksWallpaperRepository extends AbstractWallpaperRepository {
           .where((href) => href.contains('1200x2300') || href.contains('mobile') || href.contains('mw_'))
           .toSet();
 
-      // 갤럭시 월페이퍼가 없는 경우 예외처리
-      if (galaxyHref.isEmpty) galaxyHref.add('');
+      if (galaxyHref.isEmpty) return [''];
 
       final wallpaperInfoFutures = galaxyHref.map((href) => fetchWallpaperInfo(href));
-      final wallpaperInfoList = await Future.wait(wallpaperInfoFutures.toList());
-      return wallpaperInfoList;
+      return await Future.wait(wallpaperInfoFutures.toList());
     } else {
       throw Exception('Failed to load HTML');
     }
-  }
-
-  @override
-  Future<Map<String, String>> fetchWallpaperInfo(String url) async {
-    return {'url': url, 'src': url};
   }
 }

@@ -1,22 +1,16 @@
 import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
 class EldenRingWallpaperRepository extends AbstractWallpaperRepository {
-  EldenRingWallpaperRepository()
-      : super('https://eldenring.bn-ent.net/kr/special/');
-
-  @override
-  List<String> parsePaging(response) {
-    final document = getDocument(response.body);
-    return document
-        .querySelectorAll('.wpList li')
-        .map((li) => li.querySelector('a[href*="1125x2436"]'))
-        .where((a) => a != null)
-        .map((a) => a!.attributes['href']!.replaceFirst('../../', ''))
-        .toList();
-  }
-
-  @override
-  Future<Map<String, String>> fetchWallpaperInfo(String url) async {
-    return {'src': "https://eldenring.bn-ent.net/$url", 'url': "https://eldenring.bn-ent.net/$url"};
-  }
+  EldenRingWallpaperRepository(String baseUrl)
+      : super(
+    baseUrl: baseUrl,
+    selector: '#specialCol > ul.wpList > li > p > a',
+    attributeName: 'href',
+    needsReplace: true,
+    replaceFrom: '../../',
+    replaceTo: '',
+    customFilterCondition: (href) => href.contains('1125x2436'),
+    urlPattern: r'^(.*)$',
+    urlReplacement: r'https://eldenring.bn-ent.net/$1',
+  );
 }

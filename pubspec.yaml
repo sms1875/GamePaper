@@ -46,6 +46,9 @@ dependencies:
   #압축 파일
   archive: ^3.3.7
 
+  #스크래핑
+  beautiful_soup_dart: ^0.3.0
+
 
 dev_dependencies:
   flutter_test:
