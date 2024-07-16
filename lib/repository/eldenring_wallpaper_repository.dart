@@ -6,8 +6,6 @@ class EldenRingWallpaperRepository extends BaseWallpaperRepository {
     baseUrl: baseUrl,
     imageElementSelector: '#specialCol > ul.wpList > li > p > a',
     imageAttributeName: 'href',
-    imageUrlPattern: RegExp(r'^../../'),
-    imageUrlReplacement: '',
     imageUrlFilter: (href) => href.contains('1125x2436'),
     imageUrlPrefix: "https://eldenring.bn-ent.net/",
     imageUrlGroupNumber: 0,

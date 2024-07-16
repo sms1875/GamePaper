@@ -6,9 +6,7 @@ class HeavenBurnsRedWallpaperRepository extends BaseWallpaperRepository {
     baseUrl: baseUrl,
     imageElementSelector: '.post-content > ul > li > div.clm-buttons > a',
     imageAttributeName: 'href',
-    pageUrlPattern: RegExp(r'^../../'),
-    pageUrlReplacement: '',
-    pagingUrlFilter: (href) => href.contains('iphone.png'),
+    imageUrlFilter: (href) => href.contains('iphone.png'),
     imageUrlPrefix: 'https://heaven-burns-red.com/',
   );
 }

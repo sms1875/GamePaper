@@ -15,12 +15,21 @@ class WallpaperCard extends StatelessWidget {
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () => _showWallpaperDialog(context),
-        child: CachedNetworkImage(
-          imageUrl: imageUrl,
+        child: Image.network(
+
+          imageUrl,
           fit: BoxFit.cover,
-          placeholder: (context, url) =>
-          const Center(child: CircularProgressIndicator()),
-          errorWidget: (context, url, error) => const Icon(Icons.error),
+          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress){
+          if(loadingProgress == null){
+            return child;
+          }
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
+            ),
+          );
+        },
+          errorBuilder: (context, url, error) => const Icon(Icons.error),
         ),
       ),
     );

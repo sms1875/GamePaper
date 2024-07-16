@@ -1,5 +1,6 @@
-import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:http/http.dart' as http;
+import 'package:html/parser.dart';
+import 'package:html/dom.dart';
 import 'package:wallpaper/models/wallpaper.dart';
 import 'dart:core';
 
@@ -10,9 +11,7 @@ abstract class BaseWallpaperRepository {
   final String? pagingElementSelector;
   final String? pagingAttributeName;
   final RegExp? pageUrlPattern;
-  final String? pageUrlReplacement;
   final RegExp? imageUrlPattern;
-  final String? imageUrlReplacement;
   final bool Function(String)? pagingUrlFilter;
   final bool Function(String)? imageUrlFilter;
   final String? pagingUrlPrefix;
@@ -27,9 +26,7 @@ abstract class BaseWallpaperRepository {
     this.pagingElementSelector,
     this.pagingAttributeName,
     this.pageUrlPattern,
-    this.pageUrlReplacement,
     this.imageUrlPattern,
-    this.imageUrlReplacement,
     this.pagingUrlFilter,
     this.imageUrlFilter,
     this.pagingUrlPrefix,
@@ -78,10 +75,10 @@ abstract class BaseWallpaperRepository {
   }
 
   List<String> _extractPageUrls(http.Response response) {
-    final document = BeautifulSoup(response.body);
+    final document = parse(response.body);
     return document
-        .findAll(pagingElementSelector!)
-        .map((element) => _extractUrl(element, pagingAttributeName!, pageUrlPattern, pageUrlReplacement, pageUrlGroupNumber))
+        .querySelectorAll(pagingElementSelector!)
+        .map((element) => _extractUrl(element, pagingAttributeName!, pageUrlPattern, pageUrlGroupNumber))
         .where((url) => url != null && (pagingUrlFilter?.call(url) ?? true))
         .map((url) => pagingUrlPrefix != null ? '$pagingUrlPrefix$url' : url!)
         .toSet()
@@ -89,20 +86,25 @@ abstract class BaseWallpaperRepository {
   }
 
   List<String> _extractWallpaperUrls(http.Response response) {
-    final document = BeautifulSoup(response.body);
+    final document = parse(response.body);
     return document
-        .findAll(imageElementSelector)
-        .map((element) => _extractUrl(element, imageAttributeName, imageUrlPattern, imageUrlReplacement, imageUrlGroupNumber))
+        .querySelectorAll(imageElementSelector)
+        .map((element) => _extractUrl(element, imageAttributeName, imageUrlPattern, imageUrlGroupNumber))
         .where((url) => url != null && (imageUrlFilter?.call(url) ?? true))
         .map((url) => imageUrlPrefix != null ? '$imageUrlPrefix$url' : url!)
         .toSet()
         .toList();
   }
 
-  String? _extractUrl(element, String attributeName, RegExp? pattern, String? replacement, int groupNumber) {
+  String? _extractUrl(Element element, String attributeName, RegExp? pattern, int groupNumber) {
     String? url = element.attributes[attributeName];
-    if (url != null && pattern != null && replacement != null) {
-      url = url.replaceFirstMapped(pattern, (match) => match.group(groupNumber)!);
+    if (url != null && pattern != null) {
+      final matches = pattern.firstMatch(url);
+      if (matches != null) {
+        url = matches.group(groupNumber);
+      } else {
+        url = null;
+      }
     }
     return url;
   }
