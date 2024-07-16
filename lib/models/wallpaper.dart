@@ -1,7 +1,7 @@
 class Wallpaper {
-  final int page;
-  final List<List<String>> pageUrlsList;
-  final List<String> wallpapers;
+  final List<int> page;
+  final List<String> pageUrlsList;
+  final List<List<String>> wallpapers;
 
   Wallpaper({
     required this.page,
@@ -10,9 +10,11 @@ class Wallpaper {
   });
 
   factory Wallpaper.fromJson(Map<String, dynamic> json) {
-    final int page = json['page'];
-    final pageUrlsList = json['pageUrls'] as List<List<String>>;
-    final wallpapers = json['wallpapers'] as List<String>;
+    final List<int> page = List<int>.from(json['page']);
+    final List<String> pageUrlsList = List<String>.from(json['pageUrls']);
+    final List<List<String>> wallpapers = (json['wallpapers'] as List)
+        .map((list) => List<String>.from(list))
+        .toList();
     return Wallpaper(
       page: page,
       pageUrlsList: pageUrlsList,

@@ -3,7 +3,7 @@ import 'wallpaper_provider.dart';
 
 class WallpaperProviderFactory {
   static WallpaperProvider createProvider(
-      AbstractWallpaperRepository repository) {
+      BaseWallpaperRepository repository) {
     return WallpaperProvider(repository);
   }
 }

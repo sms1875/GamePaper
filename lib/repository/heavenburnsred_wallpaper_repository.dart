@@ -1,16 +1,14 @@
 import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
-class HeavenBurnsRedWallpaperRepository extends AbstractWallpaperRepository {
+class HeavenBurnsRedWallpaperRepository extends BaseWallpaperRepository {
   HeavenBurnsRedWallpaperRepository(String baseUrl)
       : super(
     baseUrl: baseUrl,
-    selector: '.post-content > ul > li > div.clm-buttons > a',
-    attributeName: 'href',
-    needsReplace: true,
-    replaceFrom: '../../',
-    replaceTo: '',
-    customFilterCondition: (href) => href.contains('iphone.png'),
-    urlPattern: r'^(.*)$',
-    urlReplacement: r'https://heaven-burns-red.com/$1',
+    imageElementSelector: '.post-content > ul > li > div.clm-buttons > a',
+    imageAttributeName: 'href',
+    pageUrlPattern: RegExp(r'^../../'),
+    pageUrlReplacement: '',
+    pagingUrlFilter: (href) => href.contains('iphone.png'),
+    imageUrlPrefix: 'https://heaven-burns-red.com/',
   );
 }

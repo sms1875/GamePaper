@@ -1,45 +1,13 @@
-import 'package:beautiful_soup_dart/beautiful_soup.dart';
-import 'package:html/parser.dart';
-import 'package:http/http.dart' as http;
 import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
 
-class BlackDesertWallpaperRepository extends AbstractWallpaperRepository {
+class BlackDesertWallpaperRepository extends BaseWallpaperRepository {
   BlackDesertWallpaperRepository(String baseUrl)
       : super(
     baseUrl: baseUrl,
-    selector: 'div.paging > a',
-    attributeName: 'href',
+    pagingElementSelector: 'div.paging > a',
+    pagingAttributeName: 'href',
+    imageElementSelector: '#wallpaper_list > li > a[attr-img_m]',
+    imageAttributeName: 'attr-img_m',
+    pagingUrlPrefix: baseUrl,
   );
-
-  @override
-  List<List<String>> generatePageUrlsList(List<String> paging) {
-    // [[$page=1], [$page=2], ...]
-    int pageSize = 1;
-    List<List<String>> pageUrlsList = List.generate(
-      (paging.length / pageSize).ceil(),
-          (i) => paging.skip(i * pageSize).take(pageSize).toList(),
-    );
-    // 마지막 페이지는 모바일 월페이퍼가 없어서 페이지목록에서 제거
-    pageUrlsList.removeLast();
-    return pageUrlsList;
-  }
-
-  @override
-  Future<List<String>> fetchPage(int page, List<List<String>> pageUrlsList) async {
-    String urls = pageUrlsList[page - 1].first;
-    final response = await http.get(Uri.parse('$baseUrl$urls'));
-    if (response.statusCode == 200) {
-      final document = BeautifulSoup(response.body);
-      final wallpapers = document
-          .findAll('#wallpaper_list > li > a[attr-img_m]')
-          .map((a) => a.attributes['attr-img_m'])
-          .where((url) => url != null)
-          .toList()
-          .cast<String>();
-
-      return wallpapers;
-    } else {
-      throw Exception('Failed to load blackdesert wallpaper');
-    }
-  }
 }

@@ -48,13 +48,15 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
         children: [
           Expanded(
             child: WallpaperGrid(
-              wallpapers: _wallpaperProvider.wallpaperPage.wallpapers,
+              wallpapers: _wallpaperProvider.wallpaperPage.wallpapers.isNotEmpty
+                  ? _wallpaperProvider.wallpaperPage.wallpapers[_wallpaperProvider.currentPageIndex]
+                  : [],
               scrollController: _scrollController,
             ),
           ),
           PageNavigation(
-            currentPage: _wallpaperProvider.currentPageIndex,
-            pageNumbers: _wallpaperProvider.pageNumbers,
+            currentPage: _wallpaperProvider.currentPageIndex + 1,
+            pageNumbers: List.generate(_wallpaperProvider.wallpaperPage.wallpapers.length, (index) => index + 1),
             onPageChanged: _onPageChanged,
           ),
         ],
@@ -62,11 +64,12 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
     );
   }
 
-  Future<void> _onPageChanged(int page) async {
+  void _onPageChanged(int page) {
     if (!_wallpaperProvider.isLoading) {
-      await _wallpaperProvider.getPage(page);
+      _wallpaperProvider.currentPageIndex = page - 1;
       _scrollController.animateTo(0,
           duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+      setState(() {});
     }
   }
 }
