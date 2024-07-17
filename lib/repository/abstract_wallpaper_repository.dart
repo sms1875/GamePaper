@@ -2,9 +2,11 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart';
 import 'package:html/dom.dart';
 import 'package:wallpaper/models/wallpaper.dart';
-import 'dart:core';
+import 'dart:math';
 
 abstract class BaseWallpaperRepository {
+  static const int WALLPAPERS_PER_PAGE = 21;
+
   final String baseUrl;
   final String imageElementSelector;
   final String imageAttributeName;
@@ -36,42 +38,54 @@ abstract class BaseWallpaperRepository {
   });
 
   Future<Wallpaper> fetchWallpaper() async {
-    final response = await http.get(Uri.parse(baseUrl));
-    if (response.statusCode == 200) {
-      final pageUrls = pagingElementSelector != null ? _extractPageUrls(response) : [baseUrl];
-      final allWallpaperUrls = await _fetchAllWallpaperUrls(pageUrls);
-      final pagedWallpaperUrls = _paginateWallpaperUrls(allWallpaperUrls);
-      return Wallpaper(
-        page: List.generate(pagedWallpaperUrls.length, (index) => index + 1),
-        pageUrlsList: pageUrls,
-        wallpapers: pagedWallpaperUrls,
-      );
-    } else {
-      throw Exception('Failed to fetch wallpaper');
+    try {
+      final response = await http.get(Uri.parse(baseUrl));
+      if (response.statusCode == 200) {
+        final pageUrls = await _getPageUrls(response);
+        final allWallpaperUrls = await _fetchAllWallpaperUrls(pageUrls);
+        final pagedWallpaperUrls = _paginateWallpaperUrls(allWallpaperUrls);
+        return Wallpaper(
+          page: List.generate(pagedWallpaperUrls.length, (index) => index + 1),
+          pageUrlsList: pageUrls,
+          wallpapers: pagedWallpaperUrls,
+        );
+      } else {
+        throw HttpException('Failed to fetch wallpaper: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw WallpaperFetchException('Error fetching wallpaper: $e');
     }
+  }
+
+  Future<List<String>> _getPageUrls(http.Response response) async {
+    if (pagingElementSelector == null) return [baseUrl];
+    return _extractPageUrls(response);
   }
 
   Future<List<String>> _fetchAllWallpaperUrls(List<String> pageUrls) async {
-    List<String> allWallpaperUrls = [];
-    for (String url in pageUrls) {
+    final futures = pageUrls.map((url) => _fetchWallpaperUrlsFromPage(url));
+    final results = await Future.wait(futures);
+    return results.expand((urls) => urls).toList();
+  }
+
+  Future<List<String>> _fetchWallpaperUrlsFromPage(String url) async {
+    try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
-        allWallpaperUrls.addAll(_extractWallpaperUrls(response));
+        return _extractWallpaperUrls(response);
       } else {
-        throw Exception('Failed to load wallpaper from $url');
+        throw HttpException('Failed to load wallpaper from $url: ${response.statusCode}');
       }
+    } catch (e) {
+      throw WallpaperFetchException('Error fetching wallpaper from $url: $e');
     }
-    return allWallpaperUrls;
   }
 
   List<List<String>> _paginateWallpaperUrls(List<String> allWallpaperUrls) {
-    List<List<String>> pagedWallpaperUrls = [];
-    for (int i = 0; i < allWallpaperUrls.length; i += 21) {
-      pagedWallpaperUrls.add(
-          allWallpaperUrls.sublist(i, i + 21 > allWallpaperUrls.length ? allWallpaperUrls.length : i + 21)
-      );
-    }
-    return pagedWallpaperUrls;
+    return [
+      for (var i = 0; i < allWallpaperUrls.length; i += WALLPAPERS_PER_PAGE)
+        allWallpaperUrls.sublist(i, min(i + WALLPAPERS_PER_PAGE, allWallpaperUrls.length))
+    ];
   }
 
   List<String> _extractPageUrls(http.Response response) {
@@ -80,7 +94,7 @@ abstract class BaseWallpaperRepository {
         .querySelectorAll(pagingElementSelector!)
         .map((element) => _extractUrl(element, pagingAttributeName!, pageUrlPattern, pageUrlGroupNumber))
         .where((url) => url != null && (pagingUrlFilter?.call(url) ?? true))
-        .map((url) => pagingUrlPrefix != null ? '$pagingUrlPrefix$url' : url!)
+        .map((url) => _processUrl(url, pagingUrlPrefix, null, 0)!)
         .toSet()
         .toList();
   }
@@ -90,22 +104,40 @@ abstract class BaseWallpaperRepository {
     return document
         .querySelectorAll(imageElementSelector)
         .map((element) => _extractUrl(element, imageAttributeName, imageUrlPattern, imageUrlGroupNumber))
-        .where((url) => url != null && (imageUrlFilter?.call(url) ?? true))
-        .map((url) => imageUrlPrefix != null ? '$imageUrlPrefix$url' : url!)
+        .where((url) => url != null && url.isNotEmpty && (imageUrlFilter?.call(url) ?? true))
+        .map((url) => _processUrl(url, imageUrlPrefix, null, 0)!)
         .toSet()
         .toList();
   }
 
   String? _extractUrl(Element element, String attributeName, RegExp? pattern, int groupNumber) {
     String? url = element.attributes[attributeName];
-    if (url != null && pattern != null) {
-      final matches = pattern.firstMatch(url);
-      if (matches != null) {
-        url = matches.group(groupNumber);
-      } else {
-        url = null;
-      }
+    if (url != null && url.isEmpty) {
+      url = null;
     }
-    return url;
+    return _processUrl(url, null, pattern, groupNumber);
   }
+
+  String? _processUrl(String? url, String? prefix, RegExp? pattern, int groupNumber) {
+    if (url == null) return null;
+    if (pattern != null) {
+      final matches = pattern.firstMatch(url);
+      url = matches?.group(groupNumber);
+    }
+    return url != null ? (prefix ?? '') + url : null;
+  }
+}
+
+class HttpException implements Exception {
+  final String message;
+  HttpException(this.message);
+  @override
+  String toString() => 'HttpException: $message';
+}
+
+class WallpaperFetchException implements Exception {
+  final String message;
+  WallpaperFetchException(this.message);
+  @override
+  String toString() => 'WallpaperFetchException: $message';
 }

@@ -6,9 +6,8 @@ class FinalFantasy14WallpaperRepository extends BaseWallpaperRepository {
     baseUrl: baseUrl,
     pagingElementSelector: '#pc_wallpaper > div > div > ul.nav_select.clearfix > li > a',
     pagingAttributeName: 'href',
-    imageElementSelector:'#pc_wallpaper > div > div > ul.list_sp_wallpaper.clearfix > li > p > a',
+    imageElementSelector:'#pc_wallpaper > div > div > ul.list_sp_wallpaper.clearfix > li > p > a:nth-child(5)',
     imageAttributeName: 'href',
-    pagingUrlFilter: (href) => href.contains('smartphone_wallpaper'),
     pagingUrlPrefix: 'https://na.finalfantasyxiv.com/',
   );
 }
