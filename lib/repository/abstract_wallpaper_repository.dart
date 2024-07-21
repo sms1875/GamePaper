@@ -4,7 +4,7 @@ import 'package:html/dom.dart';
 import 'package:wallpaper/models/wallpaper.dart';
 import 'dart:math';
 
-abstract class BaseWallpaperRepository {
+class BaseWallpaperRepository {
   static const int WALLPAPERS_PER_PAGE = 21;
 
   final String baseUrl;
@@ -21,6 +21,12 @@ abstract class BaseWallpaperRepository {
   final int imageUrlGroupNumber;
   final int pageUrlGroupNumber;
 
+  // New fields for post handling
+  final String? postElementSelector;
+  final String? postAttributeName;
+  final String? postUrlPrefix;
+  final bool usePostStructure;
+
   BaseWallpaperRepository({
     required this.baseUrl,
     required this.imageElementSelector,
@@ -35,6 +41,10 @@ abstract class BaseWallpaperRepository {
     this.imageUrlPrefix,
     this.imageUrlGroupNumber = 0,
     this.pageUrlGroupNumber = 0,
+    this.postElementSelector,
+    this.postAttributeName,
+    this.postUrlPrefix,
+    this.usePostStructure = false,
   });
 
   Future<Wallpaper> fetchWallpaper() async {
@@ -63,9 +73,50 @@ abstract class BaseWallpaperRepository {
   }
 
   Future<List<String>> _fetchAllWallpaperUrls(List<String> pageUrls) async {
-    final futures = pageUrls.map((url) => _fetchWallpaperUrlsFromPage(url));
+    if (usePostStructure) {
+      return _fetchWallpaperUrlsFromPosts(pageUrls);
+    } else {
+      final futures = pageUrls.map((url) => _fetchWallpaperUrlsFromPage(url));
+      final results = await Future.wait(futures);
+      return results.expand((urls) => urls).toList();
+    }
+  }
+
+  Future<List<String>> _fetchWallpaperUrlsFromPosts(List<String> pageUrls) async {
+    final postUrls = await _getAllPostUrls(pageUrls);
+    final futures = postUrls.map((url) => _fetchWallpaperUrlsFromPost(url));
     final results = await Future.wait(futures);
     return results.expand((urls) => urls).toList();
+  }
+
+  Future<List<String>> _getAllPostUrls(List<String> pageUrls) async {
+    final futures = pageUrls.map((url) => _getPostUrlsFromPage(url));
+    final results = await Future.wait(futures);
+    return results.expand((urls) => urls).toList();
+  }
+
+  Future<List<String>> _getPostUrlsFromPage(String url) async {
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final document = parse(response.body);
+      return document
+          .querySelectorAll(postElementSelector!)
+          .map((element) => element.attributes[postAttributeName!])
+          .where((url) => url != null && url.isNotEmpty)
+          .map((url) => (postUrlPrefix ?? '') + url!)
+          .toList();
+    } else {
+      throw HttpException('Failed to fetch post URLs: ${response.statusCode}');
+    }
+  }
+
+  Future<List<String>> _fetchWallpaperUrlsFromPost(String url) async {
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return _extractWallpaperUrls(response);
+    } else {
+      throw HttpException('Failed to fetch wallpapers from post: ${response.statusCode}');
+    }
   }
 
   Future<List<String>> _fetchWallpaperUrlsFromPage(String url) async {
@@ -125,6 +176,46 @@ abstract class BaseWallpaperRepository {
       url = matches?.group(groupNumber);
     }
     return url != null ? (prefix ?? '') + url : null;
+  }
+
+  static BaseWallpaperRepository create({
+    required String baseUrl,
+    String? pagingElementSelector,
+    String? pagingAttributeName,
+    required String imageElementSelector,
+    required String imageAttributeName,
+    String? pagingUrlPrefix,
+    String? imageUrlPrefix,
+    RegExp? pageUrlPattern,
+    RegExp? imageUrlPattern,
+    bool Function(String)? pagingUrlFilter,
+    bool Function(String)? imageUrlFilter,
+    int imageUrlGroupNumber = 0,
+    int pageUrlGroupNumber = 0,
+    bool usePostStructure = false,
+    String? postElementSelector,
+    String? postAttributeName,
+    String? postUrlPrefix,
+  }) {
+    return BaseWallpaperRepository(
+      baseUrl: baseUrl,
+      pagingElementSelector: pagingElementSelector,
+      pagingAttributeName: pagingAttributeName,
+      imageElementSelector: imageElementSelector,
+      imageAttributeName: imageAttributeName,
+      pagingUrlPrefix: pagingUrlPrefix,
+      imageUrlPrefix: imageUrlPrefix,
+      pageUrlPattern: pageUrlPattern,
+      imageUrlPattern: imageUrlPattern,
+      pagingUrlFilter: pagingUrlFilter,
+      imageUrlFilter: imageUrlFilter,
+      imageUrlGroupNumber: imageUrlGroupNumber,
+      pageUrlGroupNumber: pageUrlGroupNumber,
+      usePostStructure: usePostStructure,
+      postElementSelector: postElementSelector,
+      postAttributeName: postAttributeName,
+      postUrlPrefix: postUrlPrefix,
+    );
   }
 }
 
