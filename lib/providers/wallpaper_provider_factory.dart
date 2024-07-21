@@ -1,9 +1,9 @@
-import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
+import 'package:wallpaper/repository/wallpaper_repository.dart';
 import 'wallpaper_provider.dart';
 
 class WallpaperProviderFactory {
   static WallpaperProvider createProvider(
-      BaseWallpaperRepository repository) {
+      WallpaperRepository repository) {
     return WallpaperProvider(repository);
   }
 }

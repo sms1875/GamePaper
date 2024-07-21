@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/models/wallpaper.dart';
-import 'package:wallpaper/repository/abstract_wallpaper_repository.dart';
+import 'package:wallpaper/repository/wallpaper_repository.dart';
 
 abstract class AbstractWallpaperProvider extends ChangeNotifier {
-  final BaseWallpaperRepository _wallpaperRepository;
-  Wallpaper wallpaperPage = Wallpaper(page: [], pageUrlsList: [], wallpapers: []);
+  final WallpaperRepository _wallpaperRepository;
+  Wallpaper wallpaperPage = Wallpaper(pageNumbers: [], pageUrls: [], wallpapersByPage: []);
 
   AbstractWallpaperProvider(this._wallpaperRepository);
 
@@ -24,7 +24,7 @@ abstract class AbstractWallpaperProvider extends ChangeNotifier {
     _setLoading(true);
     try {
       currentPageIndex = 0;
-      wallpaperPage = await _wallpaperRepository.fetchWallpaper();
+      wallpaperPage = await _wallpaperRepository.fetchWallpapers();
     } catch (e) {
       _setError(e);
     }
@@ -33,7 +33,7 @@ abstract class AbstractWallpaperProvider extends ChangeNotifier {
 
   void nextPage() {
     final nextPage = currentPageIndex + 1;
-    if (nextPage < wallpaperPage.wallpapers.length) {
+    if (nextPage < wallpaperPage.wallpapersByPage.length) {
       currentPageIndex = nextPage;
       notifyListeners();
     }

@@ -5,6 +5,8 @@ import 'package:wallpaper/screens/wallpaper_screen.dart';
 import 'package:wallpaper/widgets/game_grid.dart';
 import 'package:wallpaper/providers/wallpaper_provider_factory.dart';
 
+import '../repository/wallpaper_repository_builder.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -30,7 +32,8 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   child: Text(
                     alphabet.toUpperCase(),
                     style: const TextStyle(
@@ -42,7 +45,8 @@ class HomeScreen extends StatelessWidget {
                 ),
                 GameGrid(
                   games: gamesByAlphabet,
-                  onGameTap: (Game game) => _navigateToWallpaperScreen(context, game),
+                  onGameTap: (Game game) =>
+                      _navigateToWallpaperScreen(context, game),
                 ),
               ],
             ),
@@ -57,7 +61,9 @@ class HomeScreen extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => WallpaperScreen(
-          wallpaperProvider: WallpaperProviderFactory.createProvider(game.repository),
+          // game.repository
+          wallpaperProvider: WallpaperProviderFactory.createProvider(
+              WallpaperRepositoryBuilder().fromData(game.repository).build()),
         ),
       ),
     );
@@ -72,6 +78,7 @@ class HomeScreen extends StatelessWidget {
       gameMap[alphabet]!.add(game);
     }
 
-    return Map.fromEntries(gameMap.entries.toList()..sort((a, b) => a.key.compareTo(b.key)));
+    return Map.fromEntries(
+        gameMap.entries.toList()..sort((a, b) => a.key.compareTo(b.key)));
   }
 }

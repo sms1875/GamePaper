@@ -48,15 +48,15 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
         children: [
           Expanded(
             child: WallpaperGrid(
-              wallpapers: _wallpaperProvider.wallpaperPage.wallpapers.isNotEmpty
-                  ? _wallpaperProvider.wallpaperPage.wallpapers[_wallpaperProvider.currentPageIndex]
+              wallpapers: _wallpaperProvider.wallpaperPage.wallpapersByPage.isNotEmpty
+                  ? _wallpaperProvider.wallpaperPage.wallpapersByPage[_wallpaperProvider.currentPageIndex]
                   : [],
               scrollController: _scrollController,
             ),
           ),
           PageNavigation(
             currentPage: _wallpaperProvider.currentPageIndex + 1,
-            pageNumbers: List.generate(_wallpaperProvider.wallpaperPage.wallpapers.length, (index) => index + 1),
+            pageNumbers: List.generate(_wallpaperProvider.wallpaperPage.wallpapersByPage.length, (index) => index + 1),
             onPageChanged: _onPageChanged,
           ),
         ],
