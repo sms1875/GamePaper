@@ -1,7 +1,6 @@
 package io.github.sms1875.gamepaper.controller;
 
 import io.github.sms1875.gamepaper.service.GameImageRetrievalService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,6 @@ public class ImageRetrievalController {
 
   private final Map<String, GameImageRetrievalService> gameServices;
 
-  @Autowired
   public ImageRetrievalController(Map<String, GameImageRetrievalService> gameServices) {
     this.gameServices = gameServices;
   }

@@ -14,7 +14,7 @@ public class SeleniumConfig {
   public WebDriver webDriver() {
     WebDriverManager.chromedriver().setup();
     ChromeOptions options = new ChromeOptions();
-    options.addArguments("--headless", "--disable-gpu", "--ignore-certificate-errors", "--lang=ko");
+    options.addArguments("--disable-gpu", "--ignore-certificate-errors", "--lang=ko");
 
     String chromeVersion = WebDriverManager.chromedriver().getDownloadedDriverVersion();
     String userAgent = String.format(

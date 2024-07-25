@@ -10,14 +10,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("mabinogi")
 public class MabinogiImageRetrievalService extends SinglePageGameImageRetrievalService {
   private static final String BASE_URL = "https://mabinogi.nexon.com/page/pds/gallery_wallpaper.asp";
 
-  @Autowired
   public MabinogiImageRetrievalService(WebDriver webDriver) {
     super(webDriver);
   }

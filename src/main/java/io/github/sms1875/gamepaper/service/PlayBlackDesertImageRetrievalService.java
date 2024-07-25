@@ -8,14 +8,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("playblackdesert")
 public class PlayBlackDesertImageRetrievalService extends PagedGameImageRetrievalService {
   private static final String BASE_URL = "https://www.kr.playblackdesert.com/ko-KR/Data/Wallpaper/";
 
-  @Autowired
   public PlayBlackDesertImageRetrievalService(WebDriver webDriver) {
     super(webDriver);
   }
