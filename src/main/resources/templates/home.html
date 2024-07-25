@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Image Fetch</title>
+  </head>
+  <body>
+    <h1>Fetch Image from PlayBlackDesert</h1>
+    <form action="/fetchImage" method="get">
+      <button type="submit">Fetch Images</button>
+    </form>
+
+    <div th:if="${imageUrls}">
+      <h2>Result:</h2>
+      <div th:each="url : ${imageUrls}">
+        <img
+          th:src="${url}"
+          alt="Fetched Image"
+          style="max-width: 500px; max-height: 500px"
+        />
+      </div>
+    </div>
+  </body>
+</html>
