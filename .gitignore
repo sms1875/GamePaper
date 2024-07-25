@@ -1,0 +1,145 @@
+# Java specific
+*.class
+*.jar
+*.war
+*.ear
+
+# Debug
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# Eclipse and IntelliJ IDEA project files
+/.idea/
+/*.iws
+/*.iml
+/*.ipr
+/.classpath
+/.project
+/.settings/
+.idea/
+*.iml
+*.ipr
+
+# VS Code files
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Gradle files
+.gradle/
+build/
+out/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Gradle log files
+.gradle/
+/build/
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# Maven files
+.mvn/
+target/
+!mvnw
+!mvnw.cmd
+pom.xml.scm-local
+
+# STS (Spring Tool Suite)
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+# IntelliJ
+/.idea
+/*.iws
+/*.iml
+/*.ipr
+
+# Eclipse
+/.classpath
+/.project
+/.settings
+/.loadpath
+
+# Distribution
+dist/
+build/
+
+# Spring Boot
+spring.log
+
+# Code Coverage
+jacoco.exec
+
+# Logs
+logs
+*.log
+
+# Sensitive information
+application.yml
+application.properties
+
+# Linux/Mac temporary files
+*~
+# Windows temporary files
+Thumbs.db
+Desktop.ini
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+package-lock.json
+
+# IDE files
+# IntelliJ
+*.idea
+*.iws
+*.iml
+*.ipr
+/.idea/
+
+# Eclipse
+.project
+.classpath
+.settings/
+.apt_generated
+.factorypath
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# VSCode
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Dependency directories
+/node_modules/
