@@ -35,12 +35,16 @@
       <option value="">Select a game</option>
       <option value="playblackdesert">Black Desert</option>
       <option value="mabinogi">Mabinogi</option>
-      <option value="maplestory">maplestory</option>
-      <option value="nikke">nikke</option>
+      <option value="maplestory">MapleStory</option>
+      <option value="nikke">Nikke</option>
+      <option value="monsterhunter">Monster Hunter</option>
     </select>
     <div id="imageContainer"></div>
 
     <script>
+      const MOBILE_SCREEN_RATIO = 9 / 16; // Example mobile screen ratio (portrait)
+      const TOLERANCE = 0.01; // Allowing a small tolerance
+
       $(document).ready(function () {
         $("#gameSelector").change(function () {
           var selectedGame = $(this).val();
@@ -49,9 +53,19 @@
               var imageContainer = $("#imageContainer");
               imageContainer.empty();
               data.forEach(function (url) {
-                imageContainer.append(
-                  '<img src="' + url + '" alt="Game Wallpaper">'
-                );
+                var img = new Image();
+                img.src = url;
+                img.onload = function () {
+                  var width = img.width;
+                  var height = img.height;
+                  var aspectRatio = height / width;
+                  if (Math.abs(aspectRatio - MOBILE_SCREEN_RATIO) > TOLERANCE) {
+                    imageContainer.append(img);
+                  }
+                };
+                img.onerror = function () {
+                  console.error("Error loading image: " + url);
+                };
               });
             }).fail(function (jqXHR, textStatus, errorThrown) {
               alert("Error: " + errorThrown);
