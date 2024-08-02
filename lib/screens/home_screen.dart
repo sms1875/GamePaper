@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpaper/data/game_list.dart';
 import 'package:wallpaper/models/game.dart';
 import 'package:wallpaper/screens/wallpaper_screen.dart';
-import 'package:wallpaper/widgets/game_grid.dart';
+import 'package:wallpaper/widgets/home_carousel.dart';
 import 'package:wallpaper/providers/wallpaper_provider_factory.dart';
 
 import '../repository/wallpaper_repository_builder.dart';
@@ -37,13 +37,13 @@ class HomeScreen extends StatelessWidget {
                   child: Text(
                     alphabet.toUpperCase(),
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 60,
                       fontWeight: FontWeight.bold,
                       color: Colors.grey,
                     ),
                   ),
                 ),
-                GameGrid(
+                HomeCarousel(
                   games: gamesByAlphabet,
                   onGameTap: (Game game) =>
                       _navigateToWallpaperScreen(context, game),

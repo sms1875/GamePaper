@@ -85,6 +85,69 @@ List<Game> gameList = [
         imageAttributeName: 'href',
         imageUrlFilter: (href) => href.contains('iphone.png'),
         imageUrlPrefix: 'https://heaven-burns-red.com/'),
+  ),Game(
+    title: 'Heaven Burns Red',
+    image: 'assets/images/heavenburnsred.png',
+    repository: WallpaperData(
+        baseUrl: 'https://heaven-burns-red.com/fankit/sp-wallpaper/',
+        imageElementSelector: '.post-content > ul > li > div.clm-buttons > a',
+        imageAttributeName: 'href',
+        imageUrlFilter: (href) => href.contains('iphone.png'),
+        imageUrlPrefix: 'https://heaven-burns-red.com/'),
+  ),Game(
+    title: 'Heaven Burns Red',
+    image: 'assets/images/heavenburnsred.png',
+    repository: WallpaperData(
+        baseUrl: 'https://heaven-burns-red.com/fankit/sp-wallpaper/',
+        imageElementSelector: '.post-content > ul > li > div.clm-buttons > a',
+        imageAttributeName: 'href',
+        imageUrlFilter: (href) => href.contains('iphone.png'),
+        imageUrlPrefix: 'https://heaven-burns-red.com/'),
+  ),Game(
+    title: 'Heaven Burns Red',
+    image: 'assets/images/heavenburnsred.png',
+    repository: WallpaperData(
+        baseUrl: 'https://heaven-burns-red.com/fankit/sp-wallpaper/',
+        imageElementSelector: '.post-content > ul > li > div.clm-buttons > a',
+        imageAttributeName: 'href',
+        imageUrlFilter: (href) => href.contains('iphone.png'),
+        imageUrlPrefix: 'https://heaven-burns-red.com/'),
+  ),Game(
+    title: 'Heaven Burns Red',
+    image: 'assets/images/heavenburnsred.png',
+    repository: WallpaperData(
+        baseUrl: 'https://heaven-burns-red.com/fankit/sp-wallpaper/',
+        imageElementSelector: '.post-content > ul > li > div.clm-buttons > a',
+        imageAttributeName: 'href',
+        imageUrlFilter: (href) => href.contains('iphone.png'),
+        imageUrlPrefix: 'https://heaven-burns-red.com/'),
+  ),Game(
+    title: 'Heaven Burns Red',
+    image: 'assets/images/heavenburnsred.png',
+    repository: WallpaperData(
+        baseUrl: 'https://heaven-burns-red.com/fankit/sp-wallpaper/',
+        imageElementSelector: '.post-content > ul > li > div.clm-buttons > a',
+        imageAttributeName: 'href',
+        imageUrlFilter: (href) => href.contains('iphone.png'),
+        imageUrlPrefix: 'https://heaven-burns-red.com/'),
+  ),Game(
+    title: 'Heaven Burns Red',
+    image: 'assets/images/heavenburnsred.png',
+    repository: WallpaperData(
+        baseUrl: 'https://heaven-burns-red.com/fankit/sp-wallpaper/',
+        imageElementSelector: '.post-content > ul > li > div.clm-buttons > a',
+        imageAttributeName: 'href',
+        imageUrlFilter: (href) => href.contains('iphone.png'),
+        imageUrlPrefix: 'https://heaven-burns-red.com/'),
+  ),Game(
+    title: 'Heaven Burns Red',
+    image: 'assets/images/heavenburnsred.png',
+    repository: WallpaperData(
+        baseUrl: 'https://heaven-burns-red.com/fankit/sp-wallpaper/',
+        imageElementSelector: '.post-content > ul > li > div.clm-buttons > a',
+        imageAttributeName: 'href',
+        imageUrlFilter: (href) => href.contains('iphone.png'),
+        imageUrlPrefix: 'https://heaven-burns-red.com/'),
   ),
   Game(
     title: 'Princess Connect Re:Dive',
@@ -97,7 +160,6 @@ List<Game> gameList = [
         imageElementSelector:
             '#contents > div > ul.wallpaper-list > li > ul > li > a',
         imageAttributeName: 'href',
-        usePostStructure: true,
         postElementSelector: "#contents > div > ul.fankit-list > li > a",
         postAttributeName: 'href'),
   ),

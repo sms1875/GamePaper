@@ -24,7 +24,6 @@ class WallpaperData {
   final bool Function(String)? imageUrlFilter;
   final int imageUrlGroupNumber;
   final int pageUrlGroupNumber;
-  final bool usePostStructure;
   final String? postElementSelector;
   final String? postAttributeName;
   final String? postUrlPrefix;
@@ -43,7 +42,6 @@ class WallpaperData {
     this.imageUrlFilter,
     this.imageUrlGroupNumber = 0,
     this.pageUrlGroupNumber = 0,
-    this.usePostStructure = false,
     this.postElementSelector,
     this.postAttributeName,
     this.postUrlPrefix,
