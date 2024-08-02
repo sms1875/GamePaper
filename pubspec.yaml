@@ -49,8 +49,11 @@ dependencies:
   #스크래핑
   beautiful_soup_dart: ^0.3.0
 
-  #게임 목록 스크롤
+  #게임 목록 캐로셀 스크롤
   carousel_slider_plus: ^6.0.0
+
+  #배경화면 목록 페이징
+  smooth_page_indicator: ^1.2.0+3
 
 
 dev_dependencies:

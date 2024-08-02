@@ -3,6 +3,7 @@ import 'package:wallpaper/models/wallpaper.dart';
 import 'package:wallpaper/repository/wallpaper_repository.dart';
 
 abstract class AbstractWallpaperProvider extends ChangeNotifier {
+  final PageController pageController = PageController();
   final WallpaperRepository _wallpaperRepository;
   Wallpaper wallpaperPage = Wallpaper(pageNumbers: [], pageUrls: [], wallpapersByPage: []);
 
