@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/models/game.dart';
+import 'package:wallpaper/repository/wallpaper_repository.dart';
 import 'package:wallpaper/screens/wallpaper_screen.dart';
 import 'package:wallpaper/providers/wallpaper_provider_factory.dart';
-import '../repository/wallpaper_repository_builder.dart';
 import 'package:wallpaper/utils/load_network_image.dart';
 
 /// GameCarouselItem 위젯
@@ -25,7 +25,7 @@ class GameCarouselItem extends StatelessWidget {
         children: [
           Expanded(
             child: loadNetworkImage(
-              game.image,
+              game.thumbnail,
               fit: BoxFit.contain,
             ),
           ),
@@ -46,13 +46,14 @@ class GameCarouselItem extends StatelessWidget {
   ///
   /// [context]: 현재 빌드 컨텍스트
   void _navigateToWallpaperScreen(BuildContext context) {
+    final wallpaperProvider = WallpaperProviderFactory.createProvider(
+        WallpaperRepository()
+    );
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => WallpaperScreen(
-          wallpaperProvider: WallpaperProviderFactory.createProvider(
-            WallpaperRepositoryBuilder().fromData(game.repository).build(),
-          ),
+          wallpaperProvider: wallpaperProvider,
         ),
       ),
     );

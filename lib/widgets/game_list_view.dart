@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/models/game.dart';
+import 'package:wallpaper/repository/wallpaper_repository.dart';
 import 'package:wallpaper/screens/wallpaper_screen.dart';
 import 'package:wallpaper/providers/wallpaper_provider_factory.dart';
-import '../repository/wallpaper_repository_builder.dart';
 
 /// GameListView 위젯
 ///
@@ -37,13 +37,14 @@ class GameListView extends StatelessWidget {
   /// [context]: 현재 빌드 컨텍스트
   /// [game]: 선택된 게임
   void _navigateToWallpaperScreen(BuildContext context, Game game) {
+    final wallpaperProvider = WallpaperProviderFactory.createProvider(
+        WallpaperRepository()
+    );
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => WallpaperScreen(
-          wallpaperProvider: WallpaperProviderFactory.createProvider(
-            WallpaperRepositoryBuilder().fromData(game.repository).build(),
-          ),
+          wallpaperProvider: wallpaperProvider,
         ),
       ),
     );
