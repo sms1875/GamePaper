@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("genshinimpact")
-public class GenshinImpactImageRetrievalService extends SinglePageGameImageRetrievalService {
+public class GenshinImpactImageRetrievalService extends AbstractGameImageRetrievalService {
   private static final String BASE_URL = "https://www.hoyolab.com/creatorCollection/526679";
   private static final Duration TIMEOUT = Duration.ofSeconds(20);
   private static final String BASE64_IMAGE_PREFIX = "data:image/png;base64";
@@ -20,7 +20,18 @@ public class GenshinImpactImageRetrievalService extends SinglePageGameImageRetri
   }
 
   @Override
-  protected void navigateToPage() {
+  public List<String> getImageUrls() {
+    List<String> imageUrls = new ArrayList<>();
+    try {
+      navigateToPage();
+      imageUrls.addAll(extractImageUrlsFromPage());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return imageUrls;
+  }
+
+  private void navigateToPage() {
     webDriver.get(BASE_URL);
     handleInterestSelector();
   }
@@ -85,7 +96,6 @@ public class GenshinImpactImageRetrievalService extends SinglePageGameImageRetri
             try {
               Thread.sleep(500);
             } catch (InterruptedException e) {
-              // TODO Auto-generated catch block
               e.printStackTrace();
             } // 스크롤 후 대기
 

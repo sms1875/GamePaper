@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("maplestory")
-public class MapleStoryMobileWallpaperService extends PagedGameImageRetrievalService {
+public class MapleStoryMobileWallpaperService extends AbstractGameImageRetrievalService {
   private static final String BASE_URL = "https://m.maplestory.nexon.com/Media/MobileWallPaper";
   private int currentPage = 1;
 
@@ -21,13 +21,25 @@ public class MapleStoryMobileWallpaperService extends PagedGameImageRetrievalSer
   }
 
   @Override
-  protected void navigateToFirstPage() {
+  public List<String> getImageUrls() {
+    List<String> imageUrls = new ArrayList<>();
+    try {
+      navigateToFirstPage();
+      do {
+        imageUrls.addAll(extractImageUrlsFromPage());
+      } while (navigateToNextPage());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return imageUrls;
+  }
+
+  private void navigateToFirstPage() {
     currentPage = 1;
     webDriver.get(BASE_URL);
   }
 
-  @Override
-  protected boolean navigateToNextPage() {
+  private boolean navigateToNextPage() {
     WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
     try {
       WebElement nextButton = wait

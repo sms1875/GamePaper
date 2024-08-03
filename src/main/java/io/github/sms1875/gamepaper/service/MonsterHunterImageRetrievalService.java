@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("monsterhunter")
-public class MonsterHunterImageRetrievalService extends SinglePageGameImageRetrievalService {
+public class MonsterHunterImageRetrievalService extends AbstractGameImageRetrievalService {
   private static final String BASE_URL = "https://www.monsterhunter.com/mha/en/wallpaper_gift/";
 
   public MonsterHunterImageRetrievalService(WebDriver webDriver) {
@@ -19,7 +19,18 @@ public class MonsterHunterImageRetrievalService extends SinglePageGameImageRetri
   }
 
   @Override
-  protected void navigateToPage() {
+  public List<String> getImageUrls() {
+    List<String> imageUrls = new ArrayList<>();
+    try {
+      navigateToPage();
+      imageUrls.addAll(extractImageUrlsFromPage());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return imageUrls;
+  }
+
+  private void navigateToPage() {
     webDriver.get(BASE_URL);
   }
 

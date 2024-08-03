@@ -11,7 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
 @Service("playblackdesert")
-public class PlayBlackDesertImageRetrievalService extends PagedGameImageRetrievalService {
+public class PlayBlackDesertImageRetrievalService extends AbstractGameImageRetrievalService {
   private static final String BASE_URL = "https://www.kr.playblackdesert.com/ko-KR/Data/Wallpaper/";
 
   public PlayBlackDesertImageRetrievalService(WebDriver webDriver) {
@@ -19,12 +19,24 @@ public class PlayBlackDesertImageRetrievalService extends PagedGameImageRetrieva
   }
 
   @Override
-  protected void navigateToFirstPage() {
+  public List<String> getImageUrls() {
+    List<String> imageUrls = new ArrayList<>();
+    try {
+      navigateToFirstPage();
+      do {
+        imageUrls.addAll(extractImageUrlsFromPage());
+      } while (navigateToNextPage());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return imageUrls;
+  }
+
+  private void navigateToFirstPage() {
     webDriver.get(BASE_URL);
   }
 
-  @Override
-  protected boolean navigateToNextPage() {
+  private boolean navigateToNextPage() {
     try {
       WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
       WebElement nextPageElement = wait

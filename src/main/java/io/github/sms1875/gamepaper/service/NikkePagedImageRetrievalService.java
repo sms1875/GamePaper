@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("nikke")
-public class NikkePagedImageRetrievalService extends PagedGameImageRetrievalService {
+public class NikkePagedImageRetrievalService extends AbstractGameImageRetrievalService {
   private static final String BASE_URL = "https://nikke-kr.com/art.html?active_tab=1864";
   private int currentPage = 0;
   private static final int TOTAL_PAGES = 16; // Adjust this if needed
@@ -23,7 +23,20 @@ public class NikkePagedImageRetrievalService extends PagedGameImageRetrievalServ
   }
 
   @Override
-  protected void navigateToFirstPage() {
+  public List<String> getImageUrls() {
+    List<String> imageUrls = new ArrayList<>();
+    try {
+      navigateToFirstPage();
+      do {
+        imageUrls.addAll(extractImageUrlsFromPage());
+      } while (navigateToNextPage());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return imageUrls;
+  }
+
+  private void navigateToFirstPage() {
     currentPage = 0;
     webDriver.get(BASE_URL);
     waitForPageLoad();
@@ -42,8 +55,7 @@ public class NikkePagedImageRetrievalService extends PagedGameImageRetrievalServ
     }
   }
 
-  @Override
-  protected boolean navigateToNextPage() {
+  private boolean navigateToNextPage() {
     return navigateToPage(currentPage + 1);
   }
 

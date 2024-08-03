@@ -13,7 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
 @Service("mabinogi")
-public class MabinogiImageRetrievalService extends SinglePageGameImageRetrievalService {
+public class MabinogiImageRetrievalService extends AbstractGameImageRetrievalService {
   private static final String BASE_URL = "https://mabinogi.nexon.com/page/pds/gallery_wallpaper.asp";
 
   public MabinogiImageRetrievalService(WebDriver webDriver) {
@@ -21,7 +21,18 @@ public class MabinogiImageRetrievalService extends SinglePageGameImageRetrievalS
   }
 
   @Override
-  protected void navigateToPage() {
+  public List<String> getImageUrls() {
+    List<String> imageUrls = new ArrayList<>();
+    try {
+      navigateToPage();
+      imageUrls.addAll(extractImageUrlsFromPage());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return imageUrls;
+  }
+
+  private void navigateToPage() {
     webDriver.get(BASE_URL);
   }
 
