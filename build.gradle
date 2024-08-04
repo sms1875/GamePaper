@@ -34,8 +34,12 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+  // 스크래핑
   implementation 'org.seleniumhq.selenium:selenium-java:4.23.0' 
   implementation 'io.github.bonigarcia:webdrivermanager:5.9.1'
+
+  // 파이어베이스 연결
+  implementation 'com.google.firebase:firebase-admin:9.2.0'
 }
 
 tasks.named('test') {

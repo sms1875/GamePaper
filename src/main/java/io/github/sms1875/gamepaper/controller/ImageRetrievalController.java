@@ -1,38 +1,70 @@
 package io.github.sms1875.gamepaper.controller;
 
-import io.github.sms1875.gamepaper.service.GameImageRetrievalService;
+import io.github.sms1875.gamepaper.service.GameService;
+import io.github.sms1875.gamepaper.service.firebase.FirebaseStorageService;
+import io.github.sms1875.gamepaper.service.WallpaperCacheService;
+import io.github.sms1875.gamepaper.service.WallpaperUpdateScheduler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class ImageRetrievalController {
 
-  private final Map<String, GameImageRetrievalService> gameServices;
+    private final GameService gameService;
+    private final WallpaperCacheService cacheService;
+    private final WallpaperUpdateScheduler updateScheduler;
+    private final FirebaseStorageService firebaseStorageService;
 
-  public ImageRetrievalController(Map<String, GameImageRetrievalService> gameServices) {
-    this.gameServices = gameServices;
-  }
-
-  @GetMapping("/")
-  public String home() {
-    return "home";
-  }
-
-  @GetMapping("/fetchImages")
-  @ResponseBody
-  public ResponseEntity<?> fetchImages(@RequestParam("game") String game) {
-    GameImageRetrievalService service = gameServices.get(game.toLowerCase());
-    if (service != null) {
-      List<String> imageUrls = service.getImageUrls();
-      return ResponseEntity.ok(imageUrls);
-    } else {
-      return ResponseEntity.badRequest().body("Unsupported game: " + game);
+    public ImageRetrievalController(GameService gameService, WallpaperCacheService cacheService, WallpaperUpdateScheduler updateScheduler, FirebaseStorageService firebaseStorageService) {
+        this.gameService = gameService;
+        this.cacheService = cacheService;
+        this.updateScheduler = updateScheduler;
+        this.firebaseStorageService = firebaseStorageService;
     }
-  }
+
+    @GetMapping("/")
+    public String home(Model model) {
+        List<GameService.Game> games = gameService.getAllGames();
+        model.addAttribute("games", games);
+        return "home";
+    }
+
+    @GetMapping("/api/games")
+    @ResponseBody
+   public List<GameDto> getGames() {
+        return gameService.getAllGames().stream()
+            .map(game -> new GameDto(game.getName(), game.getStatus().toString(), game.getLastUpdated()))
+            .collect(Collectors.toList());
+    }
+
+    @GetMapping("/api/wallpapers/{game}")
+    @ResponseBody
+    public ResponseEntity<List<String>> getWallpapers(@PathVariable String game) {
+        List<String> urls = firebaseStorageService.getImageUrls(game, "wallpapers");
+        if (!urls.isEmpty()) {
+            return ResponseEntity.ok(urls);
+        } else {
+            updateScheduler.updateGameWallpapers(gameService.getGame(game));
+            return ResponseEntity.accepted().build();
+        }
+    }
+
+    private static class GameDto {
+        public final String name;
+        public final String status;
+        public final long lastUpdated;
+
+        public GameDto(String name, String status, long lastUpdated) {
+            this.name = name;
+            this.status = status;
+            this.lastUpdated = lastUpdated;
+        }
+    }
 }

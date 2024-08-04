@@ -1,83 +1,107 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Game Wallpaper Retriever</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
+      table {
+        width: 100%;
+        border-collapse: collapse;
       }
-      h1 {
-        color: #333;
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
       }
-      select {
-        margin-bottom: 20px;
-        padding: 5px;
+      th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #4caf50;
+        color: white;
       }
-      #imageContainer {
+      .wallpaper-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
       }
-      #imageContainer img {
-        max-width: 300px;
-        height: auto;
+      .wallpaper-container img {
+        max-width: 150px;
+        max-height: 150px;
+        margin: 5px;
       }
     </style>
   </head>
   <body>
-    <h1>Game Wallpaper Retriever</h1>
-    <select id="gameSelector">
-      <option value="">Select a game</option>
-      <option value="playblackdesert">Black Desert</option>
-      <option value="mabinogi">Mabinogi</option>
-      <option value="maplestory">MapleStory</option>
-      <option value="nikke">Nikke</option>
-      <option value="monsterhunter">Monster Hunter</option>
-      <option value="finalfantasy">finalfantasy</option>
-      <option value="finalfantasy">finalfantasy</option>
-      <option value="genshinimpact">genshinimpact</option>
-    </select>
-    <div id="imageContainer"></div>
+    <div id="app">
+      <h1>Game Wallpaper Retriever</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Game</th>
+            <th>Status</th>
+            <th>Last Updated</th>
+            <th>Wallpapers</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="game in games" :key="game.name">
+            <td>{{ game.name }}</td>
+            <td>{{ game.status }}</td>
+            <td>{{ new Date(game.lastUpdated).toLocaleString() }}</td>
+            <td>
+              <button @click="fetchWallpapers(game.name)">
+                Get Wallpapers
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="wallpaper-container">
+        <img v-for="url in wallpapers" :src="url" :key="url" />
+      </div>
+    </div>
 
     <script>
-      const MOBILE_SCREEN_RATIO = 9 / 16; // Example mobile screen ratio (portrait)
-      const TOLERANCE = 0.01; // Allowing a small tolerance
-
-      $(document).ready(function () {
-        $("#gameSelector").change(function () {
-          var selectedGame = $(this).val();
-          if (selectedGame) {
-            $.get("/fetchImages?game=" + selectedGame, function (data) {
-              var imageContainer = $("#imageContainer");
-              imageContainer.empty();
-              data.forEach(function (url) {
-                var img = new Image();
-                img.src = url;
-                img.onload = function () {
-                  var width = img.width;
-                  var height = img.height;
-                  var aspectRatio = height / width;
-                  if (Math.abs(aspectRatio - MOBILE_SCREEN_RATIO) > TOLERANCE) {
-                    imageContainer.append(img);
-                  }
-                };
-                img.onerror = function () {
-                  console.error("Error loading image: " + url);
-                };
-              });
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-              alert("Error: " + errorThrown);
-            });
-          } else {
-            $("#imageContainer").empty();
-          }
-        });
+      const app = Vue.createApp({
+        data() {
+          return {
+            games: [],
+            wallpapers: [],
+          };
+        },
+        mounted() {
+          this.fetchGames();
+        },
+        methods: {
+          async fetchGames() {
+            try {
+              const response = await axios.get("/api/games");
+              this.games = response.data;
+            } catch (error) {
+              console.error("Error fetching games:", error);
+            }
+          },
+          async fetchWallpapers(game) {
+            try {
+              const response = await axios.get(`/api/wallpapers/${game}`);
+              if (response.status === 202) {
+                console.log(
+                  "Wallpapers are being updated. Please try again later."
+                );
+              } else {
+                this.wallpapers = response.data;
+              }
+            } catch (error) {
+              console.error("Error fetching wallpapers:", error);
+            }
+          },
+        },
       });
+
+      app.mount("#app");
     </script>
   </body>
 </html>
