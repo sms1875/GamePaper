@@ -6,11 +6,11 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.firebase.cloud.StorageClient;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class FirebaseStorageService {
@@ -36,7 +36,7 @@ public class FirebaseStorageService {
     String prefix = "games/" + game + "/" + type + "/";
 
     for (Blob blob : storage.list("gamepaper-e336e.appspot.com", Storage.BlobListOption.prefix(prefix)).iterateAll()) {
-      urls.add(blob.getMediaLink());
+      urls.add(blob.signUrl(15, TimeUnit.MINUTES).toString()); // 15분 동안 유효한 URL
     }
 
     return urls;
