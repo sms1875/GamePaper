@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/data/game_list.dart';
 import 'package:wallpaper/models/game.dart';
+import 'package:wallpaper/repository/fetchGameList.dart';
 import 'package:wallpaper/widgets/alphabet_game_section.dart';
 
 /// HomeScreen 위젯
@@ -17,27 +18,52 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final Map<String, List<Game>> gameMap = _groupGamesByAlphabet(gameList);
+  Future<Map<String, List<Game>>>? _gameMapFuture;
   String? selectedAlphabet;
+
+  @override
+  void initState() {
+    super.initState();
+    _gameMapFuture = _loadGames();
+  }
+
+  Future<Map<String, List<Game>>> _loadGames() async {
+    final games = await fetchGameList();
+    return _groupGamesByAlphabet(games);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[800],
-      body: ListView.builder(
-        itemCount: gameMap.length,
-        itemBuilder: (BuildContext context, int index) {
-          final String alphabet = gameMap.keys.elementAt(index);
-          final List<Game> gamesByAlphabet = gameMap[alphabet]!;
+      body: FutureBuilder<Map<String, List<Game>>>(
+        future: _gameMapFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No games available'));
+          }
 
-          return AlphabetGameSection(
-            alphabet: alphabet,
-            games: gamesByAlphabet,
-            isSelected: selectedAlphabet == alphabet,
-            onAlphabetTap: () {
-              setState(() {
-                selectedAlphabet = (selectedAlphabet == alphabet) ? null : alphabet;
-              });
+          final gameMap = snapshot.data!;
+          return ListView.builder(
+            itemCount: gameMap.length,
+            itemBuilder: (BuildContext context, int index) {
+              final String alphabet = gameMap.keys.elementAt(index);
+              final List<Game> gamesByAlphabet = gameMap[alphabet]!;
+
+              return AlphabetGameSection(
+                alphabet: alphabet,
+                games: gamesByAlphabet,
+                isSelected: selectedAlphabet == alphabet,
+                onAlphabetTap: () {
+                  setState(() {
+                    selectedAlphabet = (selectedAlphabet == alphabet) ? null : alphabet;
+                  });
+                },
+              );
             },
           );
         },

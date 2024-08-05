@@ -55,6 +55,10 @@ dependencies:
   #배경화면 목록 페이징
   smooth_page_indicator: ^1.2.0+3
 
+  #파이어베이스
+  firebase_core: ^3.3.0
+  firebase_storage: ^12.1.2
+
 
 dev_dependencies:
   flutter_test:
