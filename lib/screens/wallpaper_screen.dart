@@ -1,41 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:wallpaper/models/wallpaper.dart';
 import 'package:wallpaper/widgets/wallpaper_grid.dart';
-import 'package:wallpaper/widgets/error_display.dart';
-import 'package:wallpaper/providers/abstract_wallpaper_provider.dart';
+import 'package:wallpaper/models/game.dart';
 
-/// WallpaperScreen 클래스는 배경화면을 보여주는 화면입니다.
-/// wallpaperProvider를 통해 데이터를 불러오고, PageView와 SmoothPageIndicator를 사용하여 페이지를 전환합니다.
 class WallpaperScreen extends StatefulWidget {
-  final AbstractWallpaperProvider wallpaperProvider;
+  final Game game;
 
-  const WallpaperScreen({Key? key, required this.wallpaperProvider}) : super(key: key);
+  const WallpaperScreen({Key? key, required this.game}) : super(key: key);
 
   @override
   State<WallpaperScreen> createState() => _WallpaperScreenState();
 }
 
 class _WallpaperScreenState extends State<WallpaperScreen> {
-  late AbstractWallpaperProvider _wallpaperProvider;
   final PageController _pageController = PageController();
+  late Future<Wallpaper> _wallpaperFuture;
 
   @override
   void initState() {
     super.initState();
-    _wallpaperProvider = widget.wallpaperProvider;
-    _wallpaperProvider.addListener(_updateState);
-    _wallpaperProvider.update();
+    _wallpaperFuture = widget.game.wallpaper;
   }
 
   @override
   void dispose() {
     _pageController.dispose();
-    _wallpaperProvider.removeListener(_updateState);
     super.dispose();
-  }
-
-  void _updateState() {
-    setState(() {});
   }
 
   @override
@@ -43,60 +34,48 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: _buildBody(),
+        child: FutureBuilder<Wallpaper>(
+          future: _wallpaperFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.wallpapersByPage.isEmpty) {
+              return const Center(child: Text('No wallpapers available'));
+            }
+
+            final wallpaper = snapshot.data!;
+            return Column(
+              children: [
+                _buildPageView(wallpaper),
+                _buildSmoothPageIndicator(wallpaper.pageNumbers.length),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
 
-  /// 화면의 본문을 빌드합니다.
-  Widget _buildBody() {
-    if (_wallpaperProvider.error != null) {
-      return ErrorDisplay(onRetry: _wallpaperProvider.update);
-    }
-
-    if (_wallpaperProvider.isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (_wallpaperProvider.wallpaperPage.wallpapersByPage.isEmpty) {
-      return const Center(
-        child: Text('No wallpapers available', style: TextStyle(color: Colors.white)),
-      );
-    }
-
-    return Column(
-      children: [
-        _buildPageView(),
-        _buildSmoothPageIndicator(),
-      ],
-    );
-  }
-
-  /// PageView를 빌드하여 페이지별로 배경화면을 보여줍니다.
-  Widget _buildPageView() {
+  Widget _buildPageView(Wallpaper wallpaper) {
     return Expanded(
       child: PageView.builder(
         controller: _pageController,
-        itemCount: _wallpaperProvider.wallpaperPage.wallpapersByPage.length,
+        itemCount: wallpaper.pageNumbers.length,
         itemBuilder: (context, index) {
-          return WallpaperGrid(
-            wallpapers: _wallpaperProvider.wallpaperPage.wallpapersByPage[index],
-          );
-        },
-        onPageChanged: (index) {
-          _wallpaperProvider.currentPageIndex = index;
+          return WallpaperGrid(wallpapers: wallpaper.wallpapersByPage[index]);
         },
       ),
     );
   }
 
-  /// SmoothPageIndicator를 빌드하여 페이지 인디케이터를 표시합니다.
-  Widget _buildSmoothPageIndicator() {
+  Widget _buildSmoothPageIndicator(int count) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SmoothPageIndicator(
         controller: _pageController,
-        count: _wallpaperProvider.wallpaperPage.wallpapersByPage.length,
+        count: count,
         effect: const WormEffect(
           dotColor: Colors.grey,
           activeDotColor: Colors.blue,

@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/models/game.dart';
-import 'package:wallpaper/providers/wallpaper_provider.dart';
-import 'package:wallpaper/repository/wallpaper_repository.dart';
 import 'package:wallpaper/screens/wallpaper_screen.dart';
 import 'package:wallpaper/utils/load_network_image.dart';
 
-/// GameCarouselItem 위젯
-///
-/// 이 위젯은 GameCarousel 내의 각 게임 항목을 표시합니다.
-/// 게임 이미지와 제목을 포함하며, 탭하면 해당 게임의 월페이퍼 화면으로 이동합니다.
-///
-/// [game]: 표시할 게임 정보
 class GameCarouselItem extends StatelessWidget {
   final Game game;
 
@@ -25,7 +17,7 @@ class GameCarouselItem extends StatelessWidget {
         children: [
           Expanded(
             child: loadNetworkImage(
-              game.thumbnail,
+              game.thumbnailUrl,
               fit: BoxFit.contain,
             ),
           ),
@@ -42,19 +34,11 @@ class GameCarouselItem extends StatelessWidget {
     );
   }
 
-  /// 월페이퍼 화면으로 이동하는 메서드
-  ///
-  /// [context]: 현재 빌드 컨텍스트
   void _navigateToWallpaperScreen(BuildContext context) {
-    final wallpaperProvider = WallpaperProvider(
-        WallpaperRepository()
-    );
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => WallpaperScreen(
-          wallpaperProvider: wallpaperProvider,
-        ),
+        builder: (context) => WallpaperScreen(game: game),
       ),
     );
   }

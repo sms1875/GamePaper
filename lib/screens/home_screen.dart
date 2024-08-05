@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaper/data/game_list.dart';
 import 'package:wallpaper/models/game.dart';
 import 'package:wallpaper/repository/fetchGameList.dart';
 import 'package:wallpaper/widgets/alphabet_game_section.dart';

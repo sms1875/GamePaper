@@ -20,7 +20,8 @@ Future<List<Game>> fetchGameList() async {
 
         games.add(Game(
           title: gameName,
-          thumbnail: thumbnailUrl,
+          thumbnailUrl: thumbnailUrl,
+          wallpapersRef: wallpapersRef,
         ));
       }
     }
