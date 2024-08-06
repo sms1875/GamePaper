@@ -1,11 +1,10 @@
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:wallpaper/models/wallpaper.dart';
 
 class Game {
   final String title;
   final String thumbnailUrl;
   final Reference wallpapersRef;
-  Wallpaper? _wallpaper;
+  int? _totalWallpapers;
 
   Game({
     required this.title,
@@ -13,23 +12,48 @@ class Game {
     required this.wallpapersRef,
   });
 
-  Future<Wallpaper> get wallpaper async {
-    if (_wallpaper == null) {
-      await _loadWallpaper();
+  Future<int> get totalWallpapers async {
+    if (_totalWallpapers == null) {
+      await _loadTotalWallpapers();
     }
-    return _wallpaper!;
+    return _totalWallpapers!;
   }
 
-  Future<void> _loadWallpaper() async {
+  Future<void> _loadTotalWallpapers() async {
     try {
-      final wallpapers = await wallpapersRef.listAll();
-      final urls = await Future.wait(
-          wallpapers.items.map((ref) => ref.getDownloadURL())
-      );
-      _wallpaper = Wallpaper.fromUrls(urls);
+      final ListResult result = await wallpapersRef.listAll();
+      _totalWallpapers = result.items.length;
     } catch (e) {
-      print('Error loading wallpaper URLs: $e');
-      _wallpaper = Wallpaper(pageNumbers: [], wallpapersByPage: []);
+      print('Error loading total wallpapers: $e');
+      _totalWallpapers = 0;
     }
   }
+
+  Future<List<String>> getWallpapersForPage(int page, int wallpapersPerPage) async {
+    try {
+      final int startIndex = (page - 1) * wallpapersPerPage;
+      final int endIndex = startIndex + wallpapersPerPage;
+
+      final ListResult result = await wallpapersRef.listAll();
+      final List<Reference> pageRefs = result.items.sublist(
+          startIndex,
+          endIndex > result.items.length ? result.items.length : endIndex
+      );
+
+      return await Future.wait(pageRefs.map((ref) => ref.getDownloadURL()));
+    } catch (e) {
+      print('Error loading wallpapers for page $page: $e');
+      return [];
+    }
+  }
+}
+
+class Wallpaper {
+  final int pageNumber;
+  final List<String> wallpaperUrls;
+
+  Wallpaper({
+    required this.pageNumber,
+    required this.wallpaperUrls,
+  });
 }

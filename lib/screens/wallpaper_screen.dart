@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:wallpaper/models/wallpaper.dart';
 import 'package:wallpaper/widgets/wallpaper_grid.dart';
 import 'package:wallpaper/models/game.dart';
 
@@ -15,12 +14,13 @@ class WallpaperScreen extends StatefulWidget {
 
 class _WallpaperScreenState extends State<WallpaperScreen> {
   final PageController _pageController = PageController();
-  late Future<Wallpaper> _wallpaperFuture;
+  late Future<int> _totalWallpapersFuture;
+  final int wallpapersPerPage = 12;
 
   @override
   void initState() {
     super.initState();
-    _wallpaperFuture = widget.game.wallpaper;
+    _totalWallpapersFuture = widget.game.totalWallpapers;
   }
 
   @override
@@ -34,22 +34,24 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: FutureBuilder<Wallpaper>(
-          future: _wallpaperFuture,
+        child: FutureBuilder<int>(
+          future: _totalWallpapersFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.wallpapersByPage.isEmpty) {
+            } else if (!snapshot.hasData || snapshot.data == 0) {
               return const Center(child: Text('No wallpapers available'));
             }
 
-            final wallpaper = snapshot.data!;
+            final totalWallpapers = snapshot.data!;
+            final pageCount = (totalWallpapers / wallpapersPerPage).ceil();
+
             return Column(
               children: [
-                _buildPageView(wallpaper),
-                _buildSmoothPageIndicator(wallpaper.pageNumbers.length),
+                _buildPageView(pageCount),
+                _buildSmoothPageIndicator(pageCount),
               ],
             );
           },
@@ -58,13 +60,26 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
     );
   }
 
-  Widget _buildPageView(Wallpaper wallpaper) {
+  Widget _buildPageView(int pageCount) {
     return Expanded(
       child: PageView.builder(
         controller: _pageController,
-        itemCount: wallpaper.pageNumbers.length,
+        itemCount: pageCount,
         itemBuilder: (context, index) {
-          return WallpaperGrid(wallpapers: wallpaper.wallpapersByPage[index]);
+          return FutureBuilder<List<String>>(
+            future: widget.game.getWallpapersForPage(index + 1, wallpapersPerPage),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('No wallpapers for this page'));
+              }
+
+              return WallpaperGrid(wallpapers: snapshot.data!);
+            },
+          );
         },
       ),
     );
