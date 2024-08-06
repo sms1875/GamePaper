@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:wallpaper/providers/game_provider.dart';
+import 'package:wallpaper/providers/home_provider.dart';
 import 'package:wallpaper/repositories/game_repository.dart';
 import 'package:wallpaper/screens/home_screen.dart';
 import 'firebase_options.dart';
@@ -18,7 +18,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => GameProvider(gameRepository)),
+        ChangeNotifierProvider(create: (_) => HomeProvider(gameRepository)),
       ],
       child: MyApp(),
     ),

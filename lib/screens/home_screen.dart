@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:wallpaper/models/game.dart';
 import 'package:wallpaper/widgets/alphabet_game_section.dart';
 
-import '../providers/game_provider.dart';
+import '../providers/home_provider.dart';
 
 /// HomeScreen 위젯
 ///
@@ -23,22 +23,24 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     // 게임 목록을 로드
-    Provider.of<GameProvider>(context, listen: false).loadGames();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<HomeProvider>(context, listen: false).loadGames();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[800],
-      body: Consumer<GameProvider>(
-        builder: (context, gameProvider, child) {
-          if (gameProvider.isLoading) {
+      body: Consumer<HomeProvider>(
+        builder: (context, homeProvider, child) {
+          if (homeProvider.isLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (gameProvider.gameMap.isEmpty) {
+          } else if (homeProvider.gameMap.isEmpty) {
             return const Center(child: Text('No games available'));
           }
 
-          final gameMap = gameProvider.gameMap;
+          final gameMap = homeProvider.gameMap;
           return ListView.builder(
             itemCount: gameMap.length,
             itemBuilder: (BuildContext context, int index) {
