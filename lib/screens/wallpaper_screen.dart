@@ -3,6 +3,9 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:wallpaper/widgets/wallpaper_grid.dart';
 import 'package:wallpaper/models/game.dart';
 
+/// WallpaperScreen 위젯
+///
+/// 선택한 게임의 월페이퍼 목록을 페이지 단위로 표시합니다.
 class WallpaperScreen extends StatefulWidget {
   final Game game;
 
@@ -60,6 +63,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
     );
   }
 
+  /// 페이지 뷰 빌드 메서드
   Widget _buildPageView(int pageCount) {
     return Expanded(
       child: PageView.builder(
@@ -85,6 +89,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
     );
   }
 
+  /// 페이지 인디케이터 빌드 메서드
   Widget _buildSmoothPageIndicator(int count) {
     return Padding(
       padding: const EdgeInsets.all(8.0),

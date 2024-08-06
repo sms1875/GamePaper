@@ -1,5 +1,8 @@
 import 'package:firebase_storage/firebase_storage.dart';
 
+/// Game 모델
+///
+/// 게임 제목, 썸네일 URL, 월페이퍼 참조를 포함하는 데이터 클래스
 class Game {
   final String title;
   final String thumbnailUrl;
@@ -12,6 +15,7 @@ class Game {
     required this.wallpapersRef,
   });
 
+  /// 총 월페이퍼 수를 비동기로 반환
   Future<int> get totalWallpapers async {
     if (_totalWallpapers == null) {
       await _loadTotalWallpapers();
@@ -19,6 +23,7 @@ class Game {
     return _totalWallpapers!;
   }
 
+  /// 총 월페이퍼 수를 비동기로 로드
   Future<void> _loadTotalWallpapers() async {
     try {
       final ListResult result = await wallpapersRef.listAll();
@@ -29,6 +34,7 @@ class Game {
     }
   }
 
+  /// 특정 페이지의 월페이퍼 URL 목록을 비동기로 반환
   Future<List<String>> getWallpapersForPage(int page, int wallpapersPerPage) async {
     try {
       final int startIndex = (page - 1) * wallpapersPerPage;
@@ -46,14 +52,4 @@ class Game {
       return [];
     }
   }
-}
-
-class Wallpaper {
-  final int pageNumber;
-  final List<String> wallpaperUrls;
-
-  Wallpaper({
-    required this.pageNumber,
-    required this.wallpaperUrls,
-  });
 }
