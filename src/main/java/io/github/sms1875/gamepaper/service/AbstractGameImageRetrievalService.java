@@ -5,7 +5,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public abstract class AbstractGameImageRetrievalService implements GameImageRetrievalService {
+public abstract class AbstractGameImageRetrievalService {
   protected final WebDriver webDriver;
   protected static final Duration TIMEOUT = Duration.ofSeconds(10);
 
@@ -13,7 +13,8 @@ public abstract class AbstractGameImageRetrievalService implements GameImageRetr
     this.webDriver = webDriver;
   }
 
-  @Override
+  public abstract List<String> getImageUrls();
+
   public CompletableFuture<List<String>> getImageUrlsAsync() {
     return CompletableFuture.supplyAsync(this::getImageUrls);
   }

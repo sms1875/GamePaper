@@ -82,9 +82,4 @@ public class MabinogiImageRetrievalService extends AbstractGameImageRetrievalSer
     }
     return null;
   }
-
-  @Override
-  public String getGameName() {
-    return "Mabinogi";
-  }
 }

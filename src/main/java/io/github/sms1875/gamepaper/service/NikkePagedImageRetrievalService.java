@@ -124,9 +124,4 @@ public class NikkePagedImageRetrievalService extends AbstractGameImageRetrievalS
 
     return imageUrls;
   }
-
-  @Override
-  public String getGameName() {
-    return "nikke";
-  }
 }

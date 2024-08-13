@@ -51,9 +51,4 @@ public class MonsterHunterImageRetrievalService extends AbstractGameImageRetriev
 
     return imageUrls;
   }
-
-  @Override
-  public String getGameName() {
-    return "Monster Hunter";
-  }
 }

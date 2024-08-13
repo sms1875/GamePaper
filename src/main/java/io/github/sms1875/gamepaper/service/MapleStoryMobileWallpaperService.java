@@ -74,9 +74,4 @@ public class MapleStoryMobileWallpaperService extends AbstractGameImageRetrieval
 
     return imageUrls;
   }
-
-  @Override
-  public String getGameName() {
-    return "maplestory";
-  }
 }

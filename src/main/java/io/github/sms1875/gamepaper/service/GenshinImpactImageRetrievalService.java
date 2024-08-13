@@ -154,9 +154,4 @@ public class GenshinImpactImageRetrievalService extends AbstractGameImageRetriev
 
     return imageUrls;
   }
-
-  @Override
-  public String getGameName() {
-    return "Genshin Impact";
-  }
 }

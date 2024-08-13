@@ -37,6 +37,7 @@ dependencies {
   // 스크래핑
   implementation 'org.seleniumhq.selenium:selenium-java:4.23.0' 
   implementation 'io.github.bonigarcia:webdrivermanager:5.9.1'
+  implementation 'org.jsoup:jsoup:1.15.3'
 
   // 파이어베이스 연결
   implementation 'com.google.firebase:firebase-admin:9.2.0'

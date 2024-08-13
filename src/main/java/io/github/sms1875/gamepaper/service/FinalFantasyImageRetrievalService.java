@@ -55,9 +55,4 @@ public class FinalFantasyImageRetrievalService extends AbstractGameImageRetrieva
     }
     return imageUrls;
   }
-
-  @Override
-  public String getGameName() {
-    return "Final Fantasy XIV";
-  }
 }

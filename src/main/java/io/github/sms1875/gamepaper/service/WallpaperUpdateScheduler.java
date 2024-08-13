@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -17,17 +19,14 @@ public class WallpaperUpdateScheduler {
   private static final Logger logger = LoggerFactory.getLogger(WallpaperUpdateScheduler.class);
 
   private final GameService gameService;
-  private final Map<String, GameImageRetrievalService> gameImageServices;
-  private final WallpaperCacheService cacheService;
+  private final Map<String, AbstractGameImageRetrievalService> gameImageServices;
   private final FirebaseStorageService firebaseStorageService;
 
   public WallpaperUpdateScheduler(GameService gameService,
-      Map<String, GameImageRetrievalService> gameImageServices,
-      WallpaperCacheService cacheService,
+      Map<String, AbstractGameImageRetrievalService> gameImageServices,
       FirebaseStorageService firebaseStorageService) {
     this.gameService = gameService;
     this.gameImageServices = gameImageServices;
-    this.cacheService = cacheService;
     this.firebaseStorageService = firebaseStorageService;
   }
 
@@ -51,7 +50,7 @@ public class WallpaperUpdateScheduler {
   }
 
   public CompletableFuture<Void> updateGameWallpapers(GameService.Game game) {
-    GameImageRetrievalService service = gameImageServices.get(game.getName().toLowerCase());
+    AbstractGameImageRetrievalService service = gameImageServices.get(game.getName().toLowerCase());
     if (service == null) {
       logger.warn("No image service found for game: {}", game.getName());
       return CompletableFuture.completedFuture(null);
@@ -72,7 +71,6 @@ public class WallpaperUpdateScheduler {
       return CompletableFuture.completedFuture(null);
     }
 
-    cacheService.cacheWallpapers(game.getName(), urls);
     return CompletableFuture.allOf(
         urls.stream()
             .map(url -> CompletableFuture.runAsync(() -> uploadToFirebase(url, game.getName())))
@@ -91,12 +89,13 @@ public class WallpaperUpdateScheduler {
 
   private void uploadToFirebase(String imageUrl, String gameName) {
     try {
-      URL url = new URL(imageUrl);
+      URI uri = new URI(imageUrl);
+      URL url = uri.toURL(); // Convert URI to URL
       String fileName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
       byte[] imageData = url.openStream().readAllBytes();
 
       firebaseStorageService.uploadFile(imageData, fileName, gameName, "wallpapers");
-    } catch (IOException e) {
+    } catch (IOException | URISyntaxException e) {
       logger.error("Error uploading image to Firebase for game: " + gameName, e);
     }
   }

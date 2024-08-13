@@ -66,9 +66,4 @@ public class PlayBlackDesertImageRetrievalService extends AbstractGameImageRetri
     }
     return pageImageUrls;
   }
-
-  @Override
-  public String getGameName() {
-    return "Black Desert";
-  }
 }

@@ -15,7 +15,7 @@ public class FirebaseConfig {
   public void initialize() throws IOException {
     FileInputStream serviceAccount = new FileInputStream("src/main/resources/FirebaseAccountKey.json");
 
-    FirebaseOptions options = new FirebaseOptions.Builder()
+    FirebaseOptions options = FirebaseOptions.builder()
         .setCredentials(GoogleCredentials.fromStream(serviceAccount))
         .setStorageBucket("gamepaper-e336e.appspot.com")
         .build();
