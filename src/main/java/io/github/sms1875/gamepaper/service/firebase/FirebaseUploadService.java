@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -17,8 +18,10 @@ import java.util.concurrent.Executors;
 
 @Service
 public class FirebaseUploadService {
+
   private static final Logger logger = LoggerFactory.getLogger(FirebaseUploadService.class);
-  private static final ExecutorService executor = Executors.newCachedThreadPool();
+  private static final int BATCH_SIZE = 20; // 배치 크기 설정
+  private static final ExecutorService executor = Executors.newFixedThreadPool(10); // 고정된 스레드 풀 사용
 
   private final FirebaseStorageService firebaseStorageService;
 
@@ -33,14 +36,39 @@ public class FirebaseUploadService {
       return CompletableFuture.completedFuture(null);
     }
 
-    return CompletableFuture.allOf(
-        urls.stream()
-            .map(url -> CompletableFuture.runAsync(() -> uploadToFirebase(url, game.getName()), executor))
-            .toArray(CompletableFuture[]::new))
+    List<CompletableFuture<Void>> batchFutures = new ArrayList<>();
+
+    for (int i = 0; i < urls.size(); i += BATCH_SIZE) {
+      List<String> batch = urls.subList(i, Math.min(i + BATCH_SIZE, urls.size()));
+
+      CompletableFuture<Void> batchFuture = CompletableFuture.allOf(
+          batch.stream()
+              .map(url -> CompletableFuture.runAsync(() -> uploadToFirebase(url, game.getName()), executor))
+              .toArray(CompletableFuture[]::new))
+          .thenRun(() -> logger.info("Uploaded batch of wallpapers for game: {}", game.getName()));
+
+      batchFutures.add(batchFuture);
+
+      if (i + BATCH_SIZE < urls.size()) {
+        batchFuture.thenCompose(ignored -> delay(2000)); // 비동기적으로 2초 대기
+      }
+    }
+
+    return CompletableFuture.allOf(batchFutures.toArray(new CompletableFuture[0]))
         .thenRun(() -> {
           logger.info("Updated {} wallpapers for game: {}", urls.size(), game.getName());
           game.setStatus(GameStatus.COMPLETED);
         });
+  }
+
+  private CompletableFuture<Void> delay(long millis) {
+    return CompletableFuture.runAsync(() -> {
+      try {
+        Thread.sleep(millis);
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
+    }, executor);
   }
 
   private void uploadToFirebase(String imageUrl, String gameName) {
