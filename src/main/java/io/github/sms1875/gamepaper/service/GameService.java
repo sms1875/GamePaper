@@ -1,6 +1,8 @@
 package io.github.sms1875.gamepaper.service;
 
+import io.github.sms1875.gamepaper.domain.Game;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,7 +17,6 @@ public class GameService {
     addGame("Mabinogi");
     addGame("MapleStory");
     addGame("Nikke");
-    // addGame("monsterhunter");
     addGame("finalfantasy");
     addGame("genshinimpact");
   }
@@ -30,39 +31,5 @@ public class GameService {
 
   public List<Game> getAllGames() {
     return List.copyOf(games.values());
-  }
-
-  public static class Game {
-    private final String name;
-    private GameStatus status;
-    private long lastUpdated;
-
-    public Game(String name) {
-      this.name = name;
-      this.status = GameStatus.EMPTY;
-      this.lastUpdated = System.currentTimeMillis();
-    }
-
-    // Getters and setters
-    public String getName() {
-      return name;
-    }
-
-    public GameStatus getStatus() {
-      return status;
-    }
-
-    public void setStatus(GameStatus status) {
-      this.status = status;
-      this.lastUpdated = System.currentTimeMillis();
-    }
-
-    public long getLastUpdated() {
-      return lastUpdated;
-    }
-  }
-
-  public enum GameStatus {
-    EMPTY, UPDATING, COMPLETED
   }
 }
