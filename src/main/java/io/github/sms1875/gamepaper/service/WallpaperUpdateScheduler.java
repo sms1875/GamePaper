@@ -21,8 +21,10 @@ public class WallpaperUpdateScheduler {
   private final WallpaperCacheService cacheService;
   private final FirebaseStorageService firebaseStorageService;
 
-  public WallpaperUpdateScheduler(GameService gameService, Map<String, GameImageRetrievalService> gameImageServices,
-      WallpaperCacheService cacheService, FirebaseStorageService firebaseStorageService) {
+  public WallpaperUpdateScheduler(GameService gameService,
+      Map<String, GameImageRetrievalService> gameImageServices,
+      WallpaperCacheService cacheService,
+      FirebaseStorageService firebaseStorageService) {
     this.gameService = gameService;
     this.gameImageServices = gameImageServices;
     this.cacheService = cacheService;
@@ -33,49 +35,58 @@ public class WallpaperUpdateScheduler {
   public void updateWallpapers() {
     logger.info("Starting scheduled wallpaper update");
     List<GameService.Game> games = gameService.getAllGames();
-    updateGameWallpapersSequentially(games);
-  }
-
-  private void updateGameWallpapersSequentially(List<GameService.Game> games) {
-    CompletableFuture<Void> future = CompletableFuture.completedFuture(null);
-
-    for (GameService.Game game : games) {
-      future = future.thenCompose(ignored -> updateGameWallpapers(game));
-    }
-
-    future.thenRun(() -> logger.info("All games updated"))
+    updateGameWallpapersSequentially(games)
+        .thenRun(() -> logger.info("All games updated"))
         .exceptionally(ex -> {
-          logger.error("Error updating one or more games", ex);
+          logger.error("Error during wallpaper update process", ex);
           return null;
         });
   }
 
+  private CompletableFuture<Void> updateGameWallpapersSequentially(List<GameService.Game> games) {
+    return games.stream()
+        .reduce(CompletableFuture.completedFuture(null),
+            (future, game) -> future.thenCompose(ignored -> updateGameWallpapers(game)),
+            (f1, f2) -> f1.thenCompose(ignored -> f2));
+  }
+
   public CompletableFuture<Void> updateGameWallpapers(GameService.Game game) {
     GameImageRetrievalService service = gameImageServices.get(game.getName().toLowerCase());
-    if (service != null) {
-      game.setStatus(GameService.GameStatus.UPDATING);
-      logger.info("Updating wallpapers for game: {}", game.getName());
-      return CompletableFuture.supplyAsync(service::getImageUrls)
-          .thenAccept(urls -> {
-            if (urls.isEmpty()) {
-              logger.warn("No wallpapers found for game: {}", game.getName());
-              game.setStatus(GameService.GameStatus.EMPTY);
-            } else {
-              cacheService.cacheWallpapers(game.getName(), urls);
-              urls.forEach(url -> uploadToFirebase(url, game.getName()));
-              logger.info("Updated {} wallpapers for game: {}", urls.size(), game.getName());
-              game.setStatus(GameService.GameStatus.COMPLETED);
-            }
-          })
-          .exceptionally(ex -> {
-            logger.error("Error updating wallpapers for game: " + game.getName(), ex);
-            game.setStatus(GameService.GameStatus.EMPTY);
-            return null;
-          });
-    } else {
+    if (service == null) {
       logger.warn("No image service found for game: {}", game.getName());
       return CompletableFuture.completedFuture(null);
     }
+
+    game.setStatus(GameService.GameStatus.UPDATING);
+    logger.info("Updating wallpapers for game: {}", game.getName());
+
+    return CompletableFuture.supplyAsync(service::getImageUrls)
+        .thenCompose(urls -> processWallpapers(game, urls))
+        .exceptionally(ex -> handleUpdateError(game, ex));
+  }
+
+  private CompletableFuture<Void> processWallpapers(GameService.Game game, List<String> urls) {
+    if (urls.isEmpty()) {
+      logger.warn("No wallpapers found for game: {}", game.getName());
+      game.setStatus(GameService.GameStatus.EMPTY);
+      return CompletableFuture.completedFuture(null);
+    }
+
+    cacheService.cacheWallpapers(game.getName(), urls);
+    return CompletableFuture.allOf(
+        urls.stream()
+            .map(url -> CompletableFuture.runAsync(() -> uploadToFirebase(url, game.getName())))
+            .toArray(CompletableFuture[]::new))
+        .thenRun(() -> {
+          logger.info("Updated {} wallpapers for game: {}", urls.size(), game.getName());
+          game.setStatus(GameService.GameStatus.COMPLETED);
+        });
+  }
+
+  private Void handleUpdateError(GameService.Game game, Throwable ex) {
+    logger.error("Error updating wallpapers for game: " + game.getName(), ex);
+    game.setStatus(GameService.GameStatus.EMPTY);
+    return null;
   }
 
   private void uploadToFirebase(String imageUrl, String gameName) {

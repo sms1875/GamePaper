@@ -9,9 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableCaching
 @EnableScheduling
 public class GamepaperApplication {
-
   public static void main(String[] args) {
     SpringApplication.run(GamepaperApplication.class, args);
   }
-
 }
