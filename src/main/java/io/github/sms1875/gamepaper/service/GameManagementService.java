@@ -16,10 +16,10 @@ public class GameManagementService {
 
   private final Map<String, Game> games = new ConcurrentHashMap<>();
   private final List<String> gameNames = List.of(
-      // "genshinimpact",
-      // "mabinogi",
-      // "maplestory",
-      "nikke"
+      "genshinimpact"
+  // "mabinogi",
+  // "maplestory",
+  // "nikke",
   // "finalfantasy",
   // "playblackdesert"
   );
