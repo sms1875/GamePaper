@@ -142,7 +142,6 @@ public class GenshinImpactImageRetrievalService extends AbstractGameImageRetriev
         break;
       } catch (org.openqa.selenium.StaleElementReferenceException e) {
         // 요소가 오래되었다면 페이지를 새로고침하고 다시 시도합니다.
-        webDriver.navigate().refresh();
         wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath(
                 "//*[@id=\"__layout\"]/div/div[2]/div/div[1]/div/div/div[3]/div/div[1]/div[1]/div[2]/a/div[2]/div[1]/img")));

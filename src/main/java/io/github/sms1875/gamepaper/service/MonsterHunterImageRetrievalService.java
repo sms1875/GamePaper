@@ -25,7 +25,7 @@ public class MonsterHunterImageRetrievalService extends AbstractGameImageRetriev
       navigateToPage();
       imageUrls.addAll(extractImageUrlsFromPage());
     } catch (Exception e) {
-      e.printStackTrace();
+      handleException(e);
     }
     return imageUrls;
   }

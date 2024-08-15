@@ -34,8 +34,7 @@ public class MabinogiImageRetrievalService extends AbstractGameImageRetrievalSer
       navigateToPage();
       imageUrls.addAll(extractImageUrlsFromPage());
     } catch (Exception e) {
-      // 에러를 로깅 프레임워크로 처리할 것을 권장
-      e.printStackTrace();
+      handleException(e);
     }
     return imageUrls;
   }
@@ -85,8 +84,7 @@ public class MabinogiImageRetrievalService extends AbstractGameImageRetrievalSer
       try {
         return URLDecoder.decode(encodedUrl, StandardCharsets.UTF_8.name());
       } catch (Exception e) {
-        // 로깅 프레임워크 사용 권장
-        e.printStackTrace();
+        handleException(e);
       }
     }
     return null;

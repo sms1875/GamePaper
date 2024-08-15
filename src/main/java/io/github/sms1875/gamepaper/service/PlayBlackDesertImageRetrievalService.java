@@ -39,7 +39,7 @@ public class PlayBlackDesertImageRetrievalService extends AbstractGameImageRetri
         imageUrls.addAll(extractImageUrlsFromPage(document));
       } while ((document = navigateToNextPage(document)) != null);
 
-    } catch (IOException e) {
+    } catch (Exception e) {
       handleException(e);
     }
     return imageUrls;
@@ -72,7 +72,7 @@ public class PlayBlackDesertImageRetrievalService extends AbstractGameImageRetri
         String nextPageUrl = nextPageElement.absUrl("href");
         return connectToPage(nextPageUrl);
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       handleException(e);
     }
     return null;
@@ -95,27 +95,6 @@ public class PlayBlackDesertImageRetrievalService extends AbstractGameImageRetri
       }
     }
     return pageImageUrls;
-  }
-
-  /**
-   * 이미지 URL이 유효한지 검사합니다.
-   *
-   * @param url 검사할 URL
-   * @return 유효한 URL이면 true, 그렇지 않으면 false
-   */
-  private boolean isValidUrl(String url) {
-    return url != null && url.startsWith("http");
-  }
-
-  /**
-   * 예외가 발생했을 때 처리하는 메서드.
-   *
-   * @param e 발생한 예외
-   */
-  private void handleException(IOException e) {
-    // 로그를 남기고 예외를 처리할 수 있습니다. 예를 들어:
-    e.printStackTrace();
-    // 로깅 프레임워크를 사용하는 경우, e.printStackTrace() 대신 로그를 기록하세요.
   }
 
   @Override

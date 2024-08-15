@@ -132,24 +132,4 @@ public class MapleStoryMobileWallpaperService extends AbstractGameImageRetrieval
 
     return imageUrls;
   }
-
-  /**
-   * 이미지 URL이 유효한지 검사합니다.
-   *
-   * @param url 검사할 URL
-   * @return 유효한 URL이면 true, 그렇지 않으면 false
-   */
-  private boolean isValidUrl(String url) {
-    return url != null && url.startsWith("http");
-  }
-
-  /**
-   * 예외가 발생했을 때 처리하는 메서드.
-   *
-   * @param e 발생한 예외
-   */
-  private void handleException(Exception e) {
-    // 로깅 프레임워크 사용 권장
-    e.printStackTrace();
-  }
 }
