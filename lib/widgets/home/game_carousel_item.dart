@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/models/game.dart';
 import 'package:wallpaper/screens/wallpaper_screen.dart';
-import 'package:wallpaper/utils/load_network_image.dart';
+import 'package:wallpaper/widgets/common/load_network_image.dart';
 
 class GameCarouselItem extends StatelessWidget {
   final Game game;

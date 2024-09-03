@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:wallpaper/widgets/wallpaper_grid.dart';
 import 'package:wallpaper/models/game.dart';
 import 'package:wallpaper/providers/wallpaper_provider.dart';
+import 'package:wallpaper/widgets/wallpaper/wallpaper_grid.dart';
 
 class WallpaperScreen extends StatefulWidget {
   final Game game;
@@ -26,7 +26,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => WallpaperProvider(widget.game),
+      create: (_) => WallpaperProvider(game: widget.game),
       child: Scaffold(
         backgroundColor: Colors.black,
         body: SafeArea(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaper/utils/load_network_image.dart';
-import 'package:wallpaper/widgets/wallpaper_setting_button.dart';
+import 'package:wallpaper/widgets/common/load_network_image.dart';
+import 'package:wallpaper/widgets/wallpaper/wallpaper_setting_button.dart';
 
 /// 배경화면을 전체 화면으로 보여주는 다이얼로그입니다.
 ///

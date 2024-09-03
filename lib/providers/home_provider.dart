@@ -1,13 +1,11 @@
 import 'package:flutter/foundation.dart';
-import '../models/game.dart';
+import 'package:wallpaper/models/game.dart';
 import '../repositories/game_repository.dart';
 
 class HomeProvider with ChangeNotifier {
-  final GameRepository _repository;
+  final GameRepository _repository = GameRepository();
   Map<String, List<Game>> _gameMap = {};
   bool _isLoading = false;
-
-  HomeProvider(this._repository);
 
   Map<String, List<Game>> get gameMap => _gameMap;
   bool get isLoading => _isLoading;

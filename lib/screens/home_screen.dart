@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallpaper/models/game.dart';
-import 'package:wallpaper/widgets/alphabet_game_section.dart';
+import 'package:wallpaper/providers/home_provider.dart';
+import 'package:wallpaper/widgets/home/alphabet_game_section.dart';
 
-import '../providers/home_provider.dart';
-
-/// HomeScreen 위젯
-///
-/// 이 위젯은 앱의 메인 화면을 구성합니다. 게임 목록을 알파벳별로 그룹화하여 표시하며,
-/// 각 알파벳 섹션을 [AlphabetGameSection] 위젯을 사용하여 렌더링합니다.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -22,7 +17,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // 게임 목록을 로드
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<HomeProvider>(context, listen: false).loadGames();
     });

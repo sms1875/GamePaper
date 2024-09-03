@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/models/game.dart';
-import 'package:wallpaper/widgets/game_carousel_item.dart';
+import 'package:wallpaper/widgets/home/game_carousel_item.dart';
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 
 /// GameCarousel 위젯
@@ -12,7 +12,7 @@ import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 class GameCarousel extends StatelessWidget {
   final List<Game> games;
 
-  const GameCarousel({Key? key, required this.games}) : super(key: key);
+  const GameCarousel({super.key, required this.games});
 
   @override
   Widget build(BuildContext context) {

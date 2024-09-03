@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaper/widgets/wallpaper_card.dart';
+import 'package:wallpaper/widgets/wallpaper/wallpaper_card.dart';
 
 /// WallpaperGrid 클래스는 배경화면 이미지를 그리드 형태로 표시합니다.
 /// GridView를 사용하여 이미지를 효율적으로 표시하며, 각 이미지는 WallpaperCard로 렌더링됩니다.

@@ -1,14 +1,9 @@
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:wallpaper/models/game.dart';
 
-import '../models/game.dart';
-
-/// 게임 목록을 Firebase에서 가져오는 리포지토리 클래스
 class GameRepository {
-  final FirebaseStorage _storage;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  GameRepository(this._storage);
-
-  /// 게임 목록을 비동기로 가져옴
   Future<List<Game>> fetchGameList() async {
     final gamesRef = _storage.ref().child('games');
 
@@ -36,6 +31,28 @@ class GameRepository {
       return games;
     } catch (e) {
       print('Error fetching game list: $e');
+      return [];
+    }
+  }
+
+  Future<List<String>> getWallpapersForPage(
+      Reference wallpapersRef,
+      int page,
+      int wallpapersPerPage,
+      ) async {
+    try {
+      final int startIndex = (page - 1) * wallpapersPerPage;
+      final int endIndex = startIndex + wallpapersPerPage;
+
+      final ListResult result = await wallpapersRef.listAll();
+      final List<Reference> pageRefs = result.items.sublist(
+        startIndex,
+        endIndex > result.items.length ? result.items.length : endIndex,
+      );
+
+      return await Future.wait(pageRefs.map((ref) => ref.getDownloadURL()));
+    } catch (e) {
+      print('Error loading wallpapers for page $page: $e');
       return [];
     }
   }

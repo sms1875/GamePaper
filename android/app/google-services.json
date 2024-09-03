@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "553305162921",
+    "project_id": "gamepaper-e336e",
+    "storage_bucket": "gamepaper-e336e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553305162921:android:df9a2cdd4cd2fd223855b8",
+        "android_client_info": {
+          "package_name": "com.sms1875.wallpaper"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCi8pcP-WAjq27jLoqdu19JtDIcgVwUsxs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

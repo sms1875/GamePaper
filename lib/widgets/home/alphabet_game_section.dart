@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/models/game.dart';
-import 'package:wallpaper/widgets/game_carousel.dart';
-import 'package:wallpaper/widgets/game_list_view.dart';
+import 'package:wallpaper/widgets/home/game_carousel.dart';
+import 'package:wallpaper/widgets/home/game_list_view.dart';
 
 /// AlphabetGameSection 위젯
 ///
