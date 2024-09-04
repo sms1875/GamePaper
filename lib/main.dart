@@ -9,8 +9,9 @@ import 'package:wallpaper/services/firebase_service.dart';
 import 'models/game.dart';
 
 void main() async {
+  //WidgetsFlutterBinding.ensureInitialized();
   await FirebaseService.initialize();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
