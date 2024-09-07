@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:wallpaper/config/firebase_options.dart';
+import 'package:gamepaper/config/firebase_options.dart';
 
 class FirebaseService {
   static Future<void> initialize() async {

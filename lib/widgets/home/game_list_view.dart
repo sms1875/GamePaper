@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaper/models/game.dart';
-import 'package:wallpaper/screens/wallpaper_screen.dart';
+import 'package:gamepaper/models/game.dart';
+import 'package:gamepaper/screens/wallpaper_screen.dart';
 
 /// GameListView 위젯
 ///
@@ -11,7 +11,7 @@ import 'package:wallpaper/screens/wallpaper_screen.dart';
 class GameListView extends StatelessWidget {
   final List<Game> games;
 
-  const GameListView({Key? key, required this.games}) : super(key: key);
+  const GameListView({super.key, required this.games});
 
   @override
   Widget build(BuildContext context) {

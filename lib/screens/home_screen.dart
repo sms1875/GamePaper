@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wallpaper/models/game.dart';
-import 'package:wallpaper/providers/home_provider.dart';
-import 'package:wallpaper/widgets/home/alphabet_game_section.dart';
+import 'package:gamepaper/models/game.dart';
+import 'package:gamepaper/providers/home_provider.dart';
+import 'package:gamepaper/widgets/home/alphabet_game_section.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();

@@ -1,5 +1,5 @@
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:wallpaper/models/game.dart';
+import 'package:gamepaper/models/game.dart';
 
 class GameRepository {
   final FirebaseStorage _storage = FirebaseStorage.instance;

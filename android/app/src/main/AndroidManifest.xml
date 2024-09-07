@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sms1875.wallpaper">
+    package="io.github.sms1875.gamepaper">
     <application
         android:label="Game Paper"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
-            android:name="com.sms1875.wallpaper.MainActivity"
+            android:name="io.github.sms1875.gamepaper.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaper/widgets/wallpaper/wallpaper_dialog.dart';
-import 'package:wallpaper/widgets/common/load_network_image.dart';
+import 'package:gamepaper/widgets/wallpaper/wallpaper_dialog.dart';
+import 'package:gamepaper/widgets/common/load_network_image.dart';
 
 /// 배경화면을 카드 형태로 표시하는 위젯입니다.
 ///
@@ -12,7 +12,7 @@ class WallpaperCard extends StatelessWidget {
   final String imageUrl;
 
   /// 생성자
-  const WallpaperCard({Key? key, required this.imageUrl}) : super(key: key);
+  const WallpaperCard({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

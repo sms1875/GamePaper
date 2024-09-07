@@ -23,6 +23,44 @@
           "other_platform_oauth_client": []
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553305162921:android:08e34fb0fea992683855b8",
+        "android_client_info": {
+          "package_name": "io.github.sms1875"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCi8pcP-WAjq27jLoqdu19JtDIcgVwUsxs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553305162921:android:76aabe2142bcaaef3855b8",
+        "android_client_info": {
+          "package_name": "io.github.sms1875.gamepaper"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCi8pcP-WAjq27jLoqdu19JtDIcgVwUsxs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
     }
   ],
   "configuration_version": "1"

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaper/models/game.dart';
-import 'package:wallpaper/screens/wallpaper_screen.dart';
-import 'package:wallpaper/widgets/common/load_network_image.dart';
+import 'package:gamepaper/models/game.dart';
+import 'package:gamepaper/screens/wallpaper_screen.dart';
+import 'package:gamepaper/widgets/common/load_network_image.dart';
 
 class GameCarouselItem extends StatelessWidget {
   final Game game;
 
-  const GameCarouselItem({Key? key, required this.game}) : super(key: key);
+  const GameCarouselItem({super.key, required this.game});
 
   @override
   Widget build(BuildContext context) {

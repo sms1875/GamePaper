@@ -1,4 +1,4 @@
-package com.sms1875.wallpaper
+package io.github.sms1875.gamepaper
 
 import io.flutter.embedding.android.FlutterActivity
 

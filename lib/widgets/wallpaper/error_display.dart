@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ErrorDisplay extends StatelessWidget {
   final VoidCallback onRetry;
 
-  const ErrorDisplay({Key? key, required this.onRetry}) : super(key: key);
+  const ErrorDisplay({super.key, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {

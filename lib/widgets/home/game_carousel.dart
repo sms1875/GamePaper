@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaper/models/game.dart';
-import 'package:wallpaper/widgets/home/game_carousel_item.dart';
+import 'package:gamepaper/models/game.dart';
+import 'package:gamepaper/widgets/home/game_carousel_item.dart';
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 
 /// GameCarousel 위젯

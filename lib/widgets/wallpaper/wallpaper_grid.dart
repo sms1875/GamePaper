@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaper/widgets/wallpaper/wallpaper_card.dart';
+import 'package:gamepaper/widgets/wallpaper/wallpaper_card.dart';
 
 /// WallpaperGrid 클래스는 배경화면 이미지를 그리드 형태로 표시합니다.
 /// GridView를 사용하여 이미지를 효율적으로 표시하며, 각 이미지는 WallpaperCard로 렌더링됩니다.
@@ -10,9 +10,9 @@ class WallpaperGrid extends StatelessWidget {
   /// WallpaperGrid 생성자
   /// [wallpapers]는 배경화면 이미지 URL 리스트입니다.
   const WallpaperGrid({
-    Key? key,
+    super.key,
     required this.wallpapers,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

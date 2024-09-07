@@ -10,7 +10,7 @@ class WallpaperSettingButton extends StatelessWidget {
   final String imageUrl;
 
   /// 생성자
-  const WallpaperSettingButton({Key? key, required this.imageUrl}) : super(key: key);
+  const WallpaperSettingButton({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

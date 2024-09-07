@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:wallpaper/models/game.dart';
+import 'package:gamepaper/models/game.dart';
 import '../repositories/game_repository.dart';
 
 class HomeProvider with ChangeNotifier {

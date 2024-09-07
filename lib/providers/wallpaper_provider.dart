@@ -1,6 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
-import 'package:wallpaper/models/game.dart';
+import 'package:gamepaper/models/game.dart';
 
 import '../repositories/game_repository.dart';
 

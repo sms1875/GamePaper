@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaper/models/game.dart';
-import 'package:wallpaper/widgets/home/game_carousel.dart';
-import 'package:wallpaper/widgets/home/game_list_view.dart';
+import 'package:gamepaper/models/game.dart';
+import 'package:gamepaper/widgets/home/game_carousel.dart';
+import 'package:gamepaper/widgets/home/game_list_view.dart';
 
 /// AlphabetGameSection 위젯
 ///
@@ -19,12 +19,12 @@ class AlphabetGameSection extends StatelessWidget {
   final VoidCallback onAlphabetTap;
 
   const AlphabetGameSection({
-    Key? key,
+    super.key,
     required this.alphabet,
     required this.games,
     required this.isSelected,
     required this.onAlphabetTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

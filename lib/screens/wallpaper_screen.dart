@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:wallpaper/models/game.dart';
-import 'package:wallpaper/providers/wallpaper_provider.dart';
-import 'package:wallpaper/widgets/wallpaper/wallpaper_grid.dart';
+import 'package:gamepaper/models/game.dart';
+import 'package:gamepaper/providers/wallpaper_provider.dart';
+import 'package:gamepaper/widgets/wallpaper/wallpaper_grid.dart';
 
 class WallpaperScreen extends StatefulWidget {
   final Game game;
 
-  const WallpaperScreen({Key? key, required this.game}) : super(key: key);
+  const WallpaperScreen({super.key, required this.game});
 
   @override
   State<WallpaperScreen> createState() => _WallpaperScreenState();
