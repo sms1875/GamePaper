@@ -92,11 +92,14 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
       child: SmoothPageIndicator(
         controller: _pageController,
         count: count,
-        effect: const WormEffect(
+        effect: const ScrollingDotsEffect(
           dotColor: Colors.grey,
           activeDotColor: Colors.blue,
           dotHeight: 8.0,
           dotWidth: 8.0,
+          activeDotScale: 1.5,  // 선택된 점 크기 조정
+          maxVisibleDots: 5,  // 화면에 보이는 최대 점 개수
+          spacing: 8.0,  // 점 사이 간격
         ),
       ),
     );

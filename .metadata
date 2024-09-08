@@ -1,11 +1,11 @@
 # This file tracks properties of this Flutter project.
 # Used by Flutter tool to assess capabilities and perform upgrades etc.
 #
-# This file should be version controlled.
+# This file should be version controlled and should not be manually edited.
 
 version:
-  revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
-  channel: master
+  revision: "967286b386b2e85864f836f28f46da12026379f8"
+  channel: "master"
 
 project_type: app
 
@@ -13,26 +13,26 @@ project_type: app
 migration:
   platforms:
     - platform: root
-      create_revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
-      base_revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
+      create_revision: 967286b386b2e85864f836f28f46da12026379f8
+      base_revision: 967286b386b2e85864f836f28f46da12026379f8
     - platform: android
-      create_revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
-      base_revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
+      create_revision: 967286b386b2e85864f836f28f46da12026379f8
+      base_revision: 967286b386b2e85864f836f28f46da12026379f8
     - platform: ios
-      create_revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
-      base_revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
+      create_revision: 967286b386b2e85864f836f28f46da12026379f8
+      base_revision: 967286b386b2e85864f836f28f46da12026379f8
     - platform: linux
-      create_revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
-      base_revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
+      create_revision: 967286b386b2e85864f836f28f46da12026379f8
+      base_revision: 967286b386b2e85864f836f28f46da12026379f8
     - platform: macos
-      create_revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
-      base_revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
+      create_revision: 967286b386b2e85864f836f28f46da12026379f8
+      base_revision: 967286b386b2e85864f836f28f46da12026379f8
     - platform: web
-      create_revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
-      base_revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
+      create_revision: 967286b386b2e85864f836f28f46da12026379f8
+      base_revision: 967286b386b2e85864f836f28f46da12026379f8
     - platform: windows
-      create_revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
-      base_revision: 725d9ca214f683817bc017bbc1001b3aa7217f22
+      create_revision: 967286b386b2e85864f836f28f46da12026379f8
+      base_revision: 967286b386b2e85864f836f28f46da12026379f8
 
   # User provided section
 

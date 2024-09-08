@@ -1,23 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:gamepaper/config/firebase_options.dart';
+import 'package:gamepaper/config/firebase_options.dart'; // FirebaseOptions import
 
 class FirebaseService {
   static Future<void> initialize() async {
-    await dotenv.load(fileName: 'assets/config/.env');
+    // Firebase 초기화
     await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
+      options: DefaultFirebaseOptions.currentPlatform, // FirebaseOptions 사용
     );
 
-    // Activate Firebase App Check
+    // Firebase App Check 활성화
     await FirebaseAppCheck.instance.activate(
-      androidProvider: AndroidProvider.debug,
-      appleProvider: AppleProvider.debug,
-    );
+      androidProvider: AndroidProvider.debug,  // Play Integrity 사용
+     );
 
-    // Ensure the user is signed in
+    // 익명 사용자 로그인
     await _ensureAuthenticated();
   }
 

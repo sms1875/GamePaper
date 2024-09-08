@@ -6,6 +6,7 @@ import 'package:gamepaper/services/firebase_service.dart';
 
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await FirebaseService.initialize();
   runApp(const MyApp());
 }

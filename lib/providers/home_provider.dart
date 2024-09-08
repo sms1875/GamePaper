@@ -4,32 +4,37 @@ import '../repositories/game_repository.dart';
 
 class HomeProvider with ChangeNotifier {
   final GameRepository _repository = GameRepository();
-  Map<String, List<Game>> _gameMap = {};
-  bool _isLoading = false;
+  Map<String, List<Game>> _gameMap = {}; // 알파벳별로 게임을 그룹화한 맵
+  bool _isLoading = false; // 로딩 상태 관리
 
   Map<String, List<Game>> get gameMap => _gameMap;
   bool get isLoading => _isLoading;
 
+  // 게임 목록을 불러오고 알파벳 순으로 그룹화하는 함수
   Future<void> loadGames() async {
-    _isLoading = true;
-    notifyListeners();
-
-    final games = await _repository.fetchGameList();
-    _gameMap = _groupGamesByAlphabet(games);
-
-    _isLoading = false;
-    notifyListeners();
+    _setLoadingState(true); // 로딩 상태 시작
+    final games = await _repository.fetchGameList(); // 게임 목록 불러오기
+    _gameMap = _groupGamesByAlphabet(games); // 알파벳 그룹화
+    _setLoadingState(false); // 로딩 상태 종료
   }
 
+  // 게임 목록을 알파벳 순으로 그룹화하는 함수
   Map<String, List<Game>> _groupGamesByAlphabet(List<Game> games) {
     final Map<String, List<Game>> gameMap = {};
     for (final game in games) {
-      final String alphabet = game.title[0].toUpperCase();
-      gameMap.putIfAbsent(alphabet, () => <Game>[]);
+      final String alphabet = game.title[0].toUpperCase(); // 게임 제목의 첫 글자를 기준으로 그룹화
+      gameMap.putIfAbsent(alphabet, () => <Game>[]); // 맵에 해당 알파벳 키가 없으면 추가
       gameMap[alphabet]!.add(game);
     }
+    // 알파벳 순서대로 정렬하여 반환
     return Map.fromEntries(
       gameMap.entries.toList()..sort((a, b) => a.key.compareTo(b.key)),
     );
+  }
+
+  // 로딩 상태를 변경하는 헬퍼 함수
+  void _setLoadingState(bool isLoading) {
+    _isLoading = isLoading;
+    notifyListeners(); // 상태 변경을 알림
   }
 }
