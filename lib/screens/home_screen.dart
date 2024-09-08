@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamepaper/widgets/common/error_display.dart';
 import 'package:provider/provider.dart';
 import 'package:gamepaper/models/game.dart';
 import 'package:gamepaper/providers/home_provider.dart';
@@ -22,6 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // Retry function
+  void _retryLoadingGames(BuildContext context) {
+    Provider.of<HomeProvider>(context, listen: false).loadGames();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,8 +36,14 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context, homeProvider, child) {
           if (homeProvider.isLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (homeProvider.gameMap.isEmpty) {
-            return const Center(child: Text('No games available'));
+          } else if (homeProvider.errorMessage.isNotEmpty || homeProvider.gameMap.isEmpty) {
+            // If there is an error message or no games available, show the error state
+            return ErrorDisplayWidget(
+              errorCode: homeProvider.errorMessage.isNotEmpty
+                  ? homeProvider.errorMessage
+                  : "no-games-available", // Custom error code for no games
+              onRetry: () => _retryLoadingGames(context),
+            );
           }
 
           final gameMap = homeProvider.gameMap;

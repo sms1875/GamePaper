@@ -6,15 +6,25 @@ class HomeProvider with ChangeNotifier {
   final GameRepository _repository = GameRepository();
   Map<String, List<Game>> _gameMap = {}; // 알파벳별로 게임을 그룹화한 맵
   bool _isLoading = false; // 로딩 상태 관리
+  String _errorMessage = ''; // 에러 메시지 저장
 
   Map<String, List<Game>> get gameMap => _gameMap;
   bool get isLoading => _isLoading;
+  String get errorMessage => _errorMessage;
 
   // 게임 목록을 불러오고 알파벳 순으로 그룹화하는 함수
   Future<void> loadGames() async {
     _setLoadingState(true); // 로딩 상태 시작
-    final games = await _repository.fetchGameList(); // 게임 목록 불러오기
-    _gameMap = _groupGamesByAlphabet(games); // 알파벳 그룹화
+    _setErrorMessage(''); // 에러 메시지 초기화
+
+    try {
+      final games = await _repository.fetchGameList(); // 게임 목록 불러오기
+      _gameMap = _groupGamesByAlphabet(games); // 알파벳 그룹화
+    } catch (e) {
+      // 에러 발생 시 에러 메시지 설정
+      _setErrorMessage(e.toString());
+    }
+
     _setLoadingState(false); // 로딩 상태 종료
   }
 
@@ -30,6 +40,12 @@ class HomeProvider with ChangeNotifier {
     return Map.fromEntries(
       gameMap.entries.toList()..sort((a, b) => a.key.compareTo(b.key)),
     );
+  }
+
+  // 에러 메시지 설정
+  void _setErrorMessage(String message) {
+    _errorMessage = message;
+    notifyListeners(); // 상태 변경을 알림
   }
 
   // 로딩 상태를 변경하는 헬퍼 함수

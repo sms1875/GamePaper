@@ -23,9 +23,8 @@ class GameRepository {
       }
       return games;
     } catch (e) {
-      // 에러 발생 시 빈 리스트 반환
-      print('Error fetching game list: $e');
-      return [];
+      // 에러 발생 시 메시지 포함
+      throw Exception('Error fetching game list: $e');
     }
   }
 
@@ -33,20 +32,26 @@ class GameRepository {
   Future<Game?> _fetchGameWithWallpapers(Reference prefix) async {
     final gameName = prefix.name; // 폴더 이름 = 게임 이름
     final wallpapersRef = prefix.child('wallpapers');
-    final wallpapers = await wallpapersRef.listAll();
 
-    // 월페이퍼가 있으면 첫 번째 이미지를 썸네일로 사용
-    if (wallpapers.items.isNotEmpty) {
-      final thumbnailRef = wallpapers.items[0];
-      final thumbnailUrl = await thumbnailRef.getDownloadURL(); // 썸네일 URL 가져오기
+    try {
+      final wallpapers = await wallpapersRef.listAll();
 
-      return Game(
-        title: gameName,
-        thumbnailUrl: thumbnailUrl,
-        wallpapersRef: wallpapersRef, // 월페이퍼 레퍼런스 저장
-      );
+      // 월페이퍼가 있으면 첫 번째 이미지를 썸네일로 사용
+      if (wallpapers.items.isNotEmpty) {
+        final thumbnailRef = wallpapers.items[0];
+        final thumbnailUrl = await thumbnailRef.getDownloadURL(); // 썸네일 URL 가져오기
+
+        return Game(
+          title: gameName,
+          thumbnailUrl: thumbnailUrl,
+          wallpapersRef: wallpapersRef, // 월페이퍼 레퍼런스 저장
+        );
+      }
+      return null; // 월페이퍼가 없으면 null 반환
+    } catch (e) {
+      // 에러 발생 시 메시지 포함
+      throw Exception('Error fetching wallpapers for game $gameName: $e');
     }
-    return null; // 월페이퍼가 없으면 null 반환
   }
 
   // 월페이퍼를 페이지 단위로 가져오는 함수
@@ -59,9 +64,8 @@ class GameRepository {
       // 유틸리티 함수로 월페이퍼 배치 가져오기
       return await fetchWallpapersBatch(result.items, page, wallpapersPerPage);
     } catch (e) {
-      // 에러 발생 시 빈 리스트 반환
-      print('Error loading wallpapers for page $page: $e');
-      return [];
+      // 에러 발생 시 메시지 포함
+      throw Exception('Error loading wallpapers for page $page: $e');
     }
   }
 }

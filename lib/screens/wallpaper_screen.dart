@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gamepaper/widgets/common/error_display.dart'; // Assuming this is the same ErrorDisplayWidget from before
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:gamepaper/models/game.dart';
 import 'package:gamepaper/providers/wallpaper_provider.dart';
 import 'package:gamepaper/widgets/wallpaper/wallpaper_grid.dart';
-
-import '../widgets/wallpaper/error_display.dart';
 
 class WallpaperScreen extends StatefulWidget {
   final Game game;
@@ -40,11 +39,17 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
-                    return ErrorDisplay(
-                      onRetry: () => wallpaperProvider.loadWallpapers(), // 에러 시 재시도
+                    // Use the ErrorDisplayWidget for errors
+                    return ErrorDisplayWidget(
+                      errorCode: snapshot.error.toString(),
+                      onRetry: () => wallpaperProvider.loadWallpapers(),
                     );
                   } else if (!snapshot.hasData || snapshot.data == 0) {
-                    return const Center(child: Text('No wallpapers available'));
+                    // Treat no wallpapers available as an error
+                    return ErrorDisplayWidget(
+                      errorCode: 'no-wallpapers-available',
+                      onRetry: () => wallpaperProvider.loadWallpapers(),
+                    );
                   }
 
                   final totalWallpapers = snapshot.data!;
@@ -77,11 +82,17 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                return ErrorDisplay(
+                // Use the ErrorDisplayWidget for page-level errors
+                return ErrorDisplayWidget(
+                  errorCode: snapshot.error.toString(),
                   onRetry: () => wallpaperProvider.getWallpapersForPage(index + 1),
                 );
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(child: Text('No wallpapers for this page'));
+                // Treat no wallpapers for this page as an error
+                return ErrorDisplayWidget(
+                  errorCode: 'no-wallpapers-for-this-page',
+                  onRetry: () => wallpaperProvider.getWallpapersForPage(index + 1),
+                );
               }
 
               return WallpaperGrid(wallpapers: snapshot.data!);
