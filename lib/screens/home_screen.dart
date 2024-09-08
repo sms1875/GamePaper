@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (homeProvider.errorMessage.isNotEmpty || homeProvider.gameMap.isEmpty) {
             // If there is an error message or no games available, show the error state
             return ErrorDisplayWidget(
-              errorCode: homeProvider.errorMessage.isNotEmpty
+              error: homeProvider.errorMessage.isNotEmpty
                   ? homeProvider.errorMessage
                   : "no-games-available", // Custom error code for no games
               onRetry: () => _retryLoadingGames(context),

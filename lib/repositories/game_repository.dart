@@ -1,6 +1,5 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:gamepaper/models/game.dart';
-import '../utils/firebase_util.dart'; // 유틸리티 함수들을 모아둔 파일
 
 class GameRepository {
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -61,11 +60,27 @@ class GameRepository {
       // 월페이퍼 목록을 불러옴
       final ListResult result = await wallpapersRef.listAll();
 
-      // 유틸리티 함수로 월페이퍼 배치 가져오기
-      return await fetchWallpapersBatch(result.items, page, wallpapersPerPage);
+      // 페이지 배치를 계산하여 월페이퍼 URL 가져오기
+      return await _fetchWallpapersBatch(result.items, page, wallpapersPerPage);
     } catch (e) {
       // 에러 발생 시 메시지 포함
       throw Exception('Error loading wallpapers for page $page: $e');
     }
+  }
+
+  // 페이지 단위로 월페이퍼를 배치로 가져오는 함수
+  Future<List<String>> _fetchWallpapersBatch(
+      List<Reference> items, int page, int wallpapersPerPage) async {
+    final int startIndex = (page - 1) * wallpapersPerPage; // 시작 인덱스 계산
+    final int endIndex = startIndex + wallpapersPerPage; // 끝 인덱스 계산
+
+    // 페이징 범위 내에서 레퍼런스 목록 추출
+    final List<Reference> pageRefs = items.sublist(
+      startIndex,
+      endIndex > items.length ? items.length : endIndex, // 마지막 인덱스가 범위 초과할 경우 처리
+    );
+
+    // 해당 페이지의 월페이퍼 URL들을 가져옴
+    return await Future.wait(pageRefs.map((ref) => ref.getDownloadURL()));
   }
 }

@@ -2,11 +2,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gamepaper/models/game.dart';
 import '../repositories/game_repository.dart';
-import '../utils/firebase_util.dart';
 
 class WallpaperProvider with ChangeNotifier {
   final Game game;
-  late Future<int> _totalWallpapersFuture; // 전체 월페이퍼 수를 가져옴
+  late Future<int> _totalWallpapersFuture;
   final int wallpapersPerPage = 12;
   final GameRepository _repository = GameRepository();
 
@@ -22,13 +21,16 @@ class WallpaperProvider with ChangeNotifier {
   // 특정 페이지의 월페이퍼를 가져오는 함수
   Future<List<String>> getWallpapersForPage(int page) async {
     if (_wallpaperCache.containsKey(page)) {
-      return _wallpaperCache[page]!; // 캐시된 데이터 반환
+      return _wallpaperCache[page]!;
     }
 
-    List<String> wallpapers = await _repository.getWallpapersForPage(game.wallpapersRef, page, wallpapersPerPage);
-
-    _wallpaperCache[page] = wallpapers; // 캐시 저장
-    return wallpapers;
+    try {
+      List<String> wallpapers = await _repository.getWallpapersForPage(game.wallpapersRef, page, wallpapersPerPage);
+      _wallpaperCache[page] = wallpapers;
+      return wallpapers;
+    } catch (error) {
+      throw error; // Pass error to be handled by the UI layer
+    }
   }
 
   // 월페이퍼 총 개수를 비동기적으로 가져옴
@@ -40,7 +42,7 @@ class WallpaperProvider with ChangeNotifier {
   // 월페이퍼 목록을 다시 불러오는 함수 (에러 발생 시 재시도용)
   void loadWallpapers() {
     _totalWallpapersFuture = _getTotalWallpapers();
-    _wallpaperCache.clear(); // 캐시 초기화
-    notifyListeners(); // 리스너에게 변경 알림
+    _wallpaperCache.clear();
+    notifyListeners();
   }
 }
