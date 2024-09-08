@@ -13,7 +13,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? selectedAlphabet;
+  // Set<String>으로 변경하여 여러 개의 알파벳을 동시에 선택할 수 있도록 함
+  Set<String> selectedAlphabets = {};
 
   @override
   void initState() {
@@ -56,10 +57,14 @@ class _HomeScreenState extends State<HomeScreen> {
               return AlphabetGameSection(
                 alphabet: alphabet,
                 games: gamesByAlphabet,
-                isSelected: selectedAlphabet == alphabet,
+                isSelected: selectedAlphabets.contains(alphabet),
                 onAlphabetTap: () {
                   setState(() {
-                    selectedAlphabet = (selectedAlphabet == alphabet) ? null : alphabet;
+                    if (selectedAlphabets.contains(alphabet)) {
+                      selectedAlphabets.remove(alphabet); // 이미 선택된 경우 해제
+                    } else {
+                      selectedAlphabets.add(alphabet); // 선택되지 않은 경우 추가
+                    }
                   });
                 },
               );
