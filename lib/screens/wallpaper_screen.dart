@@ -5,6 +5,8 @@ import 'package:gamepaper/models/game.dart';
 import 'package:gamepaper/providers/wallpaper_provider.dart';
 import 'package:gamepaper/widgets/wallpaper/wallpaper_grid.dart';
 
+import '../widgets/wallpaper/error_display.dart';
+
 class WallpaperScreen extends StatefulWidget {
   final Game game;
 
@@ -38,7 +40,9 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
+                    return ErrorDisplay(
+                      onRetry: () => wallpaperProvider.loadWallpapers(), // 에러 시 재시도
+                    );
                   } else if (!snapshot.hasData || snapshot.data == 0) {
                     return const Center(child: Text('No wallpapers available'));
                   }
@@ -73,7 +77,9 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
+                return ErrorDisplay(
+                  onRetry: () => wallpaperProvider.getWallpapersForPage(index + 1),
+                );
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return const Center(child: Text('No wallpapers for this page'));
               }
@@ -97,9 +103,9 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
           activeDotColor: Colors.blue,
           dotHeight: 8.0,
           dotWidth: 8.0,
-          activeDotScale: 1.5,  // 선택된 점 크기 조정
-          maxVisibleDots: 5,  // 화면에 보이는 최대 점 개수
-          spacing: 8.0,  // 점 사이 간격
+          activeDotScale: 1.5,
+          maxVisibleDots: 5,
+          spacing: 8.0,
         ),
       ),
     );
