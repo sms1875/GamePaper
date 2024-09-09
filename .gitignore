@@ -96,7 +96,7 @@ logs
 
 # Sensitive information
 application.yml
-application.properties
+#application.properties
 
 # Linux/Mac temporary files
 *~
@@ -143,3 +143,6 @@ Thumbs.db
 
 # Dependency directories
 /node_modules/
+
+#firebase key
+FirebaseAccountKey.json
