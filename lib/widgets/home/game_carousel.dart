@@ -38,7 +38,8 @@ class GameCarousel extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             loadNetworkImage(
-              game.thumbnailUrl,
+              game.thumbnail.url,
+              blurHash: game.thumbnail.blurHash,
               fit: BoxFit.cover,
             ),
             Positioned(

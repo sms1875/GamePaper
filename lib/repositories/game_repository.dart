@@ -1,86 +1,92 @@
+import 'dart:convert';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:gamepaper/models/game.dart';
 
 class GameRepository {
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final Map<String, Game> _gameCache = {};
+  final Map<String, List<String>> _wallpaperCache = {};
 
-  // 게임 목록을 가져오는 함수
   Future<List<Game>> fetchGameList() async {
+    if (_gameCache.isNotEmpty) {
+      return _gameCache.values.toList();
+    }
+
     final gamesRef = _storage.ref().child('games');
 
     try {
-      // 'games' 디렉토리의 모든 하위 폴더를 가져옴
       final result = await gamesRef.listAll();
-      List<Game> games = [];
+      final gameFutures = result.prefixes.map(_fetchGameThumbnail);
+      final games = await Future.wait(gameFutures);
 
-      // 각 게임 폴더에 대해 월페이퍼를 불러옴
-      for (var prefix in result.prefixes) {
-        final game = await _fetchGameWithWallpapers(prefix);
-        if (game != null) {
-          games.add(game); // 월페이퍼가 있으면 게임 목록에 추가
-        }
-      }
-      return games;
+      _gameCache.addAll({for (var game in games.whereType<Game>()) game.title: game});
+      return _gameCache.values.toList();
     } catch (e) {
-      // 에러 발생 시 메시지 포함
       throw Exception('Error fetching game list: $e');
     }
   }
 
-  // 각 게임에 대한 월페이퍼를 가져오는 함수
-  Future<Game?> _fetchGameWithWallpapers(Reference prefix) async {
-    final gameName = prefix.name; // 폴더 이름 = 게임 이름
+  Future<Game?> _fetchGameThumbnail(Reference prefix) async {
+    final gameName = prefix.name;
     final wallpapersRef = prefix.child('wallpapers');
 
     try {
-      final wallpapers = await wallpapersRef.listAll();
+      final wallpapers = await wallpapersRef.list(ListOptions(maxResults: 1));
 
-      // 월페이퍼가 있으면 첫 번째 이미지를 썸네일로 사용
       if (wallpapers.items.isNotEmpty) {
         final thumbnailRef = wallpapers.items[0];
-        final thumbnailUrl = await thumbnailRef.getDownloadURL(); // 썸네일 URL 가져오기
+        final thumbnailUrl = await thumbnailRef.getDownloadURL();
 
+        final fileName = thumbnailRef.name;
+        final blurHashBase64 = fileName.split('#')[1].split('.')[0];
+        final blurHash = utf8.decode(base64.decode(blurHashBase64));
+        Wallpaper thumbnail = Wallpaper(url: thumbnailUrl,blurHash: blurHash);
         return Game(
           title: gameName,
-          thumbnailUrl: thumbnailUrl,
-          wallpapersRef: wallpapersRef, // 월페이퍼 레퍼런스 저장
+          thumbnail: thumbnail,
+          wallpapersRef: wallpapersRef,
         );
       }
-      return null; // 월페이퍼가 없으면 null 반환
     } catch (e) {
-      // 에러 발생 시 메시지 포함
-      throw Exception('Error fetching wallpapers for game $gameName: $e');
+      print('Error fetching wallpapers for game $gameName: $e');
     }
+    return null;
   }
 
-  // 월페이퍼를 페이지 단위로 가져오는 함수
   Future<List<String>> getWallpapersForPage(
       Reference wallpapersRef, int page, int wallpapersPerPage) async {
-    try {
-      // 월페이퍼 목록을 불러옴
-      final ListResult result = await wallpapersRef.listAll();
+    final cacheKey = '${wallpapersRef.fullPath}_$page';
 
-      // 페이지 배치를 계산하여 월페이퍼 URL 가져오기
-      return await _fetchWallpapersBatch(result.items, page, wallpapersPerPage);
+    if (_wallpaperCache.containsKey(cacheKey)) {
+      return _wallpaperCache[cacheKey]!;
+    }
+
+    try {
+      final result = await wallpapersRef.listAll();
+      final wallpapers = await _fetchWallpapersBatch(result.items, page, wallpapersPerPage);
+
+      _wallpaperCache[cacheKey] = wallpapers;
+      return wallpapers;
     } catch (e) {
-      // 에러 발생 시 메시지 포함
       throw Exception('Error loading wallpapers for page $page: $e');
     }
   }
 
-  // 페이지 단위로 월페이퍼를 배치로 가져오는 함수
   Future<List<String>> _fetchWallpapersBatch(
       List<Reference> items, int page, int wallpapersPerPage) async {
-    final int startIndex = (page - 1) * wallpapersPerPage; // 시작 인덱스 계산
-    final int endIndex = startIndex + wallpapersPerPage; // 끝 인덱스 계산
+    final int startIndex = (page - 1) * wallpapersPerPage;
+    final int endIndex = startIndex + wallpapersPerPage;
 
-    // 페이징 범위 내에서 레퍼런스 목록 추출
     final List<Reference> pageRefs = items.sublist(
       startIndex,
-      endIndex > items.length ? items.length : endIndex, // 마지막 인덱스가 범위 초과할 경우 처리
+      endIndex > items.length ? items.length : endIndex,
     );
 
-    // 해당 페이지의 월페이퍼 URL들을 가져옴
     return await Future.wait(pageRefs.map((ref) => ref.getDownloadURL()));
+  }
+
+  void clearCache() {
+    _gameCache.clear();
+    _wallpaperCache.clear();
   }
 }

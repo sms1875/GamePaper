@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamepaper/widgets/common/error_display.dart';
+import 'package:gamepaper/widgets/common/loading_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:gamepaper/models/game.dart';
@@ -37,7 +38,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
                 future: wallpaperProvider.totalWallpapersFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: LoadingWidget());
                   } else if (snapshot.hasError) {
                     return ErrorDisplayWidget(
                       error: snapshot.error!,
@@ -78,7 +79,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
             future: wallpaperProvider.getWallpapersForPage(index + 1),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: LoadingWidget());
               } else if (snapshot.hasError) {
                 return ErrorDisplayWidget(
                   error: snapshot.error!,

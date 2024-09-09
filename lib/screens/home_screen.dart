@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamepaper/widgets/common/error_display.dart';
+import 'package:gamepaper/widgets/common/loading_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:gamepaper/models/game.dart';
 import 'package:gamepaper/providers/home_provider.dart';
@@ -36,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Consumer<HomeProvider>(
         builder: (context, homeProvider, child) {
           if (homeProvider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: LoadingWidget());
           } else if (homeProvider.errorMessage.isNotEmpty || homeProvider.gameMap.isEmpty) {
             // If there is an error message or no games available, show the error state
             return ErrorDisplayWidget(
