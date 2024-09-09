@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamepaper/repositories/game_repository.dart';
 import 'package:gamepaper/widgets/common/error_display.dart';
 import 'package:gamepaper/widgets/common/loading_widget.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => WallpaperProvider(game: widget.game),
+      create: (_) => WallpaperProvider(game: widget.game, repository: GameRepository()),
       child: Scaffold(
         backgroundColor: Colors.black,
         body: SafeArea(

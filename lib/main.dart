@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamepaper/repositories/game_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:gamepaper/providers/home_provider.dart';
 import 'package:gamepaper/screens/home_screen.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => HomeProvider()),
+        ChangeNotifierProvider(create: (_) => HomeProvider(repository: GameRepository())),
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,

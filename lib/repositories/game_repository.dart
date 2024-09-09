@@ -3,9 +3,20 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:gamepaper/models/game.dart';
 
 class GameRepository {
+  // Singleton instance
+  static final GameRepository _instance = GameRepository._internal();
+
+  // Factory constructor
+  factory GameRepository() {
+    return _instance;
+  }
+
+  // Private constructor
+  GameRepository._internal();
+
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final Map<String, Game> _gameCache = {};
-  final Map<String, List<Wallpaper>> _wallpaperCache = {}; // Use Wallpaper instead of String
+  final Map<String, List<Wallpaper>> _wallpaperCache = {};
 
   Future<List<Game>> fetchGameList() async {
     if (_gameCache.isNotEmpty) {
@@ -16,8 +27,7 @@ class GameRepository {
 
     try {
       final result = await gamesRef.listAll();
-      final gameFutures = result.prefixes.map(_fetchGameThumbnail);
-      final games = await Future.wait(gameFutures);
+      final games = await Future.wait(result.prefixes.map(_fetchGameThumbnail));
 
       _gameCache.addAll({for (var game in games.whereType<Game>()) game.title: game});
       return _gameCache.values.toList();
@@ -36,11 +46,8 @@ class GameRepository {
       if (wallpapers.items.isNotEmpty) {
         final thumbnailRef = wallpapers.items[0];
         final thumbnailUrl = await thumbnailRef.getDownloadURL();
+        final thumbnail = _createWallpaper(thumbnailRef.name, thumbnailUrl);
 
-        final fileName = thumbnailRef.name;
-        final blurHashBase64 = fileName.split('#')[1].split('.')[0];
-        final blurHash = utf8.decode(base64.decode(blurHashBase64));
-        Wallpaper thumbnail = Wallpaper(url: thumbnailUrl, blurHash: blurHash);
         return Game(
           title: gameName,
           thumbnail: thumbnail,
@@ -53,8 +60,7 @@ class GameRepository {
     return null;
   }
 
-  Future<List<Wallpaper>> getWallpapersForPage(
-      Reference wallpapersRef, int page, int wallpapersPerPage) async {
+  Future<List<Wallpaper>> getWallpapersForPage(Reference wallpapersRef, int page, int wallpapersPerPage) async {
     final cacheKey = '${wallpapersRef.fullPath}_$page';
 
     if (_wallpaperCache.containsKey(cacheKey)) {
@@ -62,8 +68,15 @@ class GameRepository {
     }
 
     try {
-      final result = await wallpapersRef.listAll();
-      final wallpapers = await _fetchWallpapersBatch(result.items, page, wallpapersPerPage);
+      final result = await wallpapersRef.list(ListOptions(
+        maxResults: wallpapersPerPage,
+        pageToken: (page > 1) ? (await wallpapersRef.list(ListOptions(maxResults: (page - 1) * wallpapersPerPage))).nextPageToken : null,
+      ));
+
+      final wallpapers = await Future.wait(result.items.map((ref) async {
+        final url = await ref.getDownloadURL();
+        return _createWallpaper(ref.name, url);
+      }));
 
       _wallpaperCache[cacheKey] = wallpapers;
       return wallpapers;
@@ -72,23 +85,10 @@ class GameRepository {
     }
   }
 
-  Future<List<Wallpaper>> _fetchWallpapersBatch(
-      List<Reference> items, int page, int wallpapersPerPage) async {
-    final int startIndex = (page - 1) * wallpapersPerPage;
-    final int endIndex = startIndex + wallpapersPerPage;
-
-    final List<Reference> pageRefs = items.sublist(
-      startIndex,
-      endIndex > items.length ? items.length : endIndex,
-    );
-
-    return await Future.wait(pageRefs.map((ref) async {
-      final url = await ref.getDownloadURL();
-      final fileName = ref.name;
-      final blurHashBase64 = fileName.contains('#') ? fileName.split('#')[1].split('.')[0] : null;
-      final blurHash = blurHashBase64 != null ? utf8.decode(base64.decode(blurHashBase64)) : null;
-      return Wallpaper(url: url, blurHash: blurHash);
-    }));
+  Wallpaper _createWallpaper(String fileName, String url) {
+    final blurHashBase64 = fileName.split('#').length > 1 ? fileName.split('#')[1].split('.')[0] : null;
+    final blurHash = blurHashBase64 != null ? utf8.decode(base64.decode(blurHashBase64)) : null;
+    return Wallpaper(url: url, blurHash: blurHash);
   }
 
   void clearCache() {
