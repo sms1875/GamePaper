@@ -5,7 +5,7 @@ import 'package:gamepaper/models/game.dart';
 class GameRepository {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final Map<String, Game> _gameCache = {};
-  final Map<String, List<String>> _wallpaperCache = {};
+  final Map<String, List<Wallpaper>> _wallpaperCache = {}; // Use Wallpaper instead of String
 
   Future<List<Game>> fetchGameList() async {
     if (_gameCache.isNotEmpty) {
@@ -40,7 +40,7 @@ class GameRepository {
         final fileName = thumbnailRef.name;
         final blurHashBase64 = fileName.split('#')[1].split('.')[0];
         final blurHash = utf8.decode(base64.decode(blurHashBase64));
-        Wallpaper thumbnail = Wallpaper(url: thumbnailUrl,blurHash: blurHash);
+        Wallpaper thumbnail = Wallpaper(url: thumbnailUrl, blurHash: blurHash);
         return Game(
           title: gameName,
           thumbnail: thumbnail,
@@ -53,7 +53,7 @@ class GameRepository {
     return null;
   }
 
-  Future<List<String>> getWallpapersForPage(
+  Future<List<Wallpaper>> getWallpapersForPage(
       Reference wallpapersRef, int page, int wallpapersPerPage) async {
     final cacheKey = '${wallpapersRef.fullPath}_$page';
 
@@ -72,7 +72,7 @@ class GameRepository {
     }
   }
 
-  Future<List<String>> _fetchWallpapersBatch(
+  Future<List<Wallpaper>> _fetchWallpapersBatch(
       List<Reference> items, int page, int wallpapersPerPage) async {
     final int startIndex = (page - 1) * wallpapersPerPage;
     final int endIndex = startIndex + wallpapersPerPage;
@@ -82,7 +82,13 @@ class GameRepository {
       endIndex > items.length ? items.length : endIndex,
     );
 
-    return await Future.wait(pageRefs.map((ref) => ref.getDownloadURL()));
+    return await Future.wait(pageRefs.map((ref) async {
+      final url = await ref.getDownloadURL();
+      final fileName = ref.name;
+      final blurHashBase64 = fileName.contains('#') ? fileName.split('#')[1].split('.')[0] : null;
+      final blurHash = blurHashBase64 != null ? utf8.decode(base64.decode(blurHashBase64)) : null;
+      return Wallpaper(url: url, blurHash: blurHash);
+    }));
   }
 
   void clearCache() {

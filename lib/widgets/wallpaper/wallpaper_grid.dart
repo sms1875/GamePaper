@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gamepaper/widgets/wallpaper/wallpaper_card.dart';
+import 'package:gamepaper/models/game.dart'; // Import the Wallpaper model
 
 /// 배경화면을 그리드 형태로 보여주는 위젯입니다.
-/// 주어진 [wallpapers] URL 리스트를 기반으로 각 배경화면을 표시합니다.
+/// 주어진 [wallpapers] 리스트를 기반으로 각 배경화면을 표시합니다.
 class WallpaperGrid extends StatelessWidget {
-  final List<String> wallpapers;
+  final List<Wallpaper> wallpapers; // Change from List<String> to List<Wallpaper>
 
   const WallpaperGrid({
     super.key,
@@ -26,7 +27,7 @@ class WallpaperGrid extends StatelessWidget {
       ),
       itemCount: wallpapers.length,
       itemBuilder: (context, index) {
-        return WallpaperCard(imageUrl: wallpapers[index]);
+        return WallpaperCard(wallpaper: wallpapers[index]); // Pass Wallpaper object
       },
     );
   }

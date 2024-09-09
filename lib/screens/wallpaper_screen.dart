@@ -75,7 +75,7 @@ class _WallpaperScreenState extends State<WallpaperScreen> {
         controller: _pageController,
         itemCount: pageCount,
         itemBuilder: (context, index) {
-          return FutureBuilder<List<String>>(
+          return FutureBuilder<List<Wallpaper>>(
             future: wallpaperProvider.getWallpapersForPage(index + 1),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {

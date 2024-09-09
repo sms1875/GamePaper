@@ -10,7 +10,7 @@ class WallpaperProvider with ChangeNotifier {
   final GameRepository _repository = GameRepository();
 
   // 캐시된 월페이퍼 리스트
-  Map<int, List<String>> _wallpaperCache = {};
+  Map<int, List<Wallpaper>> _wallpaperCache = {}; // Store Wallpaper objects
 
   WallpaperProvider({required this.game}) {
     _totalWallpapersFuture = _getTotalWallpapers();
@@ -19,13 +19,17 @@ class WallpaperProvider with ChangeNotifier {
   Future<int> get totalWallpapersFuture => _totalWallpapersFuture;
 
   // 특정 페이지의 월페이퍼를 가져오는 함수
-  Future<List<String>> getWallpapersForPage(int page) async {
+  Future<List<Wallpaper>> getWallpapersForPage(int page) async {
     if (_wallpaperCache.containsKey(page)) {
       return _wallpaperCache[page]!;
     }
 
     try {
-      List<String> wallpapers = await _repository.getWallpapersForPage(game.wallpapersRef, page, wallpapersPerPage);
+      List<Wallpaper> wallpapers = await _repository.getWallpapersForPage(
+        game.wallpapersRef,
+        page,
+        wallpapersPerPage,
+      );
       _wallpaperCache[page] = wallpapers;
       return wallpapers;
     } catch (error) {
