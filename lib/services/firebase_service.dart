@@ -12,7 +12,7 @@ class FirebaseService {
 
     // Firebase App Check 활성화
     await FirebaseAppCheck.instance.activate(
-      androidProvider: AndroidProvider.debug,  // Play Integrity 사용
+      androidProvider: AndroidProvider.playIntegrity,  // Play Integrity 사용
      );
 
     // 익명 사용자 로그인
