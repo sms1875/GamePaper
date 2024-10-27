@@ -136,7 +136,7 @@ public class FirebaseUploadService {
     URL url = uri.toURL();
     String fileExtension = getFileExtension(processedImage.getUrl());
 
-    String fileName = processedImage.getNumber() + fileExtension;
+    String fileName = processedImage.getNumberWithBlurhash() + fileExtension;
 
     try (var inputStream = url.openStream()) {
       byte[] imageData = inputStream.readAllBytes();
