@@ -41,7 +41,7 @@
 
 ### 시스템 아키텍처
 
-<!--![시스템 아키텍처](https://user-images.githubusercontent.com/112460466/210706312-6a44b60d-a42e-4210-b334-9e5983f70fb3.png)-->
+![시스템 아키텍처](https://github.com/sms1875/GamePaper/blob/master/Frame%201.png?raw=true)
 
 <br>
 
