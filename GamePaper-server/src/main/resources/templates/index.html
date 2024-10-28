@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Wallpaper Retriever</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+      th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #4caf50;
+        color: white;
+      }
+      .wallpaper-container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .wallpaper-container img {
+        max-width: 150px;
+        max-height: 150px;
+        margin: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Game Wallpaper Retriever</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Game</th>
+            <th>Status</th>
+            <th>Last Updated</th>
+            <th>Wallpapers</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="game in games" :key="game.name">
+            <td>{{ game.name }}</td>
+            <td>{{ game.status }}</td>
+            <td>{{ new Date(game.lastUpdated).toLocaleString() }}</td>
+            <td>
+              <button @click="fetchWallpapers(game.name)">
+                Get Wallpapers
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="wallpaper-container">
+        <img v-for="url in wallpapers" :src="url" :key="url" />
+      </div>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            games: [],
+            wallpapers: [],
+          };
+        },
+        mounted() {
+          this.fetchGames();
+        },
+        methods: {
+          async fetchGames() {
+            try {
+              const response = await axios.get("/api/games");
+              this.games = response.data;
+            } catch (error) {
+              console.error("Error fetching games:", error);
+            }
+          },
+          async fetchWallpapers(game) {
+            try {
+              const response = await axios.get(`/api/wallpapers/${game}`);
+              if (response.status === 202) {
+                console.log(
+                  "Wallpapers are being updated. Please try again later."
+                );
+              } else {
+                this.wallpapers = response.data;
+              }
+            } catch (error) {
+              console.error("Error fetching wallpapers:", error);
+            }
+          },
+        },
+      });
+
+      app.mount("#app");
+    </script>
+  </body>
+</html>
