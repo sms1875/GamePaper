@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "firebase.config.path",
+      "type": "java.lang.String",
+      "description": "Path to the Firebase service account key JSON file."
+    },
+    {
+      "name": "firebase.storage.bucket",
+      "type": "java.lang.String",
+      "description": "Name of the Firebase Storage bucket."
+    }
+  ]
+}
