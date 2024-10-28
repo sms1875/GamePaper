@@ -1,6 +1,6 @@
 # Game Paper App
 
-<!--![프로젝트 이미지](https://user-images.githubusercontent.com/112460466/210706312-6a44b60d-a42e-4210-b334-9e5983f70fb3.png)-->
+![프로젝트 이미지](https://github.com/sms1875/GamePaper/blob/master/Frame%201.png?raw=true)
 
 - [Google Playstore Link](https://play.google.com/store/apps/details?id=io.github.sms1875.gamepaper)
   
