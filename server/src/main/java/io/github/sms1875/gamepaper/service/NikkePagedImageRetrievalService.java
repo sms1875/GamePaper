@@ -17,7 +17,7 @@ public class NikkePagedImageRetrievalService extends AbstractGameImageRetrievalS
 
   // 상수 선언
   private static final String BASE_URL = "https://nikke-kr.com/art.html?active_tab=1864";
-  private static final String TAB_TEXT = "모바일 배경화면";
+  private static final String TAB_TEXT = "모바일 배경화면 1080*1920";
   private static final String PAGE_ICONS_XPATH_TEMPLATE = "//ul[@class='page-icons']//li[@data-page='%d']";
   private static final String IMAGE_LIST_XPATH = "//div[@class='list w-vertical']//div[@class='item']//img";
   private static final String PAGE_ICONS_XPATH = "//*[@id='wrapper_id']/div[5]/div/ul";
