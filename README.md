@@ -56,52 +56,58 @@
 
 **배경화면 이미지 로드 및 설정**
 
-- Firebase 스토리지를 사용하여 다양한 배경화면 이미지를 저장하고 로드합니다. 사용자는 이러한 이미지를 앱에서 바로 배경화면 또는 잠금화면으로 설정할 수 있습니다.
+- Firebase 스토리지를 사용하여 다양한 배경화면 이미지를 저장하고 로드합니다.
+- 사용자는 이러한 이미지를 앱에서 바로 배경화면 또는 잠금화면으로 설정할 수 있습니다.
 
 **이미지 블러 해쉬 미리보기**
 
-- 이미지를 로드할 때 블러 해쉬(blur hash)를 사용하여 빠른 미리보기를 제공합니다. 사용자는 이미지가 완전히 로드되기 전에 저해상도의 블러된 미리보기를 통해 더 빠르고 부드러운 사용자 경험을 누릴 수 있습니다.
+- 이미지를 로드할 때 블러 해쉬(blur hash)를 사용하여 빠른 미리보기를 제공합니다.
+- 사용자는 이미지가 완전히 로드되기 전에 저해상도의 블러된 미리보기를 통해 더 빠르고 부드러운 사용자 경험을 누릴 수 있습니다.
 
 **손쉬운 배경화면 설정**
 
-- 사용자는 선택한 배경화면을 간단한 버튼 클릭만으로 자신의 기기에 배경화면 또는 잠금화면으로 설정할 수 있습니다. 이 과정은 Flutter의 네이티브 기능 호출을 통해 손쉽게 이루어집니다.
+- 사용자는 선택한 배경화면을 간단한 버튼 클릭만으로 자신의 기기에 배경화면 또는 잠금화면으로 설정할 수 있습니다.
+- 이 과정은 Flutter의 네이티브 기능 호출을 통해 손쉽게 이루어집니다.
 
 **게임 데이터 관리 및 진행 상황 저장**
 
-- Firebase Realtime Database 또는 Firestore를 사용하여 다양한 게임 데이터와 사용자 진행 상태를 관리합니다. 사용자가 게임을 중단한 후에도 이전 진행 상황을 저장하여, 재방문 시 계속 이어서 플레이할 수 있습니다.
+- Firebase Realtime Database 또는 Firestore를 사용하여 다양한 게임 데이터와 사용자 진행 상태를 관리합니다.
+- 사용자가 게임을 중단한 후에도 이전 진행 상황을 저장하여, 재방문 시 계속 이어서 플레이할 수 있습니다.
 
 **사용자 인증 및 데이터 보호**
    
-- Firebase Authentication을 통해 사용자 로그인 및 인증 기능을 제공합니다. 이를 통해 사용자의 개인 설정과 데이터를 안전하게 저장하고 관리할 수 있도록 보장합니다.
+- Firebase Authentication을 통해 사용자 로그인 및 인증 기능을 제공합니다.
+- 이를 통해 사용자의 개인 설정과 데이터를 안전하게 저장하고 관리할 수 있도록 보장합니다.
 
 <br>
 
-### 스크린 구성
+## 스크린 구성
 
-**게임 목록 스크린**
+### 게임 목록 스크린
 - 게임은 알파벳 순으로 정렬되어 있습니다.
 - 상하, 좌우 스크롤을 통해 게임 목록을 확인 가능합니다.
 - 알파벳을 클릭하면 텍스트로 목록을 확인 할 수 있습니다.
 
 | 게임 목록 스크린 |
 |----------|
-| ![home1](https://github.com/sms1875/GamePaper/blob/master/asset/home1.gif?raw=true) ![home2](https://github.com/sms1875/GamePaper/blob/master/asset/home2.gif?raw=true) ![home3](https://github.com/sms1875/GamePaper/blob/master/asset/home3.gif?raw=true) |
+| <img src="https://github.com/sms1875/GamePaper/blob/master/asset/home1.gif?raw=true" width="200"/> <img src="https://github.com/sms1875/GamePaper/blob/master/asset/home2.gif?raw=true" width="200"/> <img src="https://github.com/sms1875/GamePaper/blob/master/asset/home3.gif?raw=true" width="200"/> |
 
-**월페이퍼 목록 스크린**
+### 월페이퍼 목록 스크린
 - 게임의 월페이퍼 목록을 스크롤을 통해 확인할 수 있습니다.
 - 로딩 중 이미지 표시는 블러해쉬를 적용하였습니다.
 
 | 월페이퍼 목록 스크린 |
 |----------|
-| ![home4](https://github.com/sms1875/GamePaper/blob/master/asset/home4.gif?raw=true) ![wallpaperlist](https://github.com/sms1875/GamePaper/blob/master/asset/wallpaperlist.gif?raw=true) |
+| <img src="https://github.com/sms1875/GamePaper/blob/master/asset/home4.gif?raw=true" width="200"/> <img src="https://github.com/sms1875/GamePaper/blob/master/asset/wallpaperlist.gif?raw=true" width="200"/> |
 
-**월페이퍼 스크린**
+### 월페이퍼 스크린
 - 이미지를 클릭하여 확대할 수 있습니다.
 - 버튼을 클릭하여 홈 화면, 잠금화면에 적용할 수 있습니다.
 
 | 월페이퍼 스크린 |
 |----------|
-| ![click](https://github.com/sms1875/GamePaper/blob/master/asset/click.gif?raw=true) ![apply](https://github.com/sms1875/GamePaper/blob/master/asset/apply.gif?raw=true) |
+| <img src="https://github.com/sms1875/GamePaper/blob/master/asset/click.gif?raw=true" width="200"/> <img src="https://github.com/sms1875/GamePaper/blob/master/asset/apply.gif?raw=true" width="200"/> |
+
 
 
 <br>
