@@ -76,17 +76,32 @@
 
 <br>
 
-### 앱 스크린
+### 스크린 구성
 
-### [초기화면]
-- 서비스 접속 초기화면으로 splash 화면이 잠시 나온 뒤 다음 페이지가 나타납니다.
-    - 로그인이 되어 있지 않은 경우 : SNS 로그인 페이지
-    - 로그인이 되어 있는 경우 : README 홈 화면
-- SNS(카카오톡, 구글, 페이스북) 로그인 기능은 구현되어 있지 않습니다.
+**게임 목록 스크린**
+- 게임은 알파벳 순으로 정렬되어 있습니다.
+- 상하, 좌우 스크롤을 통해 게임 목록을 확인 가능합니다.
+- 알파벳을 클릭하면 텍스트로 목록을 확인 할 수 있습니다.
 
-| 초기화면 |
+| 게임 목록 스크린 |
 |----------|
-|![apply](https://github.com/sms1875/GamePaper/blob/master/asset/apply.gif?raw=true)|
+| ![home1](https://github.com/sms1875/GamePaper/blob/master/asset/home1.gif?raw=true) ![home2](https://github.com/sms1875/GamePaper/blob/master/asset/home2.gif?raw=true) ![home3](https://github.com/sms1875/GamePaper/blob/master/asset/home3.gif?raw=true) |
+
+**월페이퍼 목록 스크린**
+- 게임의 월페이퍼 목록을 스크롤을 통해 확인할 수 있습니다.
+- 로딩 중 이미지 표시는 블러해쉬를 적용하였습니다.
+
+| 월페이퍼 목록 스크린 |
+|----------|
+| ![home4](https://github.com/sms1875/GamePaper/blob/master/asset/home4.gif?raw=true) ![wallpaperlist](https://github.com/sms1875/GamePaper/blob/master/asset/wallpaperlist.gif?raw=true) |
+
+**월페이퍼 스크린**
+- 이미지를 클릭하여 확대할 수 있습니다.
+- 버튼을 클릭하여 홈 화면, 잠금화면에 적용할 수 있습니다.
+
+| 월페이퍼 스크린 |
+|----------|
+| ![click](https://github.com/sms1875/GamePaper/blob/master/asset/click.gif?raw=true) ![apply](https://github.com/sms1875/GamePaper/blob/master/asset/apply.gif?raw=true) |
 
 
 <br>
