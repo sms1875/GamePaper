@@ -41,7 +41,6 @@
 - Back-end : Spring Boot
 - Database : FireStorage
 - Security : Firesbase App Check
-- 디자인 : <!--[Figma](https://www.figma.com/file/fAisC2pEKzxTOzet9CfqML/README(oh-my-code)?node-id=39%3A1814)-->
 - 개발 툴 : VS Code, Android Studio
 - 서버 배포 : AWS EC2
   
@@ -84,22 +83,16 @@
     - 로그인이 되어 있지 않은 경우 : SNS 로그인 페이지
     - 로그인이 되어 있는 경우 : README 홈 화면
 - SNS(카카오톡, 구글, 페이스북) 로그인 기능은 구현되어 있지 않습니다.
-<!--
+
 | 초기화면 |
 |----------|
-|![splash](https://user-images.githubusercontent.com/112460466/210172920-aef402ed-5aef-4d4a-94b9-2b7147fd8389.gif)|
--->
+|![apply](https://github.com/sms1875/GamePaper/blob/master/asset/apply.gif?raw=true)|
+
+
 <br>
 
 ## 개발 내용
 
-### 디자인 설계
-<!--
-| ㅁ | ㅠ | ㄴ |
-|----------|----------|----------|
-|![splash](https://user-images.githubusercontent.com/112460466/210172920-aef402ed-5aef-4d4a-94b9-2b7147fd8389.gif)|![splash](https://user-images.githubusercontent.com/112460466/210172920-aef402ed-5aef-4d4a-94b9-2b7147fd8389.gif)|![splash](https://user-images.githubusercontent.com/112460466/210172920-aef402ed-5aef-4d4a-94b9-2b7147fd8389.gif)|
-
--->
 ### FrontEnd
 
 ```
