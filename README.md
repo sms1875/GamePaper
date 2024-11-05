@@ -54,6 +54,35 @@
 
 ## 기능 설명
 
+### 스크린 구성
+
+#### 게임 목록 스크린
+- 게임은 알파벳 순으로 정렬되어 있습니다.
+- 상하, 좌우 스크롤을 통해 게임 목록을 확인 가능합니다.
+- 알파벳을 클릭하면 텍스트로 목록을 확인 할 수 있습니다.
+
+| 게임 목록 스크린 |
+|----------|
+| <img src="https://github.com/sms1875/GamePaper/blob/master/asset/home1.gif?raw=true" width="200"/> <img src="https://github.com/sms1875/GamePaper/blob/master/asset/home2.gif?raw=true" width="200"/> <img src="https://github.com/sms1875/GamePaper/blob/master/asset/home3.gif?raw=true" width="200"/> |
+
+#### 월페이퍼 목록 스크린
+- 게임의 월페이퍼 목록을 스크롤을 통해 확인할 수 있습니다.
+- 로딩 중 이미지 표시는 블러해쉬를 적용하였습니다.
+
+| 월페이퍼 목록 스크린 |
+|----------|
+| <img src="https://github.com/sms1875/GamePaper/blob/master/asset/home4.gif?raw=true" width="200"/> <img src="https://github.com/sms1875/GamePaper/blob/master/asset/wallpaperlist.gif?raw=true" width="200"/> |
+
+#### 월페이퍼 스크린
+- 이미지를 클릭하여 확대할 수 있습니다.
+- 버튼을 클릭하여 홈 화면, 잠금화면에 적용할 수 있습니다.
+
+| 월페이퍼 스크린 |
+|----------|
+| <img src="https://github.com/sms1875/GamePaper/blob/master/asset/click.gif?raw=true" width="200"/> <img src="https://github.com/sms1875/GamePaper/blob/master/asset/apply.gif?raw=true" width="200"/> |
+
+<br>
+
 **배경화면 이미지 로드 및 설정**
 
 - Firebase 스토리지를 사용하여 다양한 배경화면 이미지를 저장하고 로드합니다.
@@ -78,37 +107,6 @@
    
 - Firebase Authentication을 통해 사용자 로그인 및 인증 기능을 제공합니다.
 - 이를 통해 사용자의 개인 설정과 데이터를 안전하게 저장하고 관리할 수 있도록 보장합니다.
-
-<br>
-
-## 스크린 구성
-
-### 게임 목록 스크린
-- 게임은 알파벳 순으로 정렬되어 있습니다.
-- 상하, 좌우 스크롤을 통해 게임 목록을 확인 가능합니다.
-- 알파벳을 클릭하면 텍스트로 목록을 확인 할 수 있습니다.
-
-| 게임 목록 스크린 |
-|----------|
-| <img src="https://github.com/sms1875/GamePaper/blob/master/asset/home1.gif?raw=true" width="200"/> <img src="https://github.com/sms1875/GamePaper/blob/master/asset/home2.gif?raw=true" width="200"/> <img src="https://github.com/sms1875/GamePaper/blob/master/asset/home3.gif?raw=true" width="200"/> |
-
-### 월페이퍼 목록 스크린
-- 게임의 월페이퍼 목록을 스크롤을 통해 확인할 수 있습니다.
-- 로딩 중 이미지 표시는 블러해쉬를 적용하였습니다.
-
-| 월페이퍼 목록 스크린 |
-|----------|
-| <img src="https://github.com/sms1875/GamePaper/blob/master/asset/home4.gif?raw=true" width="200"/> <img src="https://github.com/sms1875/GamePaper/blob/master/asset/wallpaperlist.gif?raw=true" width="200"/> |
-
-### 월페이퍼 스크린
-- 이미지를 클릭하여 확대할 수 있습니다.
-- 버튼을 클릭하여 홈 화면, 잠금화면에 적용할 수 있습니다.
-
-| 월페이퍼 스크린 |
-|----------|
-| <img src="https://github.com/sms1875/GamePaper/blob/master/asset/click.gif?raw=true" width="200"/> <img src="https://github.com/sms1875/GamePaper/blob/master/asset/apply.gif?raw=true" width="200"/> |
-
-
 
 <br>
 
