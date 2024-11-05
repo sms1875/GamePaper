@@ -103,13 +103,87 @@
 ### FrontEnd
 
 ```
-ㅅ
+client/
+├─ android/
+│  ├─ app/
+│  │  ├─ build.gradle
+│  │  ├─ google-services.json
+│  │  └─ src/
+│  │     ├─ debug/AndroidManifest.xml
+│  │     ├─ main/
+│  │        ├─ AndroidManifest.xml
+│  │        ├─ kotlin/io/github/sms1875/gamepaper/MainActivity.kt
+│  │        └─ res/
+│  │           ├─ drawable/launch_background.xml
+│  │           ├─ mipmap-[dpi folders]
+│  │           └─ values[-night]
+│  ├─ build.gradle
+├─ assets/
+│  └─ images/logo.png
+├─ lib/
+│  ├─ config/firebase_options.dart
+│  ├─ main.dart
+│  ├─ models/
+│  │  └─ game.dart
+│  ├─ providers/
+│  │  ├─ home_provider.dart
+│  │  └─ wallpaper_provider.dart
+│  ├─ repositories/
+│  │  └─ game_repository.dart
+│  ├─ screens/
+│  │  ├─ home_screen.dart
+│  │  └─ wallpaper_screen.dart
+│  ├─ services/
+│  │  └─ firebase_service.dart
+│  ├─ utils/
+│  │  └─ handle_error.dart
+│  └─ widgets/
+│     ├─ common/
+│     │  ├─ error_display.dart
+│     │  ├─ loading_widget.dart
+│     │  └─ load_network_image.dart
+│     ├─ home/
+│     │  └─ [components]
+│     └─ wallpaper/
+│        └─ [components]
+├─ pubspec.yaml
+└─ test/
+   └─ widget_test.dart
 ```
 
 ### BackEnd
 
 ```
-ㅁ
+server/
+├─ chromedriver-win64/
+│  ├─ chromedriver.exe
+│  ├─ LICENSE.chromedriver
+│  └─ THIRD_PARTY_NOTICES.chromedriver
+├─ src/
+│  ├─ main/
+│  │  ├─ java/io/github/sms1875/gamepaper/
+│  │  │  ├─ config/
+│  │  │  │  ├─ FirebaseConfig.java
+│  │  │  │  └─ SeleniumConfig.java
+│  │  │  ├─ controller/
+│  │  │  │  ├─ GameController.java
+│  │  │  │  ├─ HomeController.java
+│  │  │  │  └─ ImageRetrievalController.java
+│  │  │  ├─ domain/
+│  │  │  │  ├─ Game.java
+│  │  │  │  └─ GameStatus.java
+│  │  │  └─ service/
+│  │  │     ├─ firebase/
+│  │  │     │  ├─ FirebaseStorageService.java
+│  │  │     │  └─ FirebaseUploadService.java
+│  │  │     ├─ [GameManagementService.java, WallpaperProcessingService.java, etc.]
+│  │  └─ resources/
+│  │     ├─ application.properties
+│  │     ├─ META-INF/additional-spring-configuration-metadata.json
+│  │     └─ templates/index.html
+└─ test/
+   └─ java/io/github/sms1875/gamepaper/
+      └─ GamepaperApplicationTests.java
 ```
 
 ### 구현
