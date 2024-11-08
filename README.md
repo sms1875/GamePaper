@@ -46,11 +46,15 @@
   
 <br>
 
+<!--
+
 ### 시스템 아키텍처
 
 ![시스템 아키텍처](https://github.com/sms1875/GamePaper/blob/master/Frame%201.png?raw=true)
 
 <br>
+
+-->
 
 ## 기능 설명
 
@@ -218,7 +222,7 @@ server/
 
 * Firebase App Check를 사용하여 인증되지 않은 앱의 접근을 제한하였습니다.
 * Firestore에서 게임 배경화면 이미지를 관리합니다.
-
+<!--
 ### 최적화
 
 프로파일러를 통한 ?
@@ -228,3 +232,4 @@ server/
 
 - **에뮬레이터**: 안드로이드 스튜디오의 에뮬레이터에서 실행하여 테스트 가능.
 - **실제 기기**: 실제 기기와 USB 연결 후 Android Studio를 통해 빌드하여 테스트.
+-->
