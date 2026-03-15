@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamepaper/models/game.dart';
 import 'package:gamepaper/screens/wallpaper_screen.dart';
-import 'package:gamepaper/widgets/common/load_network_image.dart';
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 
 class GameCarousel extends StatelessWidget {
@@ -37,11 +36,7 @@ class GameCarousel extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            loadNetworkImage(
-              game.thumbnail.url,
-              blurHash: game.thumbnail.blurHash,
-              fit: BoxFit.cover,
-            ),
+            Container(color: Colors.grey[850]),
             Positioned(
               bottom: 0,
               left: 0,
@@ -50,7 +45,7 @@ class GameCarousel extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 color: Colors.black.withOpacity(0.7),
                 child: Text(
-                  game.title,
+                  game.name,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: fontSize,

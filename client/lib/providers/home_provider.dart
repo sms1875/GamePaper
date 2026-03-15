@@ -30,7 +30,7 @@ class HomeProvider with ChangeNotifier {
 
   Map<String, List<Game>> _groupGamesByAlphabet(List<Game> games) {
     final gameMap = games.fold<Map<String, List<Game>>>({}, (map, game) {
-      final alphabet = game.title[0].toUpperCase();
+      final alphabet = game.name[0].toUpperCase();
       map.putIfAbsent(alphabet, () => []).add(game);
       return map;
     });

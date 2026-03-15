@@ -16,6 +16,7 @@ dependencies:
   path_provider: ^2.0.8
 
   provider: ^6.0.1
+  http: ^1.2.0
   cached_network_image: ^3.4.0
   card_swiper : ^3.0.1
 

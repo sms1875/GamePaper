@@ -1,94 +1,73 @@
 import 'dart:convert';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:gamepaper/config/api_config.dart';
 import 'package:gamepaper/models/game.dart';
 
 class GameRepository {
   // Singleton instance
   static final GameRepository _instance = GameRepository._internal();
 
-  // Factory constructor
-  factory GameRepository() {
-    return _instance;
-  }
-
-  // Private constructor
+  factory GameRepository() => _instance;
   GameRepository._internal();
 
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  final Map<String, Game> _gameCache = {};
+  final Map<int, List<Game>> _gameCache = {};
   final Map<String, List<Wallpaper>> _wallpaperCache = {};
 
   Future<List<Game>> fetchGameList() async {
-    if (_gameCache.isNotEmpty) {
-      return _gameCache.values.toList();
+    if (_gameCache.containsKey(0)) {
+      return _gameCache[0]!;
     }
 
-    final gamesRef = _storage.ref().child('games');
+    final response = await http
+        .get(
+          Uri.parse(ApiConfig.gamesUrl()),
+          headers: {'Content-Type': 'application/json'},
+        )
+        .timeout(const Duration(seconds: 10));
 
-    try {
-      final result = await gamesRef.listAll();
-      final games = await Future.wait(result.prefixes.map(_fetchGameThumbnail));
-
-      _gameCache.addAll({for (var game in games.whereType<Game>()) game.title: game});
-      return _gameCache.values.toList();
-    } catch (e) {
-      throw Exception('Error fetching game list: $e');
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      final games = data.map((json) => Game.fromServerJson(json)).toList();
+      _gameCache[0] = games;
+      return games;
+    } else {
+      throw Exception('게임 목록 조회 실패: ${response.statusCode}');
     }
   }
 
-  Future<Game?> _fetchGameThumbnail(Reference prefix) async {
-    final gameName = prefix.name;
-    final wallpapersRef = prefix.child('wallpapers');
-
-    try {
-      final wallpapers = await wallpapersRef.list(ListOptions(maxResults: 1));
-
-      if (wallpapers.items.isNotEmpty) {
-        final thumbnailRef = wallpapers.items[0];
-        final thumbnailUrl = await thumbnailRef.getDownloadURL();
-        final thumbnail = _createWallpaper(thumbnailRef.name, thumbnailUrl);
-
-        return Game(
-          title: gameName,
-          thumbnail: thumbnail,
-          wallpapersRef: wallpapersRef,
-        );
-      }
-    } catch (e) {
-      print('Error fetching wallpapers for game $gameName: $e');
-    }
-    return null;
-  }
-
-  Future<List<Wallpaper>> getWallpapersForPage(Reference wallpapersRef, int page, int wallpapersPerPage) async {
-    final cacheKey = '${wallpapersRef.fullPath}_$page';
-
+  /// 배경화면 페이지 조회 (page: 1-indexed, 서버는 0-indexed)
+  Future<List<Wallpaper>> getWallpapersForPage(
+    int gameId,
+    int page,
+    int wallpapersPerPage,
+  ) async {
+    final cacheKey = '${gameId}_$page';
     if (_wallpaperCache.containsKey(cacheKey)) {
       return _wallpaperCache[cacheKey]!;
     }
 
-    try {
-      final result = await wallpapersRef.list(ListOptions(
-        maxResults: wallpapersPerPage,
-        pageToken: (page > 1) ? (await wallpapersRef.list(ListOptions(maxResults: (page - 1) * wallpapersPerPage))).nextPageToken : null,
-      ));
+    final serverPage = page - 1; // 1-indexed → 0-indexed
+    final response = await http
+        .get(
+          Uri.parse(ApiConfig.wallpapersUrl(
+            gameId,
+            page: serverPage,
+            size: wallpapersPerPage,
+          )),
+          headers: {'Content-Type': 'application/json'},
+        )
+        .timeout(const Duration(seconds: 10));
 
-      final wallpapers = await Future.wait(result.items.map((ref) async {
-        final url = await ref.getDownloadURL();
-        return _createWallpaper(ref.name, url);
-      }));
-
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      final List<dynamic> content = data['content'];
+      final wallpapers =
+          content.map((json) => Wallpaper.fromServerJson(json)).toList();
       _wallpaperCache[cacheKey] = wallpapers;
       return wallpapers;
-    } catch (e) {
-      throw Exception('Error loading wallpapers for page $page: $e');
+    } else {
+      throw Exception('배경화면 조회 실패: ${response.statusCode}');
     }
-  }
-
-  Wallpaper _createWallpaper(String fileName, String url) {
-    final blurHashBase64 = fileName.split('#').length > 1 ? fileName.split('#')[1].split('.')[0] : null;
-    final blurHash = blurHashBase64 != null ? utf8.decode(base64.decode(blurHashBase64)) : null;
-    return Wallpaper(url: url, blurHash: blurHash);
   }
 
   void clearCache() {

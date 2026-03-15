@@ -22,7 +22,7 @@ class GameListView extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
-            game.title,
+            game.name,
             style: const TextStyle(color: Colors.white, fontSize: 16),
           ),
         ),
